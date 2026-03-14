@@ -14,22 +14,22 @@ export function HeroSection() {
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-balance">
-            Build Your AI Career Through
-            <span className="block text-accent mt-2">Real-World Impact</span>
+            Advancing AI Through
+            <span className="block text-accent mt-2">Collaborative Research</span>
           </h1>
 
           <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed">
-            Join a global community of AI practitioners. Master cutting-edge technologies through hands-on bootcamps,
-            collaborate on groundbreaking research, and launch your career with industry-leading internships.
+            Join a global community of AI researchers and innovators. Contribute to cutting-edge research projects,
+            publish groundbreaking papers, and stay updated with the latest developments in AI and machine learning.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2">
-              Explore Programs
+              Explore Research
               <ArrowRight className="w-4 h-4" />
             </Button>
             <Button size="lg" variant="outline">
-              View Research Projects
+              Join Community
             </Button>
           </div>
 
