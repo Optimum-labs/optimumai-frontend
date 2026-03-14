@@ -1,21 +1,14 @@
-import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section"
-import { StatsSection } from "@/components/stats-section"
-import { ProgramsSection } from "@/components/programs-section"
-import { ResearchHighlights } from "@/components/research-highlights"
-import { CTASection } from "@/components/cta-section"
-import { Footer } from "@/components/footer"
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  return (
-    <main className="min-h-screen">
-      <Header />
-      <HeroSection />
-      <StatsSection />
-      <ProgramsSection />
-      <ResearchHighlights />
-      <CTASection />
-      <Footer />
-    </main>
-  )
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push('/community')
+  }, [router])
+
+  return null
 }

@@ -4,11 +4,38 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { GraduationCap, BookOpen, Newspaper, FileText, ArrowRight } from "lucide-react"
+import { GraduationCap, BookOpen, Newspaper, FileText, ArrowRight, Sparkles, FlaskConical, Users } from "lucide-react"
 import { useState } from "react"
 
 export default function CommunityPage() {
   const [activeTab, setActiveTab] = useState('bootcamps')
+
+  const programs = [
+    {
+      icon: FlaskConical,
+      title: "Research Projects",
+      description:
+        "Collaborate on cutting-edge AI research solving real-world challenges in NLP, Computer Vision, LLMs, and more.",
+      features: ["Published Work", "Global Collaboration", "Portfolio Building"],
+      link: "/research",
+    },
+    {
+      icon: Users,
+      title: "Community",
+      description:
+        "Join a vibrant community of AI researchers, access bootcamps, learning resources, news, and published papers.",
+      features: ["Bootcamps", "Learning Materials", "News & Updates"],
+      link: "/community",
+    },
+    {
+      icon: BookOpen,
+      title: "AI Internships",
+      description:
+        "Gain practical experience working with leading organizations on production AI systems and research initiatives.",
+      features: ["Paid Opportunities", "Career Support", "Research Experience"],
+      link: "/internships",
+    },
+  ]
 
   const bootcamps = [
     {
@@ -122,16 +149,94 @@ export default function CommunityPage() {
     <main className="min-h-screen">
       <Header />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center space-y-6">
-            <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-balance">
-              Join Our AI Community
+      {/* Main Hero Section */}
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
+
+        <div className="container mx-auto max-w-6xl relative">
+          <div className="text-center space-y-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-sm font-medium text-accent mb-4">
+              <Sparkles className="w-4 h-4" />
+              <span>Shaping the Future of AI Innovation</span>
+            </div>
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-balance">
+              Advancing AI Through
+              <span className="block text-accent mt-2">Collaborative Research</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty">
-              Learn, collaborate, and grow with thousands of AI researchers and practitioners worldwide
+
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed">
+              Join a global community of AI researchers and innovators. Contribute to cutting-edge research projects,
+              publish groundbreaking papers, and stay updated with the latest developments in AI and machine learning.
             </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2">
+                Explore Research
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+              <Button size="lg" variant="outline">
+                Join Community
+              </Button>
+            </div>
+
+            <div className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+              <div>
+                <div className="text-4xl font-bold text-accent">500+</div>
+                <div className="text-sm text-muted-foreground mt-1">AI Projects</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-accent">80+</div>
+                <div className="text-sm text-muted-foreground mt-1">Countries</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-accent">10k+</div>
+                <div className="text-sm text-muted-foreground mt-1">Learners</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-accent">98%</div>
+                <div className="text-sm text-muted-foreground mt-1">Satisfaction</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Engagement Opportunities Section */}
+      <section id="programs" className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Engage With OptimumAI</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
+              Explore research opportunities, connect with the community, and advance your AI career
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {programs.map((program, index) => {
+              const Icon = program.icon
+              return (
+                <Card key={index} className="overflow-hidden hover:shadow-lg transition-all">
+                  <CardContent className="p-8">
+                    <Icon className="w-12 h-12 text-accent mb-4" />
+                    <h3 className="text-2xl font-bold mb-3">{program.title}</h3>
+                    <p className="text-muted-foreground mb-6">{program.description}</p>
+                    <ul className="space-y-2 mb-6">
+                      {program.features.map((feature, i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm">
+                          <span className="w-1.5 h-1.5 bg-accent rounded-full"></span>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <Button className="w-full gap-2">
+                      Learn More
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         </div>
       </section>
