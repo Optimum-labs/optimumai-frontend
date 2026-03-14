@@ -1,32 +1,32 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { GraduationCap, FlaskConical, Briefcase, ArrowRight } from "lucide-react"
+import { FlaskConical, BookOpen, FileText, Users, ArrowRight } from "lucide-react"
 
 export function ProgramsSection() {
   const programs = [
     {
-      icon: GraduationCap,
-      title: "AI Bootcamps",
-      description:
-        "Intensive, project-based learning programs that take you from fundamentals to advanced AI applications in weeks.",
-      features: ["Hands-on Projects", "Expert Mentorship", "Industry Certificate"],
-      link: "#bootcamps",
-    },
-    {
       icon: FlaskConical,
-      title: "Research Programs",
+      title: "Research Projects",
       description:
-        "Collaborate with global teams on cutting-edge AI research solving real-world challenges across industries.",
+        "Collaborate on cutting-edge AI research solving real-world challenges in NLP, Computer Vision, LLMs, and more.",
       features: ["Published Work", "Global Collaboration", "Portfolio Building"],
-      link: "#research",
+      link: "/research",
     },
     {
-      icon: Briefcase,
+      icon: Users,
+      title: "Community",
+      description:
+        "Join a vibrant community of AI researchers, access bootcamps, learning resources, news, and published papers.",
+      features: ["Bootcamps", "Learning Materials", "News & Updates"],
+      link: "/community",
+    },
+    {
+      icon: BookOpen,
       title: "AI Internships",
       description:
-        "Gain practical experience working with leading organizations on production AI systems and products.",
-      features: ["Paid Opportunities", "Career Support", "Industry Connections"],
-      link: "#internships",
+        "Gain practical experience working with leading organizations on production AI systems and research initiatives.",
+      features: ["Paid Opportunities", "Career Support", "Research Experience"],
+      link: "/internships",
     },
   ]
 
@@ -34,9 +34,9 @@ export function ProgramsSection() {
     <section id="programs" className="py-24 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Your Path to AI Excellence</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Engage With OptimumAI</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Choose from our comprehensive programs designed to accelerate your AI career
+            Explore research opportunities, connect with the community, and advance your AI career
           </p>
         </div>
 
