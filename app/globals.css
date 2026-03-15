@@ -1050,7 +1050,95 @@
   .comm-row { grid-template-columns: 1fr; gap: 8px; }
   .comm-row-num { display: none; }
   .comm-auth { grid-template-columns: 1fr; }
+  .comm-detail-grid { grid-template-columns: 1fr; }
+  .comm-detail-footer { flex-direction: column; gap: 16px; }
 }
+
+/* ── Expandable detail panel ── */
+.comm-expand-item {
+  border-bottom: 1px solid rgba(10,10,10,0.08);
+}
+.comm-expand-item:last-child { border-bottom: none; }
+.comm-expand-item .comm-row {
+  border-bottom: none;
+  transition: background 0.2s ease;
+}
+.comm-expand-item .comm-row:hover {
+  background: rgba(200,57,43,0.02);
+}
+
+.comm-detail {
+  padding: 0 0 24px 52px;
+  animation: comm-slide-down 0.25s ease;
+}
+@keyframes comm-slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.comm-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 24px;
+}
+
+.comm-detail-label {
+  display: block;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.comm-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.comm-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.comm-detail-list li {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  color: var(--muted-txt);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.7;
+}
+.comm-detail-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--opt-red);
+  font-size: 10px;
+}
+
+.comm-detail-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid rgba(10,10,10,0.06);
+}
+
+.comm-detail-meta {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  color: var(--muted-txt);
+}
+.comm-detail-meta svg { color: var(--gold); }
 
 /* ── Auth pages (login/signup) ── */
 .auth-page {

@@ -1,16 +1,30 @@
 import { NextRequest, NextResponse } from "next/server"
 import nodemailer from "nodemailer"
+import { UserLogger } from "@/lib/user-logger"
 
 export async function POST(req: NextRequest) {
   const { name, email, phone, message } = await req.json()
 
   if (!name || !email || !phone || !message) {
+    await UserLogger.logAuthAction('contact_form', null, 'failure', {
+      reason: 'missing_fields',
+      name: name ? 'provided' : 'missing',
+      email: email ? 'provided' : 'missing',
+      phone: phone ? 'provided' : 'missing',
+      message: message ? 'provided' : 'missing'
+    }, req)
+
     return NextResponse.json({ error: "All fields are required." }, { status: 400 })
   }
 
   // Basic email safety check
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRe.test(email)) {
+    await UserLogger.logAuthAction('contact_form', null, 'failure', {
+      reason: 'invalid_email',
+      email
+    }, req)
+
     return NextResponse.json({ error: "Invalid email address." }, { status: 400 })
   }
 
@@ -76,9 +90,35 @@ export async function POST(req: NextRequest) {
       `,
     })
 
+    // Log successful contact form submission
+    await UserLogger.logSystemAction(
+      'contact_form_submission',
+      'Contact form submitted successfully',
+      {
+        name,
+        email,
+        phone,
+        messageLength: message.length
+      },
+      req
+    )
+
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error("[contact] mail send error:", err)
+
+    // Log contact form error
+    await UserLogger.logSystemAction(
+      'contact_form_error',
+      'Failed to send contact form email',
+      {
+        error: err instanceof Error ? err.message : 'Unknown error',
+        name,
+        email
+      },
+      req
+    )
+
     return NextResponse.json({ error: "Failed to send message. Please try again." }, { status: 500 })
   }
 }

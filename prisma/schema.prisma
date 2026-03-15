@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                String       @id @default(cuid())
+  supabaseId        String?      @unique // Link to Supabase auth user
+  name              String
+  email             String       @unique
+  emailVerified     Boolean      @default(false)
+  verificationToken String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  enrollments       Enrollment[]
+  activities        Activity[]
+  userLogs          UserLog[]
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  slug        String       @unique
+  description String
+  category    String       // bootcamp | learning
+  duration    String
+  level       String       // beginner | intermediate | advanced
+  tags        String[]
+  createdAt   DateTime     @default(now())
+  enrollments Enrollment[]
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId    String
+  status     String   @default("enrolled") // enrolled | in-progress | completed
+  progress   Int      @default(0)          // 0-100 percent
+  enrolledAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // enrollment | completion | login | paper | internship
+  description String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  supabaseId  String?
+  action      String   // login | logout | signup | password_change | profile_update | course_enroll | etc.
+  description String
+  ipAddress   String?
+  userAgent   String?
+  metadata    Json?    // Additional data like course_id, error_messages, etc.
+  success     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([supabaseId])
+  @@index([action])
+  @@index([createdAt])
+}

@@ -7,6 +7,8 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
 import { Github, Mail } from "lucide-react"
+import { createClient } from "@/lib/supabase"
+import { useRouter } from "next/navigation"
 
 function LoginForm() {
   const [email, setEmail] = useState("")
@@ -15,6 +17,8 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const supabase = createClient()
 
   useEffect(() => {
     // Check for verification success
@@ -34,19 +38,22 @@ function LoginForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Login failed')
+        setError(data.error)
+      } else {
+        // Redirect to dashboard on success
+        router.push('/dashboard')
       }
-
-      // Redirect to dashboard on success
-      window.location.href = '/dashboard'
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError('An unexpected error occurred')
     } finally {
       setIsLoading(false)
     }

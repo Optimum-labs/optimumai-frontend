@@ -6,6 +6,8 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
 import { Github, Mail } from "lucide-react"
+import { createClient } from "@/lib/supabase"
+import { useRouter } from "next/navigation"
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -17,6 +19,8 @@ export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+  const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,18 +57,16 @@ export default function SignUpPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Signup failed')
-      }
-
-      // In development mode, redirect directly to dashboard
-      // In production, show success message for email verification
-      if (process.env.NODE_ENV === 'development') {
-        window.location.href = '/dashboard'
+        setError(data.error)
       } else {
         setIsSuccess(true)
+        // Redirect to dashboard or show success message
+        setTimeout(() => {
+          router.push('/dashboard')
+        }, 2000)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError("An unexpected error occurred")
     } finally {
       setIsLoading(false)
     }

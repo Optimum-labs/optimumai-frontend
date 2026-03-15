@@ -1,57 +1,68 @@
 import { NextRequest, NextResponse } from "next/server"
-import { SignJWT } from "jose"
+import { createServerSupabaseClient } from "@/lib/supabase"
+import { UserLogger } from "@/lib/user-logger"
+import { getCurrentUser } from "@/lib/auth"
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json()
 
     if (!email || !password) {
+      await UserLogger.logSystemAction(
+        'login_attempt',
+        'Login attempt with missing credentials',
+        { email: email || 'missing' },
+        req
+      )
       return NextResponse.json({ error: "Email and password are required." }, { status: 400 })
     }
 
-    // Basic email validation
-    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRe.test(email)) {
-      return NextResponse.json({ error: "Invalid email address." }, { status: 400 })
+    const supabase = await createServerSupabaseClient()
+
+    // Attempt login with Supabase
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (error) {
+      await UserLogger.logAuthAction(
+        'login',
+        null,
+        null,
+        false,
+        { error: error.message, email },
+        req
+      )
+      return NextResponse.json({ error: error.message }, { status: 401 })
     }
 
-    // Simulate user authentication (in a real app, check against database)
-    // For demo purposes, accept any email/password combination
-    const userId = Math.random().toString(36).substring(2, 15)
-    const userName = email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
+    // Get or create user in our database
+    const user = await getCurrentUser(data.user.id)
 
-    // Create a simple JWT token (in production, use proper JWT with secret)
-    const token = await new SignJWT({
-      userId,
-      email,
-      name: userName
-    })
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
-      .setExpirationTime('24h')
-      .sign(new TextEncoder().encode(process.env.JWT_SECRET || 'demo-secret-key'))
+    // Log successful login
+    await UserLogger.logAuthAction(
+      'login',
+      data.user.id,
+      user.id,
+      true,
+      { email },
+      req
+    )
 
-    // Set HTTP-only cookie
-    const response = NextResponse.json({
+    return NextResponse.json({
       message: "Login successful",
-      user: {
-        id: userId,
-        name: userName,
-        email
-      }
+      user: { id: user.id, name: user.name, email: user.email },
     })
 
-    response.cookies.set('auth-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 // 24 hours
-    })
-
-    return response
-
-  } catch (error) {
-    console.error("Login error:", error)
-    return NextResponse.json({ error: "Login failed. Please try again." }, { status: 500 })
+  } catch (err) {
+    console.error('Login error:', err)
+    await UserLogger.logSystemAction(
+      'login_error',
+      'Unexpected error during login',
+      { error: err instanceof Error ? err.message : 'Unknown error' },
+      req
+    )
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 })
   }
 }

@@ -1,64 +1,93 @@
+"use client"
+
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight, BookOpen, Users, Brain, FlaskConical, Calendar, Award, TrendingUp } from "lucide-react"
+import { ArrowRight, BookOpen, Users, Brain, FlaskConical, Calendar, Award, TrendingUp, LogOut } from "lucide-react"
 import Link from "next/link"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase"
 
-export const metadata = {
-  title: "Dashboard — OptimumAI",
-  description: "Your personal dashboard for AI research and learning.",
+interface DashboardData {
+  user: { id: string; name: string; email: string; joinedDate: string }
+  stats: { enrolled: number; completed: number; inProgress: number; totalActivities: number }
+  enrollments: { id: string; courseTitle: string; courseCategory: string; status: string; progress: number; enrolledAt: string }[]
+  recentActivity: { id: string; type: string; description: string; createdAt: string }[]
 }
 
 export default function DashboardPage() {
-  // In a real app, this would come from authentication context
-  const user = {
-    name: "Demo User",
-    email: "user@example.com",
-    joinedDate: "March 2026",
-    progress: {
-      bootcamps: 2,
-      papers: 5,
-      internships: 1
+  const router = useRouter()
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const supabase = createClient()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push("/login")
+        return
+      }
+    }
+
+    checkAuth()
+
+    fetch("/api/dashboard")
+      .then((res) => {
+        if (!res.ok) {
+          router.push("/login")
+          return null
+        }
+        return res.json()
+      })
+      .then((d) => { if (d) setData(d) })
+      .finally(() => setLoading(false))
+  }, [router])
+
+  const handleLogout = async () => {
+    console.log("Starting logout...")
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error("Logout error:", errorData.error)
+        return
+      }
+
+      console.log("Logout successful, redirecting...")
+      window.location.href = '/login' // Use window.location for full page reload
+    } catch (err) {
+      console.error("Logout failed:", err)
     }
   }
 
-  const recentActivity = [
-    {
-      type: "bootcamp",
-      title: "Completed: Deep Learning Foundations",
-      date: "2 days ago",
-      status: "completed"
-    },
-    {
-      type: "paper",
-      title: "Co-authored: Human-Centric Reward Modeling",
-      date: "1 week ago",
-      status: "published"
-    },
-    {
-      type: "internship",
-      title: "Applied: ML Engineering at TechCorp",
-      date: "3 days ago",
-      status: "pending"
-    }
-  ]
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main className="optimum-main">
+          <div className="grain-overlay" aria-hidden="true" />
+          <div className="opt-page">
+            <section className="opt-hero">
+              <p className="opt-kicker opt-anim-1">Loading...</p>
+            </section>
+          </div>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
-  const upcomingEvents = [
-    {
-      title: "Advanced LLM Bootcamp",
-      date: "March 25, 2026",
-      type: "bootcamp"
-    },
-    {
-      title: "Research Paper Review Session",
-      date: "March 28, 2026",
-      type: "webinar"
-    },
-    {
-      title: "AI Ethics Discussion",
-      date: "April 2, 2026",
-      type: "community"
-    }
-  ]
+  if (!data) return null
+
+  const { user, stats, enrollments, recentActivity } = data
+  const joinedFormatted = new Date(user.joinedDate).toLocaleDateString("en-US", { month: "long", year: "numeric" })
 
   return (
     <>
@@ -73,20 +102,25 @@ export default function DashboardPage() {
           <section className="opt-hero">
             <p className="opt-kicker opt-anim-1">Welcome back</p>
             <h1 className="opt-headline opt-anim-2">
-              Hello, {user.name.split(' ')[0]}!
+              Hello, {user.name.split(" ")[0]}!
             </h1>
             <p className="opt-sub opt-anim-3">
-              Ready to continue your AI research journey? Here's what's happening in your world.
+              Member since {joinedFormatted}. Ready to continue your AI research journey?
             </p>
+            <div className="opt-hero-cta" style={{ marginTop: "16px" }}>
+              <button onClick={handleLogout} className="opt-btn-ghost" style={{ fontSize: "13px" }}>
+                <LogOut size={14} style={{ marginRight: "6px" }} /> Sign Out
+              </button>
+            </div>
           </section>
 
           {/* ── Quick Stats ── */}
           <div className="opt-stats-bar opt-anim-5">
             {[
-              { value: user.progress.bootcamps, label: "Bootcamps Completed" },
-              { value: user.progress.papers, label: "Papers Co-authored" },
-              { value: user.progress.internships, label: "Internship Applications" },
-              { value: "Level 3", label: "Research Level" },
+              { value: stats.enrolled, label: "Courses Enrolled" },
+              { value: stats.completed, label: "Completed" },
+              { value: stats.inProgress, label: "In Progress" },
+              { value: stats.totalActivities, label: "Total Activities" },
             ].map((s) => (
               <div key={s.label} className="opt-stat">
                 <span className="opt-stat-value">{s.value}</span>
@@ -111,8 +145,12 @@ export default function DashboardPage() {
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  {recentActivity.map((activity, i) => (
-                    <div key={i} style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                  {recentActivity.length === 0 ? (
+                    <p style={{ fontSize: "13px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace" }}>
+                      No activity yet. Enroll in a course to get started!
+                    </p>
+                  ) : recentActivity.map((activity) => (
+                    <div key={activity.id} style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
                         <span style={{
                           fontFamily: "var(--font-playfair), serif",
@@ -120,42 +158,46 @@ export default function DashboardPage() {
                           fontWeight: 600,
                           color: "var(--ink)"
                         }}>
-                          {activity.title}
+                          {activity.description}
                         </span>
                         <span style={{
                           fontSize: "10px",
-                          color: activity.status === "completed" ? "var(--gold)" :
-                                 activity.status === "published" ? "var(--opt-red)" : "var(--muted-txt)",
-                          background: activity.status === "completed" ? "rgba(184,150,90,0.1)" :
-                                   activity.status === "published" ? "rgba(200,57,43,0.1)" : "rgba(107,100,86,0.1)",
+                          color: "var(--gold)",
+                          background: "rgba(184,150,90,0.1)",
                           padding: "2px 8px",
                           borderRadius: "12px",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em"
                         }}>
-                          {activity.status}
+                          {activity.type}
                         </span>
                       </div>
-                      <span style={{ fontSize: "12px", color: "var(--muted-txt)" }}>{activity.date}</span>
+                      <span style={{ fontSize: "12px", color: "var(--muted-txt)" }}>
+                        {new Date(activity.createdAt).toLocaleDateString()}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Upcoming Events */}
+            {/* Enrolled Courses */}
             <div className="ed-card">
               <div className="ed-card-body">
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
                   <Calendar size={20} style={{ color: "var(--gold)" }} />
                   <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "18px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
-                    Upcoming Events
+                    My Courses
                   </h3>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  {upcomingEvents.map((event, i) => (
-                    <div key={i} style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                  {enrollments.length === 0 ? (
+                    <p style={{ fontSize: "13px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace" }}>
+                      No courses yet. Browse our bootcamps to enroll!
+                    </p>
+                  ) : enrollments.map((enrollment) => (
+                    <div key={enrollment.id} style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
                         <span style={{
                           fontFamily: "var(--font-playfair), serif",
@@ -163,21 +205,28 @@ export default function DashboardPage() {
                           fontWeight: 600,
                           color: "var(--ink)"
                         }}>
-                          {event.title}
+                          {enrollment.courseTitle}
                         </span>
                         <span style={{
                           fontSize: "10px",
-                          color: "var(--opt-red)",
-                          background: "rgba(200,57,43,0.1)",
+                          color: enrollment.status === "completed" ? "var(--gold)" : "var(--opt-red)",
+                          background: enrollment.status === "completed" ? "rgba(184,150,90,0.1)" : "rgba(200,57,43,0.1)",
                           padding: "2px 8px",
                           borderRadius: "12px",
                           textTransform: "uppercase",
                           letterSpacing: "0.05em"
                         }}>
-                          {event.type}
+                          {enrollment.status}
                         </span>
                       </div>
-                      <span style={{ fontSize: "12px", color: "var(--muted-txt)" }}>{event.date}</span>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: "12px", color: "var(--muted-txt)" }}>
+                          {enrollment.courseCategory}
+                        </span>
+                        <span style={{ fontSize: "12px", color: "var(--muted-txt)" }}>
+                          {enrollment.progress}% complete
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
