@@ -1,9 +1,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Clock, Users, Code, Brain, Zap, CheckCircle } from "lucide-react"
+import { Clock, Users, Code, Brain, Zap, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 export default function BootcampsPage() {
   const bootcamps = [
@@ -135,107 +133,103 @@ export default function BootcampsPage() {
   ]
 
   return (
-    <main className="min-h-screen">
+    <>
       <Header />
+      <main className="optimum-main">
+        <div className="grain-overlay" aria-hidden="true" />
+        <div className="opt-page">
 
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-muted/30 to-background">
-        <div className="container mx-auto max-w-6xl text-center">
-          <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">Bootcamps</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold mb-6 text-balance">Intensive AI Training Programs</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty mb-8">
-            Transform your career with project-based bootcamps designed by industry experts. Go from beginner to
-            job-ready in weeks.
-          </p>
-        </div>
-      </section>
+          {/* ── Hero ── */}
+          <section className="opt-hero">
+            <p className="opt-kicker opt-anim-1">Bootcamps</p>
+            <h1 className="opt-headline opt-anim-2">
+              Intensive AI Training<br />
+              <em>Programs.</em>
+            </h1>
+            <p className="opt-sub opt-anim-3">
+              Transform your career with project-based bootcamps designed by industry experts.
+              Go from beginner to job-ready in weeks.
+            </p>
+            <div className="opt-hero-cta opt-anim-4">
+              <Link href="/community" className="opt-btn-primary">Explore Community <ArrowRight size={13} /></Link>
+              <Link href="/contact" className="opt-btn-ghost">Get in Touch</Link>
+            </div>
+          </section>
 
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {features.map((feature, index) => (
-              <Card key={index} className="text-center">
-                <CardContent className="pt-6">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-accent/10 rounded-lg mb-4">
-                    <feature.icon className="w-6 h-6 text-accent" />
-                  </div>
-                  <h3 className="font-bold mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
+          {/* ── Features ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Why OptimumAI</span></div>
+
+          <div className="opt-pillars" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: "64px" }}>
+            {features.map((f, i) => (
+              <div key={i} className="opt-pillar" style={{ borderBottom: "none" }}>
+                <f.icon size={20} style={{ color: "var(--gold)", marginBottom: "12px" }} />
+                <div className="opt-pillar-title">{f.title}</div>
+                <p className="opt-pillar-body">{f.description}</p>
+              </div>
             ))}
           </div>
 
-          <div className="space-y-8">
-            {bootcamps.map((bootcamp, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-xl transition-shadow">
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="relative h-64 md:h-auto bg-gradient-to-br from-accent/20 to-accent/5">
-                    <img
-                      src={bootcamp.image || "/placeholder.svg"}
-                      alt={bootcamp.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <Badge className="absolute top-4 right-4 bg-accent text-accent-foreground">{bootcamp.level}</Badge>
+          {/* ── Bootcamp listings ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Programs</span></div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "64px" }}>
+            {bootcamps.map((b, i) => (
+              <div key={i} className="ed-card">
+                <div className="ed-card-img">
+                  <img src={b.image || "/placeholder.svg"} alt={b.title} />
+                  <span className={`ed-badge${b.level === "Advanced" ? " ed-badge--red" : b.level === "Beginner" ? " ed-badge--gold" : ""}`}>
+                    {b.level}
+                  </span>
+                </div>
+                <div className="ed-card-body">
+                  <div className="ed-card-title">{b.title}</div>
+                  <p className="ed-card-desc">{b.description}</p>
+
+                  <div className="ed-meta">
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><Clock size={12} /> {b.duration}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><Users size={12} /> {b.students} students</span>
                   </div>
 
-                  <div className="md:col-span-2 p-6">
-                    <CardHeader className="p-0 mb-4">
-                      <h3 className="text-2xl font-bold mb-2">{bootcamp.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">{bootcamp.description}</p>
-                    </CardHeader>
+                  <div className="ed-tags">
+                    {b.topics.map((t, idx) => <span key={idx} className="ed-tag">{t}</span>)}
+                  </div>
 
-                    <CardContent className="p-0 space-y-4">
-                      <div className="flex flex-wrap gap-4 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-accent" />
-                          <span>{bootcamp.duration}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Users className="w-4 h-4 text-accent" />
-                          <span>{bootcamp.students} students</span>
-                        </div>
-                      </div>
+                  <ul className="ed-list">
+                    {b.outcomes.map((o, idx) => <li key={idx}>{o}</li>)}
+                  </ul>
 
-                      <div>
-                        <div className="text-sm font-medium mb-2">Topics Covered:</div>
-                        <div className="flex flex-wrap gap-2">
-                          {bootcamp.topics.map((topic, idx) => (
-                            <Badge key={idx} variant="secondary" className="text-xs">
-                              {topic}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="text-sm font-medium mb-2">What You'll Learn:</div>
-                        <div className="grid sm:grid-cols-2 gap-2">
-                          {bootcamp.outcomes.map((outcome, idx) => (
-                            <div key={idx} className="flex items-start gap-2 text-sm">
-                              <CheckCircle className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-                              <span>{outcome}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-4 pt-4">
-                        <div className="flex-1">
-                          <div className="text-sm text-muted-foreground">Next cohort starts</div>
-                          <div className="font-semibold">{bootcamp.nextStart}</div>
-                        </div>
-                        <Button className="bg-accent hover:bg-accent/90">Apply Now</Button>
-                      </div>
-                    </CardContent>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid rgba(10,10,10,0.08)" }}>
+                    <div>
+                      <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "var(--muted-txt)" }}>Next cohort</span>
+                      <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 700, color: "var(--ink)" }}>{b.nextStart}</div>
+                    </div>
+                    <Link href="/signup" className="opt-btn-primary" style={{ fontSize: "11px", padding: "8px 18px" }}>
+                      Apply Now <ArrowRight size={11} />
+                    </Link>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
-        </div>
-      </section>
 
+          {/* ── CTA ── */}
+          <div className="opt-cta-block">
+            <p className="opt-kicker">Ready to Start?</p>
+            <h2 className="opt-headline" style={{ fontSize: "28px", marginBottom: "12px" }}>
+              Join the Next Cohort
+            </h2>
+            <p className="opt-sub" style={{ marginBottom: "28px" }}>
+              Applications are open. Spots are limited — reserve yours today.
+            </p>
+            <div className="opt-hero-cta">
+              <Link href="/signup" className="opt-btn-primary">Apply Now <ArrowRight size={13} /></Link>
+              <Link href="/contact" className="opt-btn-ghost">Contact Us</Link>
+            </div>
+          </div>
+
+        </div>
+      </main>
       <Footer />
-    </main>
+    </>
   )
 }

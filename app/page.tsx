@@ -1,280 +1,397 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowRight, Sparkles, Zap, Globe } from "lucide-react"
-import Image from "next/image"
+import { ArrowRight, ExternalLink, BookOpen, Users, Brain, FlaskConical } from "lucide-react"
 import Link from "next/link"
 
 export const metadata = {
-  title: "OptimumAI - Leading AI Research & Innovation",
-  description: "Advancing AI through collaborative research, groundbreaking products, and global community engagement.",
+  title: "OptimumAI — Reclaim Human Agency",
+  description:
+    "AI that amplifies what makes us human. Research, tools, and systems built for the agentic era.",
 }
 
+const stats = [
+  { value: "250+", label: "Published Papers" },
+  { value: "10K+", label: "Active Researchers" },
+  { value: "80+",  label: "Countries" },
+  { value: "500+", label: "Research Projects" },
+]
+
+const pillars = [
+  {
+    num: "01",
+    title: "Mission",
+    body: "Build AI that serves human intent — not the other way around. Every product decision starts and ends with agency returned to the person.",
+  },
+  {
+    num: "02",
+    title: "Vision",
+    body: "A world where intelligence amplifies human potential. Where agentic systems act as extensions of human will, not substitutes for human thought.",
+  },
+  {
+    num: "03",
+    title: "Method",
+    body: "Rigorous research paired with production-grade engineering. We close the gap between what is proven in the lab and what works at scale.",
+  },
+  {
+    num: "04",
+    title: "Community",
+    body: "Open by default. Every breakthrough belongs to humanity first. We build in the open and share gains with the researchers who made them possible.",
+  },
+]
+
+const papers = [
+  {
+    id: "01",
+    category: "Alignment",
+    title: "Human-Centric Reward Modeling at Scale",
+    authors: "Chen, M. · Patel, R. · Yılmaz, A.",
+    date: "Mar 2026",
+    href: "/research",
+  },
+  {
+    id: "02",
+    category: "Agents",
+    title: "Toward Persistent Agentic Memory in LLMs",
+    authors: "Singh, K. · Ibrahim, F. · Nakamura, T.",
+    date: "Feb 2026",
+    href: "/research",
+  },
+  {
+    id: "03",
+    category: "Multimodal",
+    title: "Cross-Modal Grounding for Embodied Reasoning",
+    authors: "Lee, J. · Osei, A. · Müller, H.",
+    date: "Feb 2026",
+    href: "/research",
+  },
+  {
+    id: "04",
+    category: "Safety",
+    title: "Red-Teaming Frontier Models: A Systematic Framework",
+    authors: "Vargas, C. · Kim, S. · Okafor, N.",
+    date: "Jan 2026",
+    href: "/research",
+  },
+]
+
+const tracks = [
+  {
+    Icon: Brain,
+    title: "AI Research",
+    body: "Co-author papers, access compute, and publish alongside mentors from top labs worldwide.",
+    href: "/research",
+  },
+  {
+    Icon: BookOpen,
+    title: "Bootcamps",
+    body: "Intensive cohorts covering LLMs, vision, and RL — from foundations to frontier techniques.",
+    href: "/bootcamps",
+  },
+  {
+    Icon: FlaskConical,
+    title: "Internships",
+    body: "Paid placements at companies building the next wave of applied AI products.",
+    href: "/internships",
+  },
+  {
+    Icon: Users,
+    title: "Community",
+    body: "10K+ researchers collaborating across 80 countries on open problems in AI.",
+    href: "/community",
+  },
+]
+
 export default function Home() {
-  const products = [
-    {
-      id: 1,
-      title: "LLM Fine-tuning Platform",
-      description: "State-of-the-art tools for fine-tuning large language models with minimal resources",
-      image: "/ai-model-optimization.jpg",
-      tags: ["LLM", "Fine-tuning", "NLP"],
-    },
-    {
-      id: 2,
-      title: "Vision AI Toolkit",
-      description: "Comprehensive computer vision solutions for real-world applications",
-      image: "/computer-vision-ai-technology.jpg",
-      tags: ["Computer Vision", "Detection", "Segmentation"],
-    },
-    {
-      id: 3,
-      title: "Multimodal Research Suite",
-      description: "Integrated tools for vision-language model research and development",
-      image: "/multimodal-ai-vision-language.jpg",
-      tags: ["Multimodal", "Vision-Language", "Research"],
-    },
-    {
-      id: 4,
-      title: "RAG Infrastructure",
-      description: "Enterprise-grade retrieval-augmented generation systems",
-      image: "/information-retrieval-system.jpg",
-      tags: ["RAG", "Retrieval", "Enterprise"],
-    },
-  ]
-
-  const stats = [
-    { label: "Research Projects", value: "500+" },
-    { label: "Active Researchers", value: "10K+" },
-    { label: "Countries", value: "80+" },
-    { label: "Published Papers", value: "250+" },
-  ]
-
   return (
-    <main className="min-h-screen">
+    <>
       <Header />
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
-        
-        <div className="container mx-auto max-w-6xl relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-sm font-medium text-accent">
-                <Sparkles className="w-4 h-4" />
-                <span>Pioneering AI Research</span>
+      <main className="optimum-main">
+        {/* Grain texture */}
+        <div className="grain-overlay" aria-hidden="true" />
+
+        <div className="opt-page">
+
+          {/* ── Hero ── */}
+          <section className="opt-hero">
+            <p className="opt-kicker opt-anim-1">Mission &amp; Vision</p>
+            <h1 className="opt-headline opt-anim-2">
+              Reclaim<br />
+              <em>Human</em>
+              <span className="opt-indent">Agency.</span>
+            </h1>
+            <p className="opt-sub opt-anim-3">
+              The mission was always clear. AI that amplifies what makes us
+              human — not replaces it. Every decision, every tool, every system
+              built toward one end: <em>human agency restored</em>.
+            </p>
+            <p className="opt-sub opt-anim-4" style={{ marginTop: "20px", fontSize: "14px", opacity: 0.8 }}>
+              We're building the infrastructure for the agentic era — where AI serves human intent,
+              not the other way around.
+            </p>
+          </section>
+
+          {/* ── Stats bar ── */}
+          <div className="opt-stats-bar opt-anim-5">
+            {stats.map((s) => (
+              <div key={s.label} className="opt-stat">
+                <span className="opt-stat-value">{s.value}</span>
+                <span className="opt-stat-label">{s.label}</span>
               </div>
+            ))}
+          </div>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-balance">
-                Transform AI Research Into
-                <span className="block text-accent mt-2">Real-World Impact</span>
-              </h1>
+          {/* ── The Evolution ── */}
+          <div className="opt-rule opt-anim-6">
+            <span className="opt-rule-text">The Evolution</span>
+          </div>
 
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl text-pretty leading-relaxed">
-                OptimumAI is at the forefront of AI innovation. We develop cutting-edge research products, publish groundbreaking papers, and foster a global community of AI pioneers.
+          <div className="opt-shift">
+            <div>
+              <span className="opt-shift-label">Then</span>
+              <p className="opt-shift-text">
+                A clear mission from day one. Built to optimize for humans, not around them.
               </p>
+            </div>
+            <div className="opt-shift-divider" />
+            <div>
+              <span className="opt-shift-label">Now</span>
+              <p className="opt-shift-text-now">
+                Just became more <em>agentic</em> —
+                because the mission demands it.
+              </p>
+            </div>
+          </div>
 
-              <div className="flex flex-col sm:flex-row items-start gap-4 pt-4">
-                <Link href="/community">
-                  <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground gap-2">
-                    Explore Community
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
+          {/* ── Foundations ── */}
+          <div className="opt-rule">
+            <span className="opt-rule-text">Foundations</span>
+          </div>
+
+          <div className="opt-pillars">
+            {pillars.map((p) => (
+              <div key={p.num} className="opt-pillar">
+                <span className="opt-pillar-num">{p.num}</span>
+                <div className="opt-pillar-title">{p.title}</div>
+                <p className="opt-pillar-body">{p.body}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* ── About OptimumAI ── */}
+          <div className="opt-rule">
+            <span className="opt-rule-text">About OptimumAI</span>
+          </div>
+
+          <div style={{ maxWidth: "800px", margin: "0 auto 80px", textAlign: "center" }}>
+            <h2 style={{
+              fontFamily: "var(--font-playfair), serif",
+              fontSize: "clamp(28px, 4vw, 48px)",
+              fontWeight: 700,
+              color: "var(--ink)",
+              marginBottom: "20px",
+              lineHeight: 1.2
+            }}>
+              We exist to make<br /><em>world-class AI</em><br />available to everyone.
+            </h2>
+            <p style={{
+              fontSize: "18px",
+              lineHeight: 1.6,
+              color: "var(--muted-txt)",
+              marginBottom: "32px",
+              maxWidth: "600px",
+              marginLeft: "auto",
+              marginRight: "auto"
+            }}>
+              OptimumAI is a research-first education company founded in 2022. We build the programmes, tools, and
+              community infrastructure that turn ambitious people into practising AI researchers and engineers.
+            </p>
+
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+              gap: "24px",
+              marginBottom: "40px"
+            }}>
+              {[
+                { value: "2022", label: "Founded" },
+                { value: "10,000+", label: "Members trained" },
+                { value: "80+", label: "Countries represented" },
+                { value: "50+", label: "Partner companies" },
+              ].map((s, i) => (
+                <div key={i} style={{
+                  borderLeft: "2px solid var(--gold)",
+                  paddingLeft: "16px",
+                  textAlign: "left"
+                }}>
+                  <div style={{
+                    fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                    fontSize: "clamp(24px, 3vw, 36px)",
+                    fontWeight: 900,
+                    color: "var(--ink)",
+                    lineHeight: 1
+                  }}>{s.value}</div>
+                  <div style={{
+                    fontFamily: "var(--font-dm-mono), 'DM Mono', monospace",
+                    fontSize: "10px",
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: "var(--muted-txt)",
+                    marginTop: "6px"
+                  }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{
+              background: "rgba(184,150,90,0.05)",
+              border: "1px solid rgba(184,150,90,0.1)",
+              borderRadius: "4px",
+              padding: "24px",
+              marginBottom: "32px"
+            }}>
+              <p style={{
+                fontSize: "16px",
+                lineHeight: 1.6,
+                color: "var(--ink)",
+                margin: 0,
+                fontStyle: "italic"
+              }}>
+                "The gap between academic AI research and accessible education was enormous. The best techniques
+                were locked inside elite labs and paywalled journals. Talented people everywhere had no path into the field."
+              </p>
+            </div>
+
+            <Link href="/about" className="opt-btn-ghost">
+              Learn more about us <ArrowRight size={13} />
+            </Link>
+          </div>
+
+          {/* ── Latest Research ── */}
+          <div className="opt-rule">
+            <span className="opt-rule-text">Latest Research</span>
+          </div>
+
+          <div className="opt-papers">
+            {papers.map((paper) => (
+              <Link key={paper.id} href={paper.href} className="opt-paper-row">
+                <span className="opt-paper-num">{paper.id}</span>
+                <div className="opt-paper-body">
+                  <span className="opt-paper-cat">{paper.category}</span>
+                  <span className="opt-paper-title">{paper.title}</span>
+                  <span className="opt-paper-authors">{paper.authors}</span>
+                </div>
+                <div className="opt-paper-right">
+                  <span className="opt-paper-date">{paper.date}</span>
+                  <ExternalLink size={11} className="opt-paper-icon" />
+                </div>
+              </Link>
+            ))}
+            <Link href="/research" className="opt-papers-more">
+              View all publications <ArrowRight size={11} />
+            </Link>
+          </div>
+
+          {/* ── Programs ── */}
+          <div className="opt-rule">
+            <span className="opt-rule-text">Programs</span>
+          </div>
+
+          <div className="opt-tracks">
+            {tracks.map(({ Icon, title, body, href }) => (
+              <Link key={title} href={href} className="opt-track">
+                <div className="opt-track-icon">
+                  <Icon size={18} />
+                </div>
+                <div className="opt-track-title">{title}</div>
+                <p className="opt-track-body">{body}</p>
+                <span className="opt-track-link">
+                  Learn more <ArrowRight size={10} />
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          {/* ── Get Started ── */}
+          <div className="opt-rule">
+            <span className="opt-rule-text">Get Started</span>
+          </div>
+
+          <div className="opt-shift" style={{ marginBottom: "64px" }}>
+            <div>
+              <span className="opt-shift-label">Ready to explore?</span>
+              <p className="opt-shift-text" style={{ marginBottom: "24px" }}>
+                Join 10,000+ researchers worldwide working on the frontier of AI.
+                Start with our research programs or connect with the community.
+              </p>
+              <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+                <Link href="/research" className="opt-btn-primary">
+                  Explore Research <ArrowRight size={13} />
                 </Link>
-                <Button size="lg" variant="outline">
-                  View Research
-                </Button>
+                <Link href="/community" className="opt-btn-ghost">
+                  Join Community
+                </Link>
               </div>
             </div>
+            <div className="opt-shift-divider" />
+            <div>
+              <span className="opt-shift-label">New to AI research?</span>
+              <p className="opt-shift-text" style={{ marginBottom: "24px" }}>
+                Our intensive bootcamps transform beginners into job-ready AI practitioners.
+                Learn from industry experts and build production-ready skills.
+              </p>
+              <Link href="/bootcamps" className="opt-btn-primary" style={{ background: "transparent", color: "var(--ink)", border: "1.5px solid var(--ink)" }}>
+                View Bootcamps <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
 
-            <div className="relative h-96 lg:h-full rounded-2xl overflow-hidden">
-              <Image
-                src="/neural-network-architecture-visualization.jpg"
-                alt="AI Research Visualization"
-                fill
-                className="object-cover"
-                priority
+          {/* ── Newsletter ── */}
+          <div className="opt-rule">
+            <span className="opt-rule-text">Stay Updated</span>
+          </div>
+
+          <div className="opt-newsletter">
+            <div className="opt-newsletter-copy">
+              <p className="opt-newsletter-title">Research Digest</p>
+              <p className="opt-newsletter-desc">
+                Monthly roundup of papers, model releases, and open problems — straight to your inbox.
+              </p>
+            </div>
+            <form className="opt-newsletter-form">
+              <input
+                type="email"
+                className="opt-newsletter-input"
+                placeholder="your@email.com"
+                aria-label="Email address"
+                autoComplete="email"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent" />
-            </div>
+              <button type="submit" className="opt-newsletter-submit">
+                Subscribe
+              </button>
+            </form>
           </div>
-        </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 border-y border-border">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl sm:text-5xl font-bold text-accent mb-2">{stat.value}</div>
-                <div className="text-sm sm:text-base text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Products/Research Highlight Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Our AI Products & Research</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-              Cutting-edge tools and frameworks powering the next generation of AI applications
+          {/* ── CTA ── */}
+          <div className="opt-cta-block">
+            <p className="opt-kicker" style={{ marginBottom: "16px" }}>Ready to begin?</p>
+            <p className="opt-cta-headline">
+              Start your journey toward<br />the agentic era.
             </p>
+            <div className="opt-cta-actions">
+              <Link href="/signup" className="opt-btn-primary">
+                Apply Now <ArrowRight size={13} />
+              </Link>
+              <Link href="/about" className="opt-btn-ghost">
+                Learn about us
+              </Link>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {products.map((product) => (
-              <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-all">
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold mb-2">{product.title}</h3>
-                  <p className="text-muted-foreground mb-4">{product.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {product.tags.map((tag, i) => (
-                      <span key={i} className="px-3 py-1 text-xs font-medium bg-accent/10 text-accent rounded-full">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <Button className="w-full gap-2">
-                    Learn More
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
-      </section>
-
-      {/* Why OptimumAI Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-card/50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">Why Choose OptimumAI</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              We combine research excellence with practical innovation
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-                <Zap className="w-6 h-6 text-accent" />
-              </div>
-              <h3 className="text-xl font-bold">Production-Ready</h3>
-              <p className="text-muted-foreground">
-                Our research directly translates to enterprise-grade products and tools.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-                <Globe className="w-6 h-6 text-accent" />
-              </div>
-              <h3 className="text-xl font-bold">Global Collaboration</h3>
-              <p className="text-muted-foreground">
-                Join a vibrant community of researchers and innovators worldwide.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-accent" />
-              </div>
-              <h3 className="text-xl font-bold">Cutting-Edge</h3>
-              <p className="text-muted-foreground">
-                Access the latest breakthroughs in AI before they reach the mainstream.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-4xl sm:text-5xl font-bold mb-4">Get In Touch</h2>
-                <p className="text-lg text-muted-foreground text-pretty">
-                  Have questions about our research or products? We'd love to hear from you.
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-semibold mb-2">Email</h3>
-                  <p className="text-muted-foreground">research@optimumai.com</p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold mb-2">Address</h3>
-                  <p className="text-muted-foreground">
-                    San Francisco, CA
-                    <br />
-                    United States
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold mb-2">Connect With Us</h3>
-                  <div className="flex gap-4">
-                    <Button variant="outline" size="sm">Twitter</Button>
-                    <Button variant="outline" size="sm">LinkedIn</Button>
-                    <Button variant="outline" size="sm">GitHub</Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative h-96 rounded-2xl overflow-hidden">
-              <Image
-                src="/ai-research-lab.png"
-                alt="AI Research Lab"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 border-t border-border">
-        <div className="container mx-auto max-w-3xl text-center space-y-8">
-          <h2 className="text-4xl sm:text-5xl font-bold">Join the AI Revolution</h2>
-          <p className="text-lg text-muted-foreground text-pretty">
-            Be part of a global movement shaping the future of artificial intelligence
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/community">
-              <Button size="lg" className="bg-accent hover:bg-accent/90">
-                Join Community
-              </Button>
-            </Link>
-            <Link href="/research">
-              <Button size="lg" variant="outline">
-                Explore Research
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
+      </main>
 
       <Footer />
-    </main>
+    </>
   )
 }

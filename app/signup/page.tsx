@@ -1,14 +1,11 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import Link from "next/link"
-import { ArrowLeft, Github, Mail } from "lucide-react"
+import { Github, Mail } from "lucide-react"
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -18,146 +15,268 @@ export default function SignUpPage() {
     confirmPassword: "",
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
     setIsLoading(true)
 
+    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      console.log("[v0] Password mismatch")
+      setError("Passwords do not match")
       setIsLoading(false)
       return
     }
 
-    setTimeout(() => {
-      console.log("[v0] Sign up attempt:", { name: formData.name, email: formData.email })
+    // Validate password strength
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters long")
       setIsLoading(false)
-    }, 1500)
+      return
+    }
+
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Signup failed')
+      }
+
+      // In development mode, redirect directly to dashboard
+      // In production, show success message for email verification
+      if (process.env.NODE_ENV === 'development') {
+        window.location.href = '/dashboard'
+      } else {
+        setIsSuccess(true)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const handleSocialSignUp = (provider: string) => {
-    console.log("[v0] Social sign up with:", provider)
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    })
+    setIsSuccess(false)
+    setError(null)
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background via-muted/20 to-background">
-      <div className="w-full max-w-md">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to home
-        </Link>
+    <>
+      <Header />
+      <main className="optimum-main">
+        <div className="grain-overlay" aria-hidden="true" />
 
-        <Card className="shadow-xl border-border/50">
-          <CardHeader className="text-center space-y-2">
-            <div className="flex items-center justify-center w-12 h-12 bg-primary rounded-md mx-auto mb-2">
-              <span className="text-primary-foreground font-bold text-2xl">O</span>
+        <div className="auth-page">
+          <div>
+            <div className="auth-card">
+              <div className="auth-logo">O</div>
+
+              {isSuccess ? (
+                <>
+                  <h1 className="auth-title">Account Created!</h1>
+                  <p className="auth-desc">Welcome to OptimumAI, {formData.name.split(' ')[0]}!</p>
+
+                  <div style={{
+                    padding: "24px",
+                    background: "rgba(184,150,90,0.1)",
+                    border: "1px solid rgba(184,150,90,0.2)",
+                    borderRadius: "4px",
+                    marginBottom: "24px",
+                    textAlign: "center"
+                  }}>
+                    <div style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      background: "var(--gold)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      margin: "0 auto 16px",
+                      fontSize: "20px",
+                      color: "var(--ink)"
+                    }}>
+                      ✓
+                    </div>
+                    <p style={{
+                      fontFamily: "var(--font-dm-mono), monospace",
+                      fontSize: "14px",
+                      color: "var(--muted-txt)",
+                      margin: "0"
+                    }}>
+                      {process.env.NODE_ENV === 'development' ? (
+                        <>
+                          Your account has been created successfully.<br />
+                          Redirecting you to your dashboard...
+                        </>
+                      ) : (
+                        <>
+                          Your account has been created successfully.<br />
+                          Check your email at <strong>{formData.email}</strong> for verification instructions.
+                        </>
+                      )}
+                    </p>
+                  </div>
+
+                  <div style={{ display: "flex", gap: "12px" }}>
+                    {process.env.NODE_ENV === 'development' ? (
+                      <Link href="/dashboard" className="opt-btn-primary" style={{ flex: 1, justifyContent: "center" }}>
+                        Go to Dashboard
+                      </Link>
+                    ) : (
+                      <Link href="/login" className="opt-btn-primary" style={{ flex: 1, justifyContent: "center" }}>
+                        Go to Sign In
+                      </Link>
+                    )}
+                    <button
+                      onClick={resetForm}
+                      className="opt-btn-ghost"
+                      style={{ flex: 1, justifyContent: "center" }}
+                    >
+                      Create Another
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h1 className="auth-title">Create an account</h1>
+                  <p className="auth-desc">Start your AI learning journey with OptimumAI</p>
+
+                  <div className="auth-social">
+                    <button type="button" className="auth-social-btn">
+                      <Github size={14} /> GitHub
+                    </button>
+                    <button type="button" className="auth-social-btn">
+                      <Mail size={14} /> Google
+                    </button>
+                  </div>
+
+                  <div className="auth-divider"><span>Or continue with</span></div>
+
+                  {error && (
+                    <div style={{
+                      padding: "12px 16px",
+                      background: "rgba(200,57,43,0.1)",
+                      border: "1px solid rgba(200,57,43,0.2)",
+                      borderRadius: "4px",
+                      marginBottom: "20px"
+                    }}>
+                      <p style={{
+                        fontFamily: "var(--font-dm-mono), monospace",
+                        fontSize: "12px",
+                        color: "var(--opt-red)",
+                        margin: "0"
+                      }}>
+                        {error}
+                      </p>
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="auth-field">
+                      <label htmlFor="name" className="auth-label">Full Name</label>
+                      <input
+                        id="name"
+                        type="text"
+                        className="auth-input"
+                        placeholder="Your full name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required
+                        autoComplete="name"
+                      />
+                    </div>
+
+                    <div className="auth-field">
+                      <label htmlFor="email" className="auth-label">Email</label>
+                      <input
+                        id="email"
+                        type="email"
+                        className="auth-input"
+                        placeholder="name@example.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required
+                        autoComplete="email"
+                      />
+                    </div>
+
+                    <div className="auth-field">
+                      <label htmlFor="password" className="auth-label">Password</label>
+                      <input
+                        id="password"
+                        type="password"
+                        className="auth-input"
+                        placeholder="Create a strong password"
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        required
+                        autoComplete="new-password"
+                      />
+                    </div>
+
+                    <div className="auth-field">
+                      <label htmlFor="confirmPassword" className="auth-label">Confirm Password</label>
+                      <input
+                        id="confirmPassword"
+                        type="password"
+                        className="auth-input"
+                        placeholder="Re-enter your password"
+                        value={formData.confirmPassword}
+                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                        required
+                        autoComplete="new-password"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="opt-btn-primary"
+                      disabled={isLoading}
+                      style={{ width: "100%", justifyContent: "center", opacity: isLoading ? 0.6 : 1 }}
+                    >
+                      {isLoading ? "Creating account…" : "Create Account"}
+                    </button>
+                  </form>
+
+                  <div className="auth-footer">
+                    <span>Already have an account? </span>
+                    <Link href="/login">Sign in</Link>
+                  </div>
+                </>
+              )}
             </div>
-            <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
-            <CardDescription>Start your AI learning journey with OptimumAI</CardDescription>
-          </CardHeader>
 
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" onClick={() => handleSocialSignUp("github")} className="w-full">
-                <Github className="w-4 h-4 mr-2" />
-                GitHub
-              </Button>
-              <Button variant="outline" onClick={() => handleSocialSignUp("google")} className="w-full">
-                <Mail className="w-4 h-4 mr-2" />
-                Google
-              </Button>
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
-                  autoComplete="name"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
-                  autoComplete="email"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Create a strong password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  required
-                  autoComplete="new-password"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Re-enter your password"
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  required
-                  autoComplete="new-password"
-                />
-              </div>
-
-              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isLoading}>
-                {isLoading ? "Creating account..." : "Create Account"}
-              </Button>
-            </form>
-
-            <div className="text-center text-sm">
-              <span className="text-muted-foreground">Already have an account? </span>
-              <Link href="/login" className="text-accent hover:underline font-medium">
-                Sign in
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        <p className="text-center text-xs text-muted-foreground mt-6 leading-relaxed">
-          By signing up, you agree to our{" "}
-          <Link href="/terms" className="underline hover:text-foreground">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link href="/privacy" className="underline hover:text-foreground">
-            Privacy Policy
-          </Link>
-        </p>
-      </div>
-    </div>
+            <p className="auth-legal">
+              By signing up, you agree to our{" "}
+              <Link href="/terms">Terms of Service</Link> and{" "}
+              <Link href="/privacy">Privacy Policy</Link>
+            </p>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </>
   )
 }

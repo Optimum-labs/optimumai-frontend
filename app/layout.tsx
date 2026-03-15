@@ -1,17 +1,27 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Playfair_Display, DM_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  weight: ["400", "700", "900"],
+  style: ["normal", "italic"],
+})
+
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  variable: "--font-dm-mono",
+  weight: ["300", "400", "500"],
+})
 
 export const metadata: Metadata = {
   title: "OptimumAI - AI Bootcamps, Research & Internships",
   description:
     "Join cutting-edge AI bootcamps, collaborate on real-world research projects, and launch your career with industry-leading internships.",
-  generator: "v0.app",
+  generator: "OptimumAI",
   icons: {
     icon: [
       {
@@ -37,8 +47,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="en" className={`${playfair.variable} ${dmMono.variable}`}>
+      <body className="antialiased">
         {children}
         <Analytics />
       </body>

@@ -1,149 +1,137 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Target, Users, Zap, Globe, Award, Heart } from "lucide-react"
+import { Target, Zap, Globe, Award, Heart, Users } from "lucide-react"
+import Link from "next/link"
+
+export const metadata = {
+  title: "About — OptimumAI",
+  description: "The people and principles behind OptimumAI.",
+}
 
 export default function AboutPage() {
+  const team = [
+    {
+      name: "Mohammad Yahiya",
+      role: "Founder",
+      bio: "Founded OptimumAI with a mission to make world-class AI education accessible to everyone. Passionate about building tools and communities that empower the next generation of AI researchers and engineers.",
+      initials: "MY",
+    },
+  ]
+
   const values = [
-    {
-      icon: Target,
-      title: "Excellence",
-      description: "We strive for the highest quality in education, research, and mentorship",
-    },
-    {
-      icon: Users,
-      title: "Community",
-      description: "Building a global network of AI practitioners who support each other",
-    },
-    {
-      icon: Zap,
-      title: "Innovation",
-      description: "Pushing boundaries with cutting-edge research and novel approaches",
-    },
-    {
-      icon: Globe,
-      title: "Accessibility",
-      description: "Making world-class AI education available to everyone, everywhere",
-    },
-    {
-      icon: Award,
-      title: "Impact",
-      description: "Creating real-world solutions that benefit society and advance the field",
-    },
-    {
-      icon: Heart,
-      title: "Integrity",
-      description: "Operating with transparency, ethics, and respect for all participants",
-    },
+    { icon: Target, title: "Excellence", description: "We hold ourselves and our programmes to the highest standard — rigorous, honest, always improving." },
+    { icon: Users, title: "Community", description: "We believe great AI is built together. Collaboration, peer learning, and shared success are central to everything we do." },
+    { icon: Zap, title: "Innovation", description: "We stay at the frontier — updating curricula weekly, publishing original research, and building tools that didn't exist before." },
+    { icon: Globe, title: "Accessibility", description: "Geography and background should never be barriers. We design programmes that reach every time zone and every level." },
+    { icon: Award, title: "Impact", description: "We measure success by outcomes: papers published, jobs secured, products shipped, and lives changed." },
+    { icon: Heart, title: "Integrity", description: "We operate with radical transparency — in pricing, in results data, and in how we build our AI tools." },
   ]
 
   const stats = [
-    { value: "10,000+", label: "Students Trained" },
-    { value: "150+", label: "Research Projects" },
-    { value: "85%", label: "Job Placement Rate" },
-    { value: "50+", label: "Partner Companies" },
+    { value: "2022", label: "Founded" },
+    { value: "10,000+", label: "Members trained" },
+    { value: "80+", label: "Countries represented" },
+    { value: "50+", label: "Partner companies" },
   ]
 
   return (
-    <main className="min-h-screen">
+    <>
       <Header />
+      <main className="optimum-main">
+        <div className="grain-overlay" aria-hidden="true" />
+        <div className="opt-page">
 
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-muted/30 to-background">
-        <div className="container mx-auto max-w-4xl text-center">
-          <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">About OptimumAI</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold mb-6 text-balance">Building the Future of AI Education</h1>
-          <p className="text-xl text-muted-foreground text-pretty">
-            OptimumAI is a global platform connecting aspiring AI practitioners with world-class education, cutting-edge
-            research opportunities, and career-launching internships.
+          {/* ── Hero ── */}
+          <p className="opt-kicker">About OptimumAI</p>
+          <h1 className="opt-headline" style={{ fontSize: "clamp(36px, 5vw, 72px)" }}>
+            We exist to make<br /><em>world-class AI</em><br />available to everyone.
+          </h1>
+          <p className="opt-sub" style={{ maxWidth: "600px" }}>
+            OptimumAI is a research-first education company founded in 2022. We build the programmes, tools, and
+            community infrastructure that turn ambitious people into practising AI researchers and engineers.
           </p>
-        </div>
-      </section>
 
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-4 gap-8 mb-20">
-            {stats.map((stat, index) => (
-              <Card key={index} className="text-center">
-                <CardContent className="pt-6">
-                  <div className="text-4xl font-bold text-accent mb-2">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
-                </CardContent>
-              </Card>
+          {/* ── Stats ── */}
+          <div className="opt-rule"><span className="opt-rule-text">By the numbers</span></div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "32px", marginBottom: "64px" }}>
+            {stats.map((s, i) => (
+              <div key={i} style={{ borderLeft: "2px solid var(--gold)", paddingLeft: "16px" }}>
+                <div style={{ fontFamily: "var(--font-playfair), 'Playfair Display', serif", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "var(--ink)", lineHeight: 1 }}>{s.value}</div>
+                <div style={{ fontFamily: "var(--font-dm-mono), 'DM Mono', monospace", fontSize: "11px", letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "var(--muted-txt)", marginTop: "6px" }}>{s.label}</div>
+              </div>
             ))}
           </div>
 
-          <div className="mb-20">
-            <h2 className="text-3xl font-bold text-center mb-4">Our Mission</h2>
-            <p className="text-lg text-muted-foreground text-center max-w-3xl mx-auto mb-12 leading-relaxed">
-              To democratize access to world-class AI education and create pathways for talented individuals to
-              contribute to cutting-edge research and innovation. We believe that the next breakthrough in AI could come
-              from anywhere, and we're committed to nurturing talent globally.
+          {/* ── Story ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Our story</span></div>
+          <div className="opt-legal-body" style={{ maxWidth: "680px", marginBottom: "64px" }}>
+            <p>
+              OptimumAI was born out of a simple observation: the gap between academic AI research and accessible
+              education was enormous. The best techniques were locked inside elite labs and paywalled journals.
+              Talented people in Lagos, Karachi, and São Paulo had no path into the field.
             </p>
-
-            <Card className="bg-gradient-to-br from-accent/5 to-muted">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold mb-4">What We Do</h3>
-                <div className="space-y-4 text-muted-foreground leading-relaxed">
-                  <p>
-                    <strong className="text-foreground">Intensive Bootcamps:</strong> We offer project-based training
-                    programs that transform beginners into job-ready AI practitioners in weeks, covering everything from
-                    deep learning foundations to advanced LLM engineering.
-                  </p>
-                  <p>
-                    <strong className="text-foreground">Collaborative Research:</strong> Our research projects bring
-                    together global teams to work on cutting-edge problems like building LLMs from scratch, fine-tuning
-                    techniques, RAG systems, multimodal AI, and agentic systems.
-                  </p>
-                  <p>
-                    <strong className="text-foreground">Career Opportunities:</strong> We connect our students with
-                    exclusive internship opportunities at leading AI companies and research labs, with a high conversion
-                    rate to full-time positions.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <p>
+              Mohammad Yahiya founded OptimumAI in 2022 with a clear goal: build the infrastructure that gives
+              talented people everywhere a real shot at an AI career. Starting from a single cohort of 200 members,
+              he built a research-grade curriculum, an internship marketplace, and a global community from the ground up.
+            </p>
+            <p>
+              Today, OptimumAI runs ongoing research projects, intensive bootcamps, and a hiring marketplace used by
+              50+ companies. We are independent, profitable, and entirely focused on the learner.
+            </p>
           </div>
 
-          <div className="mb-20">
-            <h2 className="text-3xl font-bold text-center mb-12">Our Values</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {values.map((value, index) => (
-                <Card key={index}>
-                  <CardContent className="pt-6">
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-accent/10 rounded-lg mb-4">
-                      <value.icon className="w-6 h-6 text-accent" />
-                    </div>
-                    <h3 className="text-lg font-bold mb-2">{value.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{value.description}</p>
+          {/* ── Team ── */}
+          <div className="opt-rule"><span className="opt-rule-text">The team</span></div>
+          <p className="opt-sub" style={{ marginBottom: "40px" }}>The people building OptimumAI.</p>
+          <Link href="/team" style={{ textDecoration: "none" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "28px", marginBottom: "72px", cursor: "pointer" }}>
+              {team.map((member, i) => (
+                <Card key={i} style={{ background: "rgba(255,255,255,0.55)", border: "1px solid rgba(184,150,90,0.18)", borderRadius: "2px", boxShadow: "none", transition: "border-color 0.2s ease" }} className="hover:border-gold">
+                  <CardContent style={{ padding: "32px" }}>
+                    <div style={{
+                      width: "52px", height: "52px", borderRadius: "50%",
+                      background: "var(--ink)", display: "flex", alignItems: "center", justifyContent: "center",
+                      fontFamily: "var(--font-playfair), serif", fontSize: "18px", fontWeight: 700,
+                      color: "var(--paper)", marginBottom: "16px", letterSpacing: "0.04em",
+                      flexShrink: 0,
+                    }}>{member.initials}</div>
+                    <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "18px", fontWeight: 700, color: "var(--ink)", marginBottom: "4px" }}>{member.name}</div>
+                    <div style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "var(--gold)", marginBottom: "14px" }}>{member.role}</div>
+                    <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "12px", lineHeight: 1.8, color: "var(--muted-txt)", margin: 0 }}>{member.bio}</p>
                   </CardContent>
                 </Card>
               ))}
             </div>
+          </Link>
+
+          {/* ── Values ── */}
+          <div className="opt-rule"><span className="opt-rule-text">What we stand for</span></div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "24px", marginBottom: "72px" }}>
+            {values.map((v, i) => (
+              <div key={i} style={{ padding: "28px", border: "1px solid rgba(184,150,90,0.15)", borderTop: "3px solid var(--gold)", background: "rgba(255,255,255,0.4)" }}>
+                <v.icon style={{ width: 24, height: 24, color: "var(--opt-red)", marginBottom: 12 }} />
+                <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "17px", fontWeight: 700, color: "var(--ink)", marginBottom: 8 }}>{v.title}</div>
+                <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "12px", lineHeight: 1.8, color: "var(--muted-txt)", margin: 0 }}>{v.description}</p>
+              </div>
+            ))}
           </div>
 
-          <Card className="bg-gradient-to-br from-accent/10 to-background border-accent/20">
-            <CardContent className="p-8 md:p-12 text-center">
-              <h2 className="text-3xl font-bold mb-4">Join Our Community</h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Whether you're just starting your AI journey or looking to contribute to cutting-edge research, we have
-                opportunities for you to learn, grow, and make an impact.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Button size="lg" className="bg-accent hover:bg-accent/90">
-                  Explore Programs
-                </Button>
-                <Button size="lg" variant="outline">
-                  Contact Us
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+          {/* ── CTA ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Get involved</span></div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", paddingBottom: "80px" }}>
+            <Link href="/community" className="opt-btn-primary" style={{ padding: "14px 32px", fontSize: "13px" }}>
+              Join the community
+            </Link>
+            <Link href="/contact" className="opt-btn-primary" style={{ padding: "14px 32px", fontSize: "13px", background: "transparent", color: "var(--ink)", border: "1.5px solid var(--ink)" }}>
+              Contact us
+            </Link>
+          </div>
 
+        </div>
+      </main>
       <Footer />
-    </main>
+    </>
   )
 }

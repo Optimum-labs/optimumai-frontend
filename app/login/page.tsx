@@ -1,133 +1,201 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
+import { useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import Link from "next/link"
-import { ArrowLeft, Github, Mail } from "lucide-react"
+import { Github, Mail } from "lucide-react"
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    // Check for verification success
+    if (searchParams.get('verified') === 'true') {
+      setSuccessMessage('Email verified successfully! You can now sign in.')
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
     setIsLoading(true)
 
-    // Simulate login
-    setTimeout(() => {
-      console.log("[v0] Login attempt:", { email })
-      setIsLoading(false)
-    }, 1500)
-  }
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
 
-  const handleSocialLogin = (provider: string) => {
-    console.log("[v0] Social login with:", provider)
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed')
+      }
+
+      // Redirect to dashboard on success
+      window.location.href = '/dashboard'
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background via-muted/20 to-background">
-      <div className="w-full max-w-md">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to home
-        </Link>
+    <>
+      <Header />
+      <main className="optimum-main">
+        <div className="grain-overlay" aria-hidden="true" />
 
-        <Card className="shadow-xl border-border/50">
-          <CardHeader className="text-center space-y-2">
-            <div className="flex items-center justify-center w-12 h-12 bg-primary rounded-md mx-auto mb-2">
-              <span className="text-primary-foreground font-bold text-2xl">O</span>
-            </div>
-            <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-            <CardDescription>Sign in to your OptimumAI account</CardDescription>
-          </CardHeader>
+        <div className="auth-page">
+          <div>
+            <div className="auth-card">
+              <div className="auth-logo">O</div>
 
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" onClick={() => handleSocialLogin("github")} className="w-full">
-                <Github className="w-4 h-4 mr-2" />
-                GitHub
-              </Button>
-              <Button variant="outline" onClick={() => handleSocialLogin("google")} className="w-full">
-                <Mail className="w-4 h-4 mr-2" />
-                Google
-              </Button>
-            </div>
+              <h1 className="auth-title">Welcome back</h1>
+              <p className="auth-desc">Sign in to your OptimumAI account</p>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
+              <div className="auth-social">
+                <button type="button" className="auth-social-btn">
+                  <Github size={14} /> GitHub
+                </button>
+                <button type="button" className="auth-social-btn">
+                  <Mail size={14} /> Google
+                </button>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link href="/forgot-password" className="text-xs text-accent hover:underline">
-                    Forgot password?
-                  </Link>
+              <div className="auth-divider"><span>Or continue with</span></div>
+
+              {successMessage && (
+                <div style={{
+                  padding: "12px 16px",
+                  background: "rgba(184,150,90,0.1)",
+                  border: "1px solid rgba(184,150,90,0.2)",
+                  borderRadius: "4px",
+                  marginBottom: "20px"
+                }}>
+                  <p style={{
+                    fontFamily: "var(--font-dm-mono), monospace",
+                    fontSize: "12px",
+                    color: "var(--gold)",
+                    margin: "0"
+                  }}>
+                    {successMessage}
+                  </p>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                />
+              )}
+
+              {error && (
+                <div style={{
+                  padding: "12px 16px",
+                  background: "rgba(200,57,43,0.1)",
+                  border: "1px solid rgba(200,57,43,0.2)",
+                  borderRadius: "4px",
+                  marginBottom: "20px"
+                }}>
+                  <p style={{
+                    fontFamily: "var(--font-dm-mono), monospace",
+                    fontSize: "12px",
+                    color: "var(--opt-red)",
+                    margin: "0"
+                  }}>
+                    {error}
+                  </p>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="auth-form">
+                <div className="auth-field">
+                  <label htmlFor="email" className="auth-label">Email</label>
+                  <input
+                    id="email"
+                    type="email"
+                    className="auth-input"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                  />
+                </div>
+
+                <div className="auth-field">
+                  <div className="auth-label-row">
+                    <label htmlFor="password" className="auth-label">Password</label>
+                    <Link href="/forgot-password">Forgot password?</Link>
+                  </div>
+                  <input
+                    id="password"
+                    type="password"
+                    className="auth-input"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="opt-btn-primary"
+                  disabled={isLoading}
+                  style={{ width: "100%", justifyContent: "center", opacity: isLoading ? 0.6 : 1 }}
+                >
+                  {isLoading ? "Signing in…" : "Sign In"}
+                </button>
+              </form>
+
+              <div className="auth-footer">
+                <span>Don&apos;t have an account? </span>
+                <Link href="/signup">Sign up</Link>
               </div>
-
-              <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isLoading}>
-                {isLoading ? "Signing in..." : "Sign In"}
-              </Button>
-            </form>
-
-            <div className="text-center text-sm">
-              <span className="text-muted-foreground">Don't have an account? </span>
-              <Link href="/signup" className="text-accent hover:underline font-medium">
-                Sign up
-              </Link>
             </div>
-          </CardContent>
-        </Card>
 
-        <p className="text-center text-xs text-muted-foreground mt-6 leading-relaxed">
-          By signing in, you agree to our{" "}
-          <Link href="/terms" className="underline hover:text-foreground">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link href="/privacy" className="underline hover:text-foreground">
-            Privacy Policy
-          </Link>
-        </p>
-      </div>
-    </div>
+            <p className="auth-legal">
+              By signing in, you agree to our{" "}
+              <Link href="/terms">Terms of Service</Link> and{" "}
+              <Link href="/privacy">Privacy Policy</Link>
+            </p>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <>
+        <Header />
+        <main className="optimum-main">
+          <div className="grain-overlay" aria-hidden="true" />
+          <div className="auth-page">
+            <div>
+              <div className="auth-card">
+                <div className="auth-logo">O</div>
+                <h1 className="auth-title">Loading...</h1>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }

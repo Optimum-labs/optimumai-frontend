@@ -1,9 +1,8 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Globe, Users, Calendar, Zap, CheckCircle, GitBranch } from "lucide-react"
+import { Globe, Users, Calendar } from "lucide-react"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 
 export default function ResearchPage() {
   const projects = [
@@ -129,157 +128,97 @@ export default function ResearchPage() {
     },
   ]
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Advanced":
-        return "bg-red-500/10 text-red-500 border-red-500/20"
-      case "Intermediate":
-        return "bg-yellow-500/10 text-yellow-500 border-yellow-500/20"
-      case "Beginner":
-        return "bg-green-500/10 text-green-500 border-green-500/20"
-      default:
-        return "bg-accent/10 text-accent border-accent/20"
-    }
-  }
-
   return (
-    <main className="min-h-screen">
+    <>
       <Header />
+      <main className="optimum-main">
+        <div className="grain-overlay" aria-hidden="true" />
+        <div className="opt-page">
 
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-muted/30 to-background">
-        <div className="container mx-auto max-w-6xl text-center">
-          <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">Research Projects</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold mb-6 text-balance">Collaborative AI Research</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty mb-8">
-            Join cutting-edge research projects on LLM development, fine-tuning, RAG systems, and more. Collaborate with
-            global teams to push the boundaries of AI.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="bg-accent hover:bg-accent/90">
-              Browse Projects
-            </Button>
-            <Button size="lg" variant="outline">
-              Propose a Project
-            </Button>
-          </div>
-        </div>
-      </section>
+          {/* ── Hero ── */}
+          <section className="opt-hero">
+            <p className="opt-kicker opt-anim-1">Research Projects</p>
+            <h1 className="opt-headline opt-anim-2">
+              Collaborative<br /><em>AI Research</em>
+            </h1>
+            <p className="opt-sub opt-anim-3">
+              Join cutting-edge research projects on LLM development, fine-tuning, RAG systems, and more.
+              Collaborate with global teams to push the boundaries of AI.
+            </p>
+            <div className="opt-hero-cta opt-anim-4">
+              <a href="#projects" className="opt-btn-primary">Browse Projects <ArrowRight size={13} /></a>
+              <Link href="/contact" className="opt-btn-ghost">Propose a Project</Link>
+            </div>
+          </section>
 
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-7xl">
-          <div className="space-y-8 mb-16">
+          {/* ── Projects ── */}
+          <div className="opt-rule" id="projects"><span className="opt-rule-text">Projects</span></div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px", marginBottom: "64px" }}>
             {projects.map((project, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all">
-                <div className="grid lg:grid-cols-3 gap-6">
-                  <div className="relative h-64 lg:h-auto bg-gradient-to-br from-accent/10 to-muted">
-                    <img
-                      src={project.image || "/placeholder.svg"}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 right-4 flex gap-2">
-                      <Badge className={getDifficultyColor(project.difficulty)}>{project.difficulty}</Badge>
-                    </div>
+              <div key={index} className="ed-card">
+                <div className="ed-card-img">
+                  <img src={project.image || "/placeholder.svg"} alt={project.title} />
+                  <span className={`ed-badge${project.difficulty === "Advanced" ? " ed-badge--red" : " ed-badge--gold"}`}>
+                    {project.difficulty}
+                  </span>
+                </div>
+                <div className="ed-card-body">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "4px" }}>
+                    <div className="ed-card-title">{project.title}</div>
+                    <span className="ed-badge">{project.status}</span>
+                  </div>
+                  <div className="ed-card-subtitle">{project.organization}</div>
+                  <p className="ed-card-desc">{project.description}</p>
+
+                  <div className="ed-meta">
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Users size={13} /> {project.participants} collaborators</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Calendar size={13} /> {project.duration}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Globe size={13} /> {project.region}</span>
                   </div>
 
-                  <div className="lg:col-span-2 p-6">
-                    <CardHeader className="p-0 mb-4">
-                      <div className="flex items-start justify-between gap-4 mb-2">
-                        <h3 className="text-2xl font-bold text-balance">{project.title}</h3>
-                        <Badge variant={project.status === "In Progress" ? "secondary" : "default"}>
-                          {project.status}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-2">{project.organization}</p>
-                      <p className="text-muted-foreground leading-relaxed">{project.description}</p>
-                    </CardHeader>
+                  <ul className="ed-list">
+                    {project.objectives.map((obj, i) => (
+                      <li key={i}>{obj}</li>
+                    ))}
+                  </ul>
 
-                    <CardContent className="p-0 space-y-4">
-                      <div className="flex flex-wrap gap-4 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Users className="w-4 h-4 text-accent" />
-                          <span>{project.participants} collaborators</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-accent" />
-                          <span>{project.duration}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Globe className="w-4 h-4 text-accent" />
-                          <span>{project.region}</span>
-                        </div>
-                      </div>
+                  <div className="ed-tags">
+                    {project.tags.map((tag, i) => (
+                      <span key={i} className="ed-tag">{tag}</span>
+                    ))}
+                  </div>
 
-                      <div>
-                        <div className="text-sm font-medium mb-2 flex items-center gap-2">
-                          <GitBranch className="w-4 h-4" />
-                          Research Objectives:
-                        </div>
-                        <div className="grid sm:grid-cols-2 gap-2">
-                          {project.objectives.map((objective, idx) => (
-                            <div key={idx} className="flex items-start gap-2 text-sm">
-                              <CheckCircle className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-                              <span>{objective}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="text-sm font-medium mb-2">Technologies:</div>
-                        <div className="flex flex-wrap gap-2">
-                          {project.tags.map((tag, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="text-sm font-medium mb-2">Prerequisites:</div>
-                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                          {project.prerequisites.map((prereq, idx) => (
-                            <span key={idx}>
-                              {prereq}
-                              {idx < project.prerequisites.length - 1 && " • "}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-4 pt-4">
-                        <Button className="bg-accent hover:bg-accent/90">
-                          {project.status === "In Progress" ? "View Details" : "Apply to Join"}
-                        </Button>
-                        <Button variant="outline">Learn More</Button>
-                      </div>
-                    </CardContent>
+                  <div style={{ display: "flex", gap: "12px", paddingTop: "8px" }}>
+                    <button className="opt-btn-primary" style={{ fontSize: "12px", padding: "10px 20px" }}>
+                      {project.status === "In Progress" ? "View Details" : "Apply to Join"}
+                    </button>
+                    <button className="opt-btn-ghost" style={{ fontSize: "12px", padding: "10px 20px" }}>
+                      Learn More
+                    </button>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
 
-          <Card className="bg-gradient-to-br from-accent/5 to-muted border-accent/20">
-            <CardContent className="p-8 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-accent/10 rounded-full mb-4">
-                <Zap className="w-6 h-6 text-accent" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4">Have a Research Idea?</h3>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Partner with us to launch collaborative AI research projects that make real-world impact. We provide
-                infrastructure, mentorship, and a global community of researchers.
-              </p>
-              <Button size="lg" className="bg-accent hover:bg-accent/90">
-                Propose a Project
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+          {/* ── CTA ── */}
+          <div className="opt-cta-block">
+            <p className="opt-kicker" style={{ marginBottom: "16px" }}>Have a Research Idea?</p>
+            <p className="opt-cta-headline">
+              Partner with us to launch<br />collaborative AI research.
+            </p>
+            <p className="opt-pillar-body" style={{ maxWidth: "560px", margin: "0 auto 28px", textAlign: "center" }}>
+              We provide infrastructure, mentorship, and a global community of researchers to turn your idea into published, peer-reviewed work.
+            </p>
+            <div className="opt-cta-actions">
+              <Link href="/contact" className="opt-btn-primary">Propose a Project <ArrowRight size={13} /></Link>
+            </div>
+          </div>
 
+        </div>
+      </main>
       <Footer />
-    </main>
+    </>
   )
 }

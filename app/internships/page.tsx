@@ -1,9 +1,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Building2, MapPin, DollarSign, Clock, Briefcase, GraduationCap } from "lucide-react"
+import { Building2, MapPin, DollarSign, Clock, GraduationCap, Briefcase, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 export default function InternshipsPage() {
   const internships = [
@@ -185,120 +183,100 @@ export default function InternshipsPage() {
   ]
 
   return (
-    <main className="min-h-screen">
+    <>
       <Header />
+      <main className="optimum-main">
+        <div className="grain-overlay" aria-hidden="true" />
+        <div className="opt-page">
 
-      <section className="pt-32 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-muted/30 to-background">
-        <div className="container mx-auto max-w-6xl text-center">
-          <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">Internships</Badge>
-          <h1 className="text-4xl sm:text-5xl font-bold mb-6 text-balance">Launch Your AI Career</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty mb-8">
-            Access exclusive internship opportunities with leading organizations building the future of AI. Gain
-            hands-on experience and accelerate your career.
-          </p>
-        </div>
-      </section>
+          {/* ── Hero ── */}
+          <section className="opt-hero">
+            <p className="opt-kicker opt-anim-1">Careers</p>
+            <h1 className="opt-headline opt-anim-2">
+              Launch Your<br /><em>AI Career</em>
+            </h1>
+            <p className="opt-sub opt-anim-3">
+              Access exclusive internship opportunities with leading organisations building the future of AI.
+              Gain hands-on experience and accelerate your career.
+            </p>
+          </section>
 
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            {benefits.map((benefit, index) => (
-              <Card key={index} className="text-center">
-                <CardContent className="pt-6">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-accent/10 rounded-lg mb-4">
-                    <benefit.icon className="w-6 h-6 text-accent" />
-                  </div>
-                  <h3 className="font-bold mb-2">{benefit.title}</h3>
-                  <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                </CardContent>
-              </Card>
+          {/* ── Benefits ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Why Join</span></div>
+
+          <div className="opt-pillars" style={{ gridTemplateColumns: "repeat(4, 1fr)", marginBottom: "64px" }}>
+            {benefits.map((b, i) => (
+              <div key={i} className="opt-pillar" style={{ borderBottom: "none" }}>
+                <b.icon size={20} style={{ color: "var(--gold)", marginBottom: "12px" }} />
+                <div className="opt-pillar-title" style={{ fontSize: "15px" }}>{b.title}</div>
+                <p className="opt-pillar-body">{b.description}</p>
+              </div>
             ))}
           </div>
 
-          <div className="space-y-6">
-            {internships.map((internship, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-lg transition-all">
-                <div className="grid lg:grid-cols-3 gap-6">
-                  <div className="relative h-48 lg:h-auto bg-gradient-to-br from-accent/10 to-muted">
-                    <img
-                      src={internship.image || "/placeholder.svg"}
-                      alt={internship.company}
-                      className="w-full h-full object-cover opacity-80"
-                    />
+          {/* ── Listings ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Open Positions</span></div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "64px" }}>
+            {internships.map((intern, i) => (
+              <div key={i} className="ed-card">
+                <div className="ed-card-img">
+                  <img src={intern.image || "/placeholder.svg"} alt={intern.company} />
+                  <span className="ed-badge">{intern.type}</span>
+                </div>
+                <div className="ed-card-body">
+                  <div className="ed-card-title">{intern.role}</div>
+                  <div className="ed-card-subtitle" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <Building2 size={12} /> {intern.company}
+                  </div>
+                  <p className="ed-card-desc">{intern.description}</p>
+
+                  <div className="ed-meta">
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><MapPin size={13} /> {intern.location}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Clock size={13} /> {intern.duration}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><DollarSign size={13} /> {intern.compensation}</span>
                   </div>
 
-                  <div className="lg:col-span-2 p-6">
-                    <CardHeader className="p-0 mb-4">
-                      <div className="flex items-start justify-between gap-4 mb-2">
-                        <div>
-                          <h3 className="text-xl font-bold mb-1">{internship.role}</h3>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Building2 className="w-4 h-4" />
-                            <span>{internship.company}</span>
-                          </div>
-                        </div>
-                        <Badge variant="secondary">{internship.type}</Badge>
-                      </div>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{internship.description}</p>
-                    </CardHeader>
+                  <ul className="ed-list">
+                    {intern.responsibilities.map((r, j) => (
+                      <li key={j}>{r}</li>
+                    ))}
+                  </ul>
 
-                    <CardContent className="p-0 space-y-4">
-                      <div className="grid sm:grid-cols-3 gap-3 text-sm">
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-accent" />
-                          <span>{internship.location}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-accent" />
-                          <span>{internship.duration}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="w-4 h-4 text-accent" />
-                          <span className="font-semibold">{internship.compensation}</span>
-                        </div>
-                      </div>
+                  <div className="ed-tags">
+                    {intern.skills.map((s, j) => (
+                      <span key={j} className="ed-tag">{s}</span>
+                    ))}
+                  </div>
 
-                      <div>
-                        <div className="text-sm font-medium mb-2">Key Responsibilities:</div>
-                        <ul className="text-sm text-muted-foreground space-y-1">
-                          {internship.responsibilities.map((resp, idx) => (
-                            <li key={idx} className="flex items-start gap-2">
-                              <span className="text-accent mt-1">•</span>
-                              <span>{resp}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <div className="text-sm font-medium mb-2">Required Skills:</div>
-                        <div className="flex flex-wrap gap-2">
-                          {internship.skills.map((skill, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
-                              {skill}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between pt-4 border-t border-border">
-                        <span className="text-xs text-muted-foreground">
-                          Application deadline: {internship.deadline}
-                        </span>
-                        <Button size="sm" className="bg-accent hover:bg-accent/90">
-                          Apply Now
-                        </Button>
-                      </div>
-                    </CardContent>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "12px", borderTop: "1px solid rgba(10,10,10,0.08)" }}>
+                    <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "10px", color: "var(--muted-txt)" }}>
+                      Deadline: {intern.deadline}
+                    </span>
+                    <button className="opt-btn-primary" style={{ fontSize: "11px", padding: "8px 18px" }}>
+                      Apply Now
+                    </button>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
-        </div>
-      </section>
 
+          {/* ── CTA ── */}
+          <div className="opt-cta-block">
+            <p className="opt-kicker" style={{ marginBottom: "16px" }}>Ready to start?</p>
+            <p className="opt-cta-headline">
+              Your AI career<br />begins here.
+            </p>
+            <div className="opt-cta-actions">
+              <Link href="/signup" className="opt-btn-primary">Create an Account <ArrowRight size={13} /></Link>
+              <Link href="/contact" className="opt-btn-ghost">Get in Touch</Link>
+            </div>
+          </div>
+
+        </div>
+      </main>
       <Footer />
-    </main>
+    </>
   )
 }
