@@ -1,0 +1,67 @@
+{
+  "platform": {
+    "apiRuntime": "node:20"
+  },
+  "routes": [
+    {
+      "route": "/_next/static/*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "route": "/api/*",
+      "allowedRoles": ["anonymous"],
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+    },
+    {
+      "route": "/login",
+      "allowedRoles": ["anonymous"]
+    },
+    {
+      "route": "/signup",
+      "allowedRoles": ["anonymous"]
+    },
+    {
+      "route": "/dashboard",
+      "allowedRoles": ["authenticated"]
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/404",
+    "exclude": [
+      "/_next/*",
+      "/api/*",
+      "*.ico",
+      "*.png",
+      "*.jpg",
+      "*.jpeg",
+      "*.gif",
+      "*.webp",
+      "*.svg",
+      "*.css",
+      "*.js",
+      "*.woff",
+      "*.woff2",
+      "*.json"
+    ]
+  },
+  "responseOverrides": {
+    "401": {
+      "redirect": "/login",
+      "statusCode": 302
+    },
+    "404": {
+      "rewrite": "/404",
+      "statusCode": 404
+    }
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-XSS-Protection": "1; mode=block",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+  }
+}
