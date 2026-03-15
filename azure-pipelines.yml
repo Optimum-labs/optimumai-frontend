@@ -9,7 +9,7 @@ pr:
       - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: Default  # self-hosted agent pool
 
 variables:
   nodeVersion: '20.x'
