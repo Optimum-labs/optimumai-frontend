@@ -16,7 +16,7 @@ importers:
         version: 7.5.0
       '@prisma/client':
         specifier: ^7.5.0
-        version: 7.5.0(prisma@7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.0.2))(typescript@5.0.2)
+        version: 7.5.0(prisma@7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)
       '@radix-ui/react-accordion':
         specifier: 1.2.2
         version: 1.2.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -148,7 +148,7 @@ importers:
         version: 8.20.0
       prisma:
         specifier: ^7.5.0
-        version: 7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.0.2)
+        version: 7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
       react:
         specifier: 19.2.0
         version: 19.2.0
@@ -217,8 +217,8 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
       typescript:
-        specifier: ^5
-        version: 5.0.2
+        specifier: ^5.6.0
+        version: 5.9.3
 
 packages:
 
@@ -2415,9 +2415,9 @@ packages:
   tw-animate-css@1.3.3:
     resolution: {integrity: sha512-tXE2TRWrskc4TU3RDd7T8n8Np/wCfoeH9gz22c7PzYqNPQ9FBGFbWWzwL0JyHcFp+jHozmF76tbHfPAx22ua2Q==}
 
-  typescript@5.0.2:
-    resolution: {integrity: sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==}
-    engines: {node: '>=12.20'}
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
     hasBin: true
 
   undici-types@6.11.1:
@@ -2809,12 +2809,12 @@ snapshots:
 
   '@prisma/client-runtime-utils@7.5.0': {}
 
-  '@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.0.2))(typescript@5.0.2)':
+  '@prisma/client@7.5.0(prisma@7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@prisma/client-runtime-utils': 7.5.0
     optionalDependencies:
-      prisma: 7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.0.2)
-      typescript: 5.0.2
+      prisma: 7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      typescript: 5.9.3
 
   '@prisma/config@7.5.0':
     dependencies:
@@ -2829,7 +2829,7 @@ snapshots:
 
   '@prisma/debug@7.5.0': {}
 
-  '@prisma/dev@0.20.0(typescript@5.0.2)':
+  '@prisma/dev@0.20.0(typescript@5.9.3)':
     dependencies:
       '@electric-sql/pglite': 0.3.15
       '@electric-sql/pglite-socket': 0.0.20(@electric-sql/pglite@0.3.15)
@@ -2846,7 +2846,7 @@ snapshots:
       proper-lockfile: 4.1.2
       remeda: 2.33.4
       std-env: 3.10.0
-      valibot: 1.2.0(typescript@5.0.2)
+      valibot: 1.2.0(typescript@5.9.3)
       zeptomatch: 2.1.0
     transitivePeerDependencies:
       - typescript
@@ -4298,16 +4298,16 @@ snapshots:
 
   postgres@3.4.7: {}
 
-  prisma@7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.0.2):
+  prisma@7.5.0(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3):
     dependencies:
       '@prisma/config': 7.5.0
-      '@prisma/dev': 0.20.0(typescript@5.0.2)
+      '@prisma/dev': 0.20.0(typescript@5.9.3)
       '@prisma/engines': 7.5.0
       '@prisma/studio-core': 0.21.1(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       mysql2: 3.15.3
       postgres: 3.4.7
     optionalDependencies:
-      typescript: 5.0.2
+      typescript: 5.9.3
     transitivePeerDependencies:
       - '@types/react'
       - magicast
@@ -4550,7 +4550,7 @@ snapshots:
 
   tw-animate-css@1.3.3: {}
 
-  typescript@5.0.2: {}
+  typescript@5.9.3: {}
 
   undici-types@6.11.1: {}
 
@@ -4581,9 +4581,9 @@ snapshots:
 
   uuid@10.0.0: {}
 
-  valibot@1.2.0(typescript@5.0.2):
+  valibot@1.2.0(typescript@5.9.3):
     optionalDependencies:
-      typescript: 5.0.2
+      typescript: 5.9.3
 
   vaul@1.1.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
