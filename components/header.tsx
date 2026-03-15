@@ -18,6 +18,7 @@ export function Header() {
         <nav className="opt-header-nav">
           <Link href="/about" className="opt-header-nav-link">About</Link>
           <Link href="/research" className="opt-header-nav-link">Research</Link>
+          <Link href="/community" className="opt-header-nav-link">Community</Link>
         </nav>
 
         <div className="opt-header-actions">
@@ -38,6 +39,7 @@ export function Header() {
           <nav>
             <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="opt-header-nav-link">About</Link>
             <Link href="/research" onClick={() => setMobileMenuOpen(false)} className="opt-header-nav-link">Research</Link>
+            <Link href="/community" onClick={() => setMobileMenuOpen(false)} className="opt-header-nav-link">Community</Link>
           </nav>
           <div className="opt-header-mobile-actions">
             <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="opt-btn-primary" style={{ justifyContent: "center" }}>Contact Us</Link>

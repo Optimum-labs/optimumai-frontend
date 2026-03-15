@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight, ExternalLink } from "lucide-react"
+import { ArrowRight, ExternalLink, Calendar, Users } from "lucide-react"
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
@@ -78,11 +78,11 @@ function CommunityContent() {
               Bootcamps, learning resources, published papers — one global community.
             </p>
             <div className="opt-hero-cta opt-anim-4">
-              <Link href="/research" className="opt-btn-primary">
-                Explore Research <ArrowRight size={13} />
+              <Link href="/community/events" className="opt-btn-primary">
+                Upcoming Events <Calendar size={13} />
               </Link>
-              <Link href="/signup" className="opt-btn-ghost">
-                Join the Community
+              <Link href="/community/volunteer" className="opt-btn-ghost">
+                Become Ambassador <Users size={13} />
               </Link>
             </div>
           </section>

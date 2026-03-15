@@ -149,7 +149,7 @@ export default function TermsPage() {
               You may close your account at any time via account settings. We may suspend or terminate your
               access if we determine that you have breached these Terms, violated our Acceptable Use Policy, or
               if continued access poses risk to OptimumAI, other users, or third parties. Where feasible, we
-              will give you prior notice and the opportunity to appeal to <strong>appeals@optimumai.org</strong>.
+              will give you prior notice and the opportunity to appeal to <strong>appeals@optimumai.in</strong>.
             </p>
             <p>
               Accounts that are inactive for more than 24 months with no paid subscription may be closed after
@@ -199,7 +199,7 @@ export default function TermsPage() {
             <p>
               These Terms are governed by the laws of the State of Delaware, USA, without regard to conflict-of-law
               principles. Before initiating formal proceedings, both parties agree to make a good-faith effort to
-              resolve disputes informally by contacting <strong>legal@optimumai.org</strong>. If the dispute is not
+              resolve disputes informally by contacting <strong>legal@optimumai.in</strong>. If the dispute is not
               resolved within 60 days, either party may pursue available legal remedies.
             </p>
             <p>
@@ -233,7 +233,7 @@ export default function TermsPage() {
 
             <p>
               Questions about these Terms?<br />
-              <strong>Email:</strong> legal@optimumai.org<br />
+              <strong>Email:</strong> legal@optimumai.in<br />
               <strong>Mail:</strong> OptimumAI, Inc. · Attn: Legal Team · [Address on file]
             </p>
 
