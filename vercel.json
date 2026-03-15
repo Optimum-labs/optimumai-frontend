@@ -1,11 +1,5 @@
 {
-  "buildCommand": "corepack pnpm build",
-  "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "corepack pnpm install",
-  "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "installCommand": "corepack enable && pnpm install",
+  "buildCommand": "pnpm build"
 }
