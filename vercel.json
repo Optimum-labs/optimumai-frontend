@@ -3,10 +3,6 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "corepack pnpm install",
-  "packageManager": "pnpm@10.30.0",
-  "env": {
-    "PNPM_IGNORE_SCRIPTS": "false"
-  },
   "functions": {
     "app/api/**/*.ts": {
       "runtime": "nodejs20.x"
