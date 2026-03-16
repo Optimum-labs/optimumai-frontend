@@ -2,45 +2,87 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight, Calendar, Clock, MapPin, Users, ExternalLink } from "lucide-react"
+import { ArrowRight, Calendar, Clock, MapPin, Users, ExternalLink, CheckCircle } from "lucide-react"
 import Link from "next/link"
+import { useState, useEffect } from "react"
+
+interface Event {
+  id: string
+  title: string
+  date: string
+  time: string
+  location: string
+  type: string
+  description: string
+  attendees: number
+  status: string
+  maxAttendees?: number
+}
 
 export default function EventsPage() {
-  const upcomingEvents = [
-    {
-      id: 1,
-      title: "AI Research Symposium 2024",
-      date: "March 25, 2024",
-      time: "2:00 PM - 6:00 PM EST",
-      location: "Virtual Event",
-      type: "Symposium",
-      description: "Join leading AI researchers for presentations on the latest breakthroughs in machine learning and artificial intelligence.",
-      attendees: 250,
-      status: "Registering"
-    },
-    {
-      id: 2,
-      title: "LLM Fine-Tuning Workshop",
-      date: "April 2, 2024",
-      time: "10:00 AM - 4:00 PM EST",
-      location: "Virtual Event",
-      type: "Workshop",
-      description: "Hands-on workshop covering advanced techniques for fine-tuning large language models for specific domains and tasks.",
-      attendees: 150,
-      status: "Registering"
-    },
-    {
-      id: 3,
-      title: "AI Ethics & Safety Discussion",
-      date: "April 10, 2024",
-      time: "7:00 PM - 9:00 PM EST",
-      location: "Virtual Event",
-      type: "Panel Discussion",
-      description: "Expert panel discussing the ethical implications and safety considerations in modern AI development.",
-      attendees: 180,
-      status: "Registering"
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([])
+  const [loading, setLoading] = useState(true)
+  const [registering, setRegistering] = useState<string | null>(null)
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+
+  useEffect(() => {
+    fetchEvents()
+  }, [])
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('/api/events?status=upcoming')
+      if (response.ok) {
+        const events = await response.json()
+        setUpcomingEvents(events)
+      }
+    } catch (error) {
+      console.error('Failed to fetch events:', error)
+    } finally {
+      setLoading(false)
     }
-  ]
+  }
+
+  const handleRegister = async (eventId: string, eventTitle: string) => {
+    setRegistering(eventId)
+    setMessage(null)
+
+    try {
+      // Get user details - in a real app, you'd get this from a form or user context
+      const fullName = prompt('Enter your full name:')
+      const email = prompt('Enter your email address:')
+
+      if (!fullName || !email) {
+        setMessage({ type: 'error', text: 'Registration cancelled' })
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('eventId', eventId)
+      formData.append('fullName', fullName)
+      formData.append('email', email)
+
+      const response = await fetch('/api/events/register', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: data.message })
+        // Refresh events to update attendee count
+        fetchEvents()
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Registration failed' })
+      }
+    } catch (error) {
+      console.error('Registration error:', error)
+      setMessage({ type: 'error', text: 'An unexpected error occurred' })
+    } finally {
+      setRegistering(null)
+    }
+  }
 
   const pastEvents = [
     {
@@ -120,104 +162,134 @@ export default function EventsPage() {
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '32px' }}>
-              {upcomingEvents.map((event) => (
-                <div key={event.id} style={{
-                  border: '1px solid rgba(10, 10, 10, 0.12)',
-                  padding: '32px',
-                  transition: 'background 0.25s ease'
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '20px'
-                  }}>
-                    <span style={{
-                      fontSize: '10px',
-                      letterSpacing: '0.22em',
-                      textTransform: 'uppercase',
-                      color: 'var(--gold)',
-                      padding: '4px 12px',
-                      border: '1px solid var(--gold)',
-                      borderRadius: '4px'
-                    }}>{event.type}</span>
-                    <span style={{
-                      fontSize: '10px',
-                      letterSpacing: '0.22em',
-                      textTransform: 'uppercase',
-                      color: 'var(--opt-red)',
-                      fontWeight: 'bold'
-                    }}>{event.status}</span>
-                  </div>
-
-                  <h3 style={{
-                    fontFamily: 'var(--font-playfair), serif',
-                    fontSize: '22px',
-                    fontWeight: 700,
-                    marginBottom: '12px',
-                    lineHeight: 1.2,
-                    color: 'var(--ink)'
-                  }}>{event.title}</h3>
-                  <p style={{
-                    fontSize: '14px',
-                    lineHeight: 1.6,
-                    color: 'var(--muted-txt)',
-                    marginBottom: '24px'
-                  }}>{event.description}</p>
-
-                  <div style={{ marginBottom: '24px' }}>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      marginBottom: '8px',
-                      fontSize: '13px',
-                      color: 'var(--muted-txt)'
-                    }}>
-                      <Calendar size={14} />
-                      <span>{event.date}</span>
-                    </div>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      marginBottom: '8px',
-                      fontSize: '13px',
-                      color: 'var(--muted-txt)'
-                    }}>
-                      <Clock size={14} />
-                      <span>{event.time}</span>
-                    </div>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      marginBottom: '8px',
-                      fontSize: '13px',
-                      color: 'var(--muted-txt)'
-                    }}>
-                      <MapPin size={14} />
-                      <span>{event.location}</span>
-                    </div>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      fontSize: '13px',
-                      color: 'var(--muted-txt)'
-                    }}>
-                      <Users size={14} />
-                      <span>{event.attendees} attending</span>
-                    </div>
-                  </div>
-
-                  <button className="opt-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                    Register Now
-                    <ExternalLink size={16} />
-                  </button>
+              {loading ? (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
+                  Loading events...
                 </div>
-              ))}
+              ) : upcomingEvents.length === 0 ? (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
+                  No upcoming events at the moment. Check back soon!
+                </div>
+              ) : (
+                upcomingEvents.map((event) => (
+                  <div key={event.id} style={{
+                    border: '1px solid rgba(10, 10, 10, 0.12)',
+                    padding: '32px',
+                    transition: 'background 0.25s ease'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '20px'
+                    }}>
+                      <span style={{
+                        fontSize: '10px',
+                        letterSpacing: '0.22em',
+                        textTransform: 'uppercase',
+                        color: 'var(--gold)',
+                        padding: '4px 12px',
+                        border: '1px solid var(--gold)',
+                        borderRadius: '4px'
+                      }}>{event.type}</span>
+                      <span style={{
+                        fontSize: '10px',
+                        letterSpacing: '0.22em',
+                        textTransform: 'uppercase',
+                        color: event.status === 'Registering' ? 'var(--opt-red)' : 'var(--muted-txt)',
+                        fontWeight: 'bold'
+                      }}>{event.status}</span>
+                    </div>
+
+                    <h3 style={{
+                      fontFamily: 'var(--font-playfair), serif',
+                      fontSize: '22px',
+                      fontWeight: 700,
+                      marginBottom: '12px',
+                      lineHeight: 1.2,
+                      color: 'var(--ink)'
+                    }}>{event.title}</h3>
+                    <p style={{
+                      fontSize: '14px',
+                      lineHeight: 1.6,
+                      color: 'var(--muted-txt)',
+                      marginBottom: '24px'
+                    }}>{event.description}</p>
+
+                    <div style={{ marginBottom: '24px' }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginBottom: '8px',
+                        fontSize: '13px',
+                        color: 'var(--muted-txt)'
+                      }}>
+                        <Calendar size={14} />
+                        <span>{event.date}</span>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginBottom: '8px',
+                        fontSize: '13px',
+                        color: 'var(--muted-txt)'
+                      }}>
+                        <Clock size={14} />
+                        <span>{event.time}</span>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginBottom: '8px',
+                        fontSize: '13px',
+                        color: 'var(--muted-txt)'
+                      }}>
+                        <MapPin size={14} />
+                        <span>{event.location}</span>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '13px',
+                        color: 'var(--muted-txt)'
+                      }}>
+                        <Users size={14} />
+                        <span>{event.attendees} attending{event.maxAttendees ? ` / ${event.maxAttendees} max` : ''}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      className="opt-btn-primary"
+                      style={{ width: '100%', justifyContent: 'center' }}
+                      onClick={() => handleRegister(event.id, event.title)}
+                      disabled={registering === event.id || event.status !== 'Registering'}
+                    >
+                      {registering === event.id ? 'Registering...' : 'Register Now'}
+                      <ExternalLink size={16} />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
+
+            {message && (
+              <div style={{
+                marginTop: '20px',
+                padding: '16px',
+                borderRadius: '8px',
+                backgroundColor: message.type === 'success' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                border: `1px solid ${message.type === 'success' ? 'var(--success)' : 'var(--error)'}`,
+                color: message.type === 'success' ? 'var(--success)' : 'var(--error)',
+                textAlign: 'center'
+              }}>
+                {message.type === 'success' ? <CheckCircle size={16} style={{ display: 'inline', marginRight: '8px' }} /> : null}
+                {message.text}
+              </div>
+            )}
           </div>
 
           {/* ── Event Types ── */}

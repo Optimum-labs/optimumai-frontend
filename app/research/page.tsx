@@ -5,14 +5,32 @@ import { Footer } from "@/components/footer"
 import { Globe, Users, Calendar } from "lucide-react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { createBrowserClient } from "@supabase/ssr"
 
 export default function ResearchPage() {
   const [applyingSlug, setApplyingSlug] = useState<string | null>(null)
   const [appliedSlugs, setAppliedSlugs] = useState<Set<string>>(new Set())
   const [message, setMessage] = useState<{ slug: string; text: string; error: boolean } | null>(null)
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const supabase = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    getUser()
+  }, [])
 
   const handleApply = async (slug: string) => {
+    if (!user) {
+      setMessage({ slug, text: "Please sign in to apply.", error: true })
+      return
+    }
     setApplyingSlug(slug)
     setMessage(null)
     try {
@@ -229,14 +247,20 @@ export default function ResearchPage() {
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px", paddingTop: "8px" }}>
                     <div style={{ display: "flex", gap: "12px" }}>
                       {project.status === "Accepting Applications" && !appliedSlugs.has(project.slug) ? (
-                        <button
-                          onClick={() => handleApply(project.slug)}
-                          disabled={applyingSlug === project.slug}
-                          className="opt-btn-primary"
-                          style={{ fontSize: "12px", padding: "10px 20px", opacity: applyingSlug === project.slug ? 0.6 : 1 }}
-                        >
-                          {applyingSlug === project.slug ? "Submitting..." : "Apply to Join"} <ArrowRight size={11} />
-                        </button>
+                        user ? (
+                          <button
+                            onClick={() => handleApply(project.slug)}
+                            disabled={applyingSlug === project.slug}
+                            className="opt-btn-primary"
+                            style={{ fontSize: "12px", padding: "10px 20px", opacity: applyingSlug === project.slug ? 0.6 : 1 }}
+                          >
+                            {applyingSlug === project.slug ? "Submitting..." : "Apply to Join"} <ArrowRight size={11} />
+                          </button>
+                        ) : (
+                          <Link href="/login" className="opt-btn-primary" style={{ fontSize: "12px", padding: "10px 20px" }}>
+                            Sign In to Apply <ArrowRight size={11} />
+                          </Link>
+                        )
                       ) : project.status === "In Progress" ? (
                         <span className="opt-btn-ghost" style={{ fontSize: "12px", padding: "10px 20px", cursor: "default" }}>In Progress</span>
                       ) : (

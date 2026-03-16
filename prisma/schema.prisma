@@ -20,6 +20,7 @@ model User {
   userLogs          UserLog[]
   challengeRegs     ChallengeRegistration[]
   researchApps      ResearchApplication[]
+  eventRegs         EventRegistration[]
 }
 
 model Course {
@@ -42,6 +43,8 @@ model Enrollment {
   status      String   @default("enrolled") // enrolled | in-progress | completed
   progress    Int      @default(0)          // 0-100 percent
   meetingLink String?
+  resumeUrl   String?
+  jsonData    Json?
   enrolledAt  DateTime @default(now())
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -108,6 +111,8 @@ model ChallengeRegistration {
   motivation    String
   status        String    @default("pending") // pending | approved | rejected
   meetingLink   String?
+  resumeUrl     String?
+  jsonData      Json?
   createdAt     DateTime  @default(now())
   challenge     Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
   user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -147,4 +152,46 @@ model ResearchApplication {
   user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([programId, userId])
+}
+
+model MeetingLink {
+  id        String   @id @default(cuid())
+  url       String
+  type      String   // 'bootcamp', 'program', 'challenge', 'event'
+  entityId  String   // the id of the course, program, challenge, event
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id            String            @id @default(cuid())
+  title         String
+  slug          String            @unique
+  description   String
+  date          DateTime
+  time          String
+  location      String
+  type          String            // symposium | workshop | panel | bootcamp | summit
+  maxAttendees  Int?
+  status        String            @default("upcoming") // upcoming | ongoing | completed | cancelled
+  meetingLink   String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  registrations EventRegistration[]
+}
+
+model EventRegistration {
+  id         String   @id @default(cuid())
+  eventId    String
+  userId     String?
+  fullName   String
+  email      String
+  status     String   @default("registered") // registered | attended | cancelled
+  createdAt  DateTime @default(now())
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([eventId, email])
+  @@index([eventId])
+  @@index([email])
 }

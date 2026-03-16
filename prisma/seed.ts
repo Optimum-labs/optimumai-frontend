@@ -240,6 +240,42 @@ const researchPrograms = [
   },
 ]
 
+const events = [
+  {
+    title: "AI Research Symposium 2024",
+    slug: "ai-research-symposium-2024",
+    description: "Join leading AI researchers for presentations on the latest breakthroughs in machine learning and artificial intelligence.",
+    date: new Date("2026-03-25"),
+    time: "2:00 PM - 6:00 PM EST",
+    location: "Virtual Event",
+    type: "Symposium",
+    maxAttendees: 250,
+    status: "upcoming",
+  },
+  {
+    title: "LLM Fine-Tuning Workshop",
+    slug: "llm-fine-tuning-workshop",
+    description: "Hands-on workshop covering advanced techniques for fine-tuning large language models for specific domains and tasks.",
+    date: new Date("2026-04-02"),
+    time: "10:00 AM - 4:00 PM EST",
+    location: "Virtual Event",
+    type: "Workshop",
+    maxAttendees: 150,
+    status: "upcoming",
+  },
+  {
+    title: "AI Ethics & Safety Discussion",
+    slug: "ai-ethics-safety-discussion",
+    description: "Expert panel discussing the ethical implications and safety considerations in modern AI development.",
+    date: new Date("2026-04-10"),
+    time: "7:00 PM - 9:00 PM EST",
+    location: "Virtual Event",
+    type: "Panel Discussion",
+    maxAttendees: 180,
+    status: "upcoming",
+  },
+]
+
 async function main() {
   console.log("Seeding courses...")
 
@@ -276,6 +312,18 @@ async function main() {
   }
 
   console.log(`Seeded ${researchPrograms.length} research programs.`)
+
+  console.log("Seeding events...")
+
+  for (const event of events) {
+    await prisma.event.upsert({
+      where: { slug: event.slug },
+      update: event,
+      create: event,
+    })
+  }
+
+  console.log(`Seeded ${events.length} events.`)
 }
 
 main()

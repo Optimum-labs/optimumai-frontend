@@ -14,6 +14,18 @@ export interface LogData {
 export class UserLogger {
   static async log(data: LogData) {
     try {
+      // If userId is provided, check if user exists in database
+      if (data.userId) {
+        const userExists = await prisma.user.findUnique({ where: { id: data.userId } })
+        if (!userExists) {
+          // User doesn't exist locally, log without userId but with supabaseId
+          data.userId = undefined
+          if (!data.supabaseId) {
+            data.supabaseId = data.userId // Store the original userId as supabaseId
+          }
+        }
+      }
+
       await prisma.userLog.create({
         data: {
           userId: data.userId,

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, CheckCircle2 } from 'lucide-react'
+import { X, CheckCircle2, Upload } from 'lucide-react'
 
 interface ChallengeRegModalProps {
   challenge: {
@@ -17,6 +17,7 @@ export function ChallengeRegModal({ challenge, onClose }: ChallengeRegModalProps
   const [email, setEmail] = useState('')
   const [linkedIn, setLinkedIn] = useState('')
   const [motivation, setMotivation] = useState('')
+  const [resume, setResume] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -26,17 +27,30 @@ export function ChallengeRegModal({ challenge, onClose }: ChallengeRegModalProps
     setError(null)
     setLoading(true)
 
+    const formData = new FormData()
+    formData.append('challengeId', challenge.id)
+    formData.append('fullName', fullName)
+    formData.append('email', email)
+    if (linkedIn) formData.append('linkedIn', linkedIn)
+    formData.append('motivation', motivation)
+    if (resume) formData.append('resume', resume)
+
+    // Save as JSON
+    const jsonData = {
+      fullName,
+      email,
+      linkedIn: linkedIn || null,
+      motivation,
+      resumeUploaded: !!resume,
+      challengeTitle: challenge.title,
+      registeredAt: new Date().toISOString()
+    }
+    formData.append('jsonData', JSON.stringify(jsonData))
+
     try {
       const res = await fetch('/api/challenges/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          challengeId: challenge.id,
-          fullName,
-          email,
-          linkedIn: linkedIn || undefined,
-          motivation,
-        }),
+        body: formData,
       })
       const data = await res.json()
       if (!res.ok) {
@@ -134,6 +148,19 @@ export function ChallengeRegModal({ challenge, onClose }: ChallengeRegModalProps
                   required
                   rows={4}
                 />
+              </div>
+              <div className="auth-field">
+                <label htmlFor="reg-resume" className="auth-label">Resume/CV (Optional)</label>
+                <input
+                  id="reg-resume"
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="auth-input"
+                  onChange={(e) => setResume(e.target.files?.[0] || null)}
+                />
+                <small style={{ color: 'var(--muted-txt)', fontSize: '12px' }}>
+                  Upload your resume (PDF, DOC, DOCX - max 5MB)
+                </small>
               </div>
               <div className="modal-actions">
                 <button type="button" onClick={onClose} className="opt-btn-ghost">Cancel</button>
