@@ -7,17 +7,19 @@ datasource db {
 }
 
 model User {
-  id                String       @id @default(cuid())
-  supabaseId        String?      @unique // Link to Supabase auth user
+  id                String                  @id @default(cuid())
+  supabaseId        String?                 @unique // Link to Supabase auth user
   name              String
-  email             String       @unique
-  emailVerified     Boolean      @default(false)
+  email             String                  @unique
+  emailVerified     Boolean                 @default(false)
   verificationToken String?
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime                @updatedAt
   enrollments       Enrollment[]
   activities        Activity[]
   userLogs          UserLog[]
+  challengeRegs     ChallengeRegistration[]
+  researchApps      ResearchApplication[]
 }
 
 model Course {
@@ -37,12 +39,13 @@ model Enrollment {
   id         String   @id @default(cuid())
   userId     String
   courseId    String
-  status     String   @default("enrolled") // enrolled | in-progress | completed
-  progress   Int      @default(0)          // 0-100 percent
-  enrolledAt DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  status      String   @default("enrolled") // enrolled | in-progress | completed
+  progress    Int      @default(0)          // 0-100 percent
+  meetingLink String?
+  enrolledAt  DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
 }
@@ -73,4 +76,75 @@ model UserLog {
   @@index([supabaseId])
   @@index([action])
   @@index([createdAt])
+}
+
+model Challenge {
+  id            String                  @id @default(cuid())
+  title         String
+  slug          String                  @unique
+  description   String
+  level         String                  // beginner | intermediate | advanced
+  duration      String
+  prizePool     String?
+  partnership   String?
+  maxTeams      Int                     @default(10)
+  teamSize      Int                     @default(5)
+  tags          String[]
+  startsAt      DateTime
+  registrationCloses DateTime?
+  status        String                  @default("open") // open | closed | in-progress | completed
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  registrations ChallengeRegistration[]
+}
+
+model ChallengeRegistration {
+  id            String    @id @default(cuid())
+  challengeId   String
+  userId        String?
+  fullName      String
+  email         String
+  linkedIn      String?
+  motivation    String
+  status        String    @default("pending") // pending | approved | rejected
+  meetingLink   String?
+  createdAt     DateTime  @default(now())
+  challenge     Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([challengeId, email])
+  @@index([challengeId])
+  @@index([email])
+}
+
+model ResearchProgram {
+  id            String                @id @default(cuid())
+  title         String
+  slug          String                @unique
+  description   String
+  organization  String
+  difficulty    String                // beginner | intermediate | advanced
+  duration      String
+  tags          String[]
+  objectives    String[]
+  prerequisites String[]
+  status        String                @default("accepting") // accepting | in-progress | closed
+  meetingLink   String?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  applications  ResearchApplication[]
+}
+
+model ResearchApplication {
+  id          String          @id @default(cuid())
+  programId   String
+  userId      String
+  status      String          @default("pending") // pending | approved | active | completed
+  meetingLink String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  program     ResearchProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, userId])
 }

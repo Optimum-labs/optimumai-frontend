@@ -1,13 +1,45 @@
+"use client"
+
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Globe, Users, Calendar } from "lucide-react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { useState } from "react"
 
 export default function ResearchPage() {
+  const [applyingSlug, setApplyingSlug] = useState<string | null>(null)
+  const [appliedSlugs, setAppliedSlugs] = useState<Set<string>>(new Set())
+  const [message, setMessage] = useState<{ slug: string; text: string; error: boolean } | null>(null)
+
+  const handleApply = async (slug: string) => {
+    setApplyingSlug(slug)
+    setMessage(null)
+    try {
+      const res = await fetch("/api/research/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ programSlug: slug }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setMessage({ slug, text: data.error, error: true })
+        if (res.status === 409) setAppliedSlugs((s) => new Set(s).add(slug))
+      } else {
+        setMessage({ slug, text: "Application submitted! Check your dashboard.", error: false })
+        setAppliedSlugs((s) => new Set(s).add(slug))
+      }
+    } catch {
+      setMessage({ slug, text: "Something went wrong. Please try again.", error: true })
+    } finally {
+      setApplyingSlug(null)
+    }
+  }
+
   const projects = [
     {
       title: "Building LLMs from Scratch",
+      slug: "building-llms-from-scratch",
       organization: "OptimumAI Research Lab",
       participants: 62,
       duration: "16 weeks",
@@ -28,6 +60,7 @@ export default function ResearchPage() {
     },
     {
       title: "Fine-Tuning & PEFT Techniques",
+      slug: "fine-tuning-peft-techniques",
       organization: "OptimumAI Research Lab",
       participants: 78,
       duration: "12 weeks",
@@ -48,6 +81,7 @@ export default function ResearchPage() {
     },
     {
       title: "RAG Systems & Vector Databases",
+      slug: "rag-systems-vector-databases",
       organization: "OptimumAI Applied AI",
       participants: 85,
       duration: "10 weeks",
@@ -68,6 +102,7 @@ export default function ResearchPage() {
     },
     {
       title: "Multimodal AI Research",
+      slug: "multimodal-ai-research",
       organization: "OptimumAI Vision Lab",
       participants: 54,
       duration: "14 weeks",
@@ -88,6 +123,7 @@ export default function ResearchPage() {
     },
     {
       title: "LLM Agents & Tool Use",
+      slug: "llm-agents-tool-use",
       organization: "OptimumAI Agentic AI",
       participants: 67,
       duration: "10 weeks",
@@ -108,6 +144,7 @@ export default function ResearchPage() {
     },
     {
       title: "Model Compression & Optimization",
+      slug: "model-compression-optimization",
       organization: "OptimumAI Efficiency Lab",
       participants: 41,
       duration: "8 weeks",
@@ -189,13 +226,28 @@ export default function ResearchPage() {
                     ))}
                   </div>
 
-                  <div style={{ display: "flex", gap: "12px", paddingTop: "8px" }}>
-                    <button className="opt-btn-primary" style={{ fontSize: "12px", padding: "10px 20px" }}>
-                      {project.status === "In Progress" ? "View Details" : "Apply to Join"}
-                    </button>
-                    <button className="opt-btn-ghost" style={{ fontSize: "12px", padding: "10px 20px" }}>
-                      Learn More
-                    </button>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", paddingTop: "8px" }}>
+                    <div style={{ display: "flex", gap: "12px" }}>
+                      {project.status === "Accepting Applications" && !appliedSlugs.has(project.slug) ? (
+                        <button
+                          onClick={() => handleApply(project.slug)}
+                          disabled={applyingSlug === project.slug}
+                          className="opt-btn-primary"
+                          style={{ fontSize: "12px", padding: "10px 20px", opacity: applyingSlug === project.slug ? 0.6 : 1 }}
+                        >
+                          {applyingSlug === project.slug ? "Submitting..." : "Apply to Join"} <ArrowRight size={11} />
+                        </button>
+                      ) : project.status === "In Progress" ? (
+                        <span className="opt-btn-ghost" style={{ fontSize: "12px", padding: "10px 20px", cursor: "default" }}>In Progress</span>
+                      ) : (
+                        <span className="opt-btn-ghost" style={{ fontSize: "12px", padding: "10px 20px", cursor: "default", color: "#2a7d4f" }}>✓ Applied</span>
+                      )}
+                    </div>
+                    {message && message.slug === project.slug && (
+                      <span style={{ fontSize: "12px", color: message.error ? "var(--opt-red)" : "#2a7d4f", fontFamily: "var(--font-dm-mono), monospace" }}>
+                        {message.text}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

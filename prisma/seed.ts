@@ -124,6 +124,122 @@ const courses = [
   },
 ]
 
+const challenges = [
+  {
+    title: "InterviewBot: AI-Powered Interview Preparation Platform",
+    slug: "interviewbot-ai-powered-interview-preparation-platform",
+    description: "Build a complete interview preparation platform from PoC to validated product — using agentic AI, modern frameworks, and cloud infrastructure.",
+    level: "Intermediate",
+    duration: "14 weeks",
+    maxTeams: 10,
+    teamSize: 5,
+    tags: ["Flexible - Research-based", "LLMs (OpenAI/Claude/etc)", "Cloud Platforms", "Modern Web Framework"],
+    startsAt: new Date("2026-03-08"),
+    status: "open",
+  },
+  {
+    title: "AI-Powered Education Platform",
+    slug: "ai-education-platform",
+    description: "Design and build an adaptive learning platform that personalises education using AI agents, knowledge graphs, and real-time student modelling.",
+    level: "Advanced",
+    duration: "12 weeks",
+    maxTeams: 8,
+    teamSize: 4,
+    tags: ["Adaptive Learning", "Knowledge Graphs", "RAG Systems", "Next.js"],
+    startsAt: new Date("2026-04-01"),
+    registrationCloses: new Date("2026-03-28"),
+    status: "open",
+  },
+  {
+    title: "Autonomous Research Agent",
+    slug: "autonomous-research-agent",
+    description: "Create an AI agent that can autonomously conduct literature reviews, synthesize findings, and generate research hypotheses across scientific domains.",
+    level: "Advanced",
+    duration: "10 weeks",
+    maxTeams: 12,
+    teamSize: 3,
+    tags: ["Multi-Agent Systems", "Scientific Computing", "NLP", "Python"],
+    startsAt: new Date("2026-04-15"),
+    registrationCloses: new Date("2026-04-10"),
+    status: "open",
+  },
+]
+
+const researchPrograms = [
+  {
+    title: "Building LLMs from Scratch",
+    slug: "building-llms-from-scratch",
+    description: "Learn to build and train large language models from the ground up, covering tokenization, architecture design, and training strategies.",
+    organization: "OptimumAI Research Lab",
+    difficulty: "Advanced",
+    duration: "16 weeks",
+    tags: ["LLM", "Transformers", "Deep Learning", "PyTorch"],
+    objectives: ["Implement transformer architecture from scratch", "Design tokenization strategies", "Train models on distributed systems", "Optimize inference performance"],
+    prerequisites: ["Strong Python skills", "Deep learning fundamentals", "PyTorch experience", "Linear algebra"],
+    status: "accepting",
+  },
+  {
+    title: "Fine-Tuning & PEFT Techniques",
+    slug: "fine-tuning-peft-techniques",
+    description: "Master parameter-efficient fine-tuning methods including LoRA, QLoRA, and prefix tuning for adapting LLMs to specific tasks.",
+    organization: "OptimumAI Research Lab",
+    difficulty: "Intermediate",
+    duration: "12 weeks",
+    tags: ["Fine-tuning", "LoRA", "QLoRA", "PEFT"],
+    objectives: ["Implement LoRA and QLoRA techniques", "Fine-tune models with limited compute", "Evaluate fine-tuned model performance", "Deploy fine-tuned models in production"],
+    prerequisites: ["Python programming", "Basic ML knowledge", "Familiarity with transformers", "GPU access"],
+    status: "accepting",
+  },
+  {
+    title: "RAG Systems & Vector Databases",
+    slug: "rag-systems-vector-databases",
+    description: "Build production-ready Retrieval Augmented Generation systems with advanced chunking, embedding strategies, and reranking.",
+    organization: "OptimumAI Applied AI",
+    difficulty: "Intermediate",
+    duration: "10 weeks",
+    tags: ["RAG", "Vector DB", "Embeddings", "LangChain"],
+    objectives: ["Design optimal chunking strategies", "Implement vector database solutions", "Build RAG pipelines with LangChain", "Optimize retrieval accuracy"],
+    prerequisites: ["Python programming", "API development", "Database fundamentals", "LLM basics"],
+    status: "in-progress",
+  },
+  {
+    title: "Multimodal AI Research",
+    slug: "multimodal-ai-research",
+    description: "Explore cutting-edge multimodal models combining vision, language, and audio for next-generation AI applications.",
+    organization: "OptimumAI Vision Lab",
+    difficulty: "Advanced",
+    duration: "14 weeks",
+    tags: ["Vision-Language", "CLIP", "Multimodal", "Diffusion"],
+    objectives: ["Train vision-language models", "Implement multimodal embeddings", "Build cross-modal retrieval systems", "Create generative multimodal applications"],
+    prerequisites: ["Computer vision experience", "NLP knowledge", "PyTorch/TensorFlow", "Research experience"],
+    status: "accepting",
+  },
+  {
+    title: "LLM Agents & Tool Use",
+    slug: "llm-agents-tool-use",
+    description: "Design and implement autonomous AI agents with reasoning, planning, and tool-use capabilities for complex workflows.",
+    organization: "OptimumAI Agentic AI",
+    difficulty: "Intermediate",
+    duration: "10 weeks",
+    tags: ["Agents", "Tool Calling", "ReAct", "AutoGPT"],
+    objectives: ["Implement ReAct and ReWOO patterns", "Build multi-step reasoning agents", "Design tool-calling interfaces", "Create agentic workflow systems"],
+    prerequisites: ["Python development", "LLM API experience", "Software architecture", "Problem-solving skills"],
+    status: "accepting",
+  },
+  {
+    title: "Model Compression & Optimization",
+    slug: "model-compression-optimization",
+    description: "Master techniques for compressing and optimizing large models for edge deployment and inference efficiency.",
+    organization: "OptimumAI Efficiency Lab",
+    difficulty: "Advanced",
+    duration: "8 weeks",
+    tags: ["Quantization", "Pruning", "Distillation", "ONNX"],
+    objectives: ["Implement quantization techniques", "Apply model pruning strategies", "Perform knowledge distillation", "Optimize for edge devices"],
+    prerequisites: ["Deep learning expertise", "Model architectures", "C++/CUDA helpful", "Hardware understanding"],
+    status: "accepting",
+  },
+]
+
 async function main() {
   console.log("Seeding courses...")
 
@@ -136,6 +252,30 @@ async function main() {
   }
 
   console.log(`Seeded ${courses.length} courses.`)
+
+  console.log("Seeding challenges...")
+
+  for (const challenge of challenges) {
+    await prisma.challenge.upsert({
+      where: { slug: challenge.slug },
+      update: challenge,
+      create: challenge,
+    })
+  }
+
+  console.log(`Seeded ${challenges.length} challenges.`)
+
+  console.log("Seeding research programs...")
+
+  for (const program of researchPrograms) {
+    await prisma.researchProgram.upsert({
+      where: { slug: program.slug },
+      update: program,
+      create: program,
+    })
+  }
+
+  console.log(`Seeded ${researchPrograms.length} research programs.`)
 }
 
 main()

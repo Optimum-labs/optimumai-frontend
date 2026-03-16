@@ -1,12 +1,44 @@
+"use client"
+
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Clock, Users, Code, Brain, Zap, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
 
 export default function BootcampsPage() {
+  const [enrollingSlug, setEnrollingSlug] = useState<string | null>(null)
+  const [enrolledSlugs, setEnrolledSlugs] = useState<Set<string>>(new Set())
+  const [message, setMessage] = useState<{ slug: string; text: string; error: boolean } | null>(null)
+
+  const handleEnroll = async (slug: string) => {
+    setEnrollingSlug(slug)
+    setMessage(null)
+    try {
+      const res = await fetch("/api/enroll", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ courseSlug: slug }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setMessage({ slug, text: data.error, error: true })
+        if (res.status === 409) setEnrolledSlugs((s) => new Set(s).add(slug))
+      } else {
+        setMessage({ slug, text: "Enrolled! Check your dashboard.", error: false })
+        setEnrolledSlugs((s) => new Set(s).add(slug))
+      }
+    } catch {
+      setMessage({ slug, text: "Something went wrong. Please try again.", error: true })
+    } finally {
+      setEnrollingSlug(null)
+    }
+  }
+
   const bootcamps = [
     {
       title: "Deep Learning Foundations",
+      slug: "deep-learning-foundations",
       level: "Beginner",
       duration: "8 weeks",
       students: "1,200+",
@@ -24,6 +56,7 @@ export default function BootcampsPage() {
     },
     {
       title: "Advanced LLM Engineering",
+      slug: "advanced-llm-engineering",
       level: "Advanced",
       duration: "10 weeks",
       students: "800+",
@@ -41,6 +74,7 @@ export default function BootcampsPage() {
     },
     {
       title: "AI for Computer Vision",
+      slug: "ai-computer-vision",
       level: "Intermediate",
       duration: "8 weeks",
       students: "950+",
@@ -58,6 +92,7 @@ export default function BootcampsPage() {
     },
     {
       title: "MLOps & AI Infrastructure",
+      slug: "mlops-production-ml",
       level: "Intermediate",
       duration: "6 weeks",
       students: "650+",
@@ -75,6 +110,7 @@ export default function BootcampsPage() {
     },
     {
       title: "Reinforcement Learning",
+      slug: "reinforcement-learning",
       level: "Advanced",
       duration: "10 weeks",
       students: "420+",
@@ -92,6 +128,7 @@ export default function BootcampsPage() {
     },
     {
       title: "AI Product Management",
+      slug: "ai-product-management",
       level: "Beginner",
       duration: "6 weeks",
       students: "890+",
@@ -203,9 +240,25 @@ export default function BootcampsPage() {
                       <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "var(--muted-txt)" }}>Next cohort</span>
                       <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 700, color: "var(--ink)" }}>{b.nextStart}</div>
                     </div>
-                    <Link href="/signup" className="opt-btn-primary" style={{ fontSize: "11px", padding: "8px 18px" }}>
-                      Apply Now <ArrowRight size={11} />
-                    </Link>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px" }}>
+                      {enrolledSlugs.has(b.slug) ? (
+                        <span className="opt-btn-ghost" style={{ fontSize: "11px", padding: "8px 18px", cursor: "default", color: "#2a7d4f" }}>✓ Enrolled</span>
+                      ) : (
+                        <button
+                          onClick={() => handleEnroll(b.slug)}
+                          disabled={enrollingSlug === b.slug}
+                          className="opt-btn-primary"
+                          style={{ fontSize: "11px", padding: "8px 18px", opacity: enrollingSlug === b.slug ? 0.6 : 1 }}
+                        >
+                          {enrollingSlug === b.slug ? "Enrolling..." : "Enroll Now"} <ArrowRight size={11} />
+                        </button>
+                      )}
+                      {message && message.slug === b.slug && (
+                        <span style={{ fontSize: "10px", color: message.error ? "var(--opt-red)" : "#2a7d4f", fontFamily: "var(--font-dm-mono), monospace" }}>
+                          {message.text}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -222,7 +275,7 @@ export default function BootcampsPage() {
               Applications are open. Spots are limited — reserve yours today.
             </p>
             <div className="opt-hero-cta">
-              <Link href="/signup" className="opt-btn-primary">Apply Now <ArrowRight size={13} /></Link>
+              <Link href="/login" className="opt-btn-primary">Sign In to Enroll <ArrowRight size={13} /></Link>
               <Link href="/contact" className="opt-btn-ghost">Contact Us</Link>
             </div>
           </div>

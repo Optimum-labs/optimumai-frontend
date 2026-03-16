@@ -8,7 +8,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const [enrollments, activities, activityCount] = await Promise.all([
+  const [enrollments, activities, activityCount, challengeRegs, researchApps] = await Promise.all([
     prisma.enrollment.findMany({
       where: { userId: user.id },
       include: { course: true },
@@ -21,6 +21,16 @@ export async function GET() {
       take: 10,
     }),
     prisma.activity.count({ where: { userId: user.id } }),
+    prisma.challengeRegistration.findMany({
+      where: { userId: user.id },
+      include: { challenge: true },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.researchApplication.findMany({
+      where: { userId: user.id },
+      include: { program: true },
+      orderBy: { createdAt: "desc" },
+    }),
   ])
 
   const completedCount = enrollments.filter((e) => e.status === "completed").length
@@ -38,6 +48,8 @@ export async function GET() {
       completed: completedCount,
       inProgress: inProgressCount,
       totalActivities: activityCount,
+      challenges: challengeRegs.length,
+      researchPrograms: researchApps.length,
     },
     enrollments: enrollments.map((e) => ({
       id: e.id,
@@ -45,7 +57,28 @@ export async function GET() {
       courseCategory: e.course.category,
       status: e.status,
       progress: e.progress,
+      meetingLink: e.meetingLink,
       enrolledAt: e.enrolledAt,
+    })),
+    challengeRegistrations: challengeRegs.map((r) => ({
+      id: r.id,
+      challengeTitle: r.challenge.title,
+      challengeLevel: r.challenge.level,
+      challengeDuration: r.challenge.duration,
+      startsAt: r.challenge.startsAt,
+      status: r.status,
+      meetingLink: r.meetingLink,
+      appliedAt: r.createdAt,
+    })),
+    researchApplications: researchApps.map((a) => ({
+      id: a.id,
+      programTitle: a.program.title,
+      programOrganization: a.program.organization,
+      programDuration: a.program.duration,
+      programDifficulty: a.program.difficulty,
+      status: a.status,
+      meetingLink: a.meetingLink,
+      appliedAt: a.createdAt,
     })),
     recentActivity: activities.map((a) => ({
       id: a.id,

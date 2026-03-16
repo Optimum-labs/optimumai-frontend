@@ -14,16 +14,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const { courseId } = await req.json()
-  if (!courseId) {
+  const { courseId, courseSlug } = await req.json()
+  if (!courseId && !courseSlug) {
     await UserLogger.logUserAction(user.id, 'enrollment_attempt', {
       reason: 'missing_course_id'
     }, req)
 
-    return NextResponse.json({ error: "Course ID is required." }, { status: 400 })
+    return NextResponse.json({ error: "Course ID or slug is required." }, { status: 400 })
   }
 
-  const course = await prisma.course.findUnique({ where: { id: courseId } })
+  const course = courseId
+    ? await prisma.course.findUnique({ where: { id: courseId } })
+    : await prisma.course.findUnique({ where: { slug: courseSlug } })
   if (!course) {
     await UserLogger.logUserAction(user.id, 'enrollment_attempt', {
       reason: 'course_not_found',
@@ -35,7 +37,7 @@ export async function POST(req: NextRequest) {
 
   // Check if already enrolled
   const existing = await prisma.enrollment.findUnique({
-    where: { userId_courseId: { userId: user.id, courseId } },
+    where: { userId_courseId: { userId: user.id, courseId: course.id } },
   })
   if (existing) {
     await UserLogger.logUserAction(user.id, 'enrollment_attempt', {
@@ -48,7 +50,7 @@ export async function POST(req: NextRequest) {
   }
 
   const enrollment = await prisma.enrollment.create({
-    data: { userId: user.id, courseId },
+    data: { userId: user.id, courseId: course.id },
   })
 
   await prisma.activity.create({

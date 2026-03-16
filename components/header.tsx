@@ -1,11 +1,35 @@
 "use client"
 
-import { Menu, X } from "lucide-react"
-import { useState } from "react"
+import { Menu, X, LogOut, LogIn } from "lucide-react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
+import { createClient } from "@/lib/supabase"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [user, setUser] = useState<{ email?: string } | null>(null)
+  const [loading, setLoading] = useState(true)
+  const supabase = createClient()
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      setLoading(false)
+    }
+    checkSession()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleLogout = async () => {
+    await fetch('/api/logout', { method: 'POST' })
+    setUser(null)
+    window.location.href = '/login'
+  }
 
   return (
     <header className="opt-header">
@@ -22,7 +46,22 @@ export function Header() {
         </nav>
 
         <div className="opt-header-actions">
-          <Link href="/contact" className="opt-btn-primary opt-header-started">Contact Us</Link>
+          {!loading && (
+            user ? (
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <button onClick={handleLogout} className="opt-btn-ghost opt-header-started" style={{ padding: "8px 16px", fontSize: "11px", cursor: "pointer", background: "none", border: "1px solid rgba(10,10,10,0.15)" }}>
+                  <LogOut size={13} style={{ marginRight: "4px" }} /> Sign Out
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Link href="/login" className="opt-btn-ghost opt-header-started" style={{ padding: "8px 16px", fontSize: "11px" }}>
+                  <LogIn size={13} style={{ marginRight: "4px" }} /> Sign In
+                </Link>
+                <Link href="/contact" className="opt-btn-primary opt-header-started">Contact Us</Link>
+              </div>
+            )
+          )}
         </div>
 
         <button
@@ -42,7 +81,18 @@ export function Header() {
             <Link href="/community" onClick={() => setMobileMenuOpen(false)} className="opt-header-nav-link">Community</Link>
           </nav>
           <div className="opt-header-mobile-actions">
-            <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="opt-btn-primary" style={{ justifyContent: "center" }}>Contact Us</Link>
+            {user ? (
+              <>
+                <button onClick={() => { setMobileMenuOpen(false); handleLogout() }} className="opt-btn-ghost" style={{ justifyContent: "center", width: "100%", cursor: "pointer", background: "none", border: "1px solid rgba(10,10,10,0.15)" }}>
+                  <LogOut size={13} style={{ marginRight: "6px" }} /> Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="opt-btn-ghost" style={{ justifyContent: "center" }}>Sign In</Link>
+                <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="opt-btn-primary" style={{ justifyContent: "center", marginTop: "8px" }}>Contact Us</Link>
+              </>
+            )}
           </div>
         </div>
       )}

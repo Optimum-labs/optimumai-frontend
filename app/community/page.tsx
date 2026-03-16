@@ -2,10 +2,13 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight, ExternalLink, Calendar, Users, Clock, Code, Brain, Zap, ChevronDown, BookOpen, Play } from "lucide-react"
+import { ArrowRight, ExternalLink, Calendar, Users, Clock, ChevronDown, BookOpen, Play, LayoutDashboard } from "lucide-react"
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
+import { ActiveChallenges } from "@/components/active-challenges"
+import { createClient } from "@/lib/supabase"
+import type { User } from "@supabase/supabase-js"
 
 export default function CommunityPage() {
   return (
@@ -17,9 +20,19 @@ export default function CommunityPage() {
 
 function CommunityContent() {
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'bootcamps')
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'challenges')
   const [expandedBootcamp, setExpandedBootcamp] = useState<string | null>(null)
   const [expandedLearning, setExpandedLearning] = useState<string | null>(null)
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   useEffect(() => {
     const tab = searchParams.get('tab')
@@ -27,6 +40,7 @@ function CommunityContent() {
   }, [searchParams])
 
   const tabs = [
+    { key: "challenges", label: "Challenges" },
     { key: "bootcamps", label: "Bootcamps" },
     { key: "learnings", label: "Learning" },
     { key: "news",      label: "News" },
@@ -256,6 +270,13 @@ function CommunityContent() {
             ))}
           </div>
 
+          {/* ── Tab: Challenges ── */}
+          {activeTab === "challenges" && (
+            <div className="comm-section" style={{ marginBottom: '40px' }}>
+              <ActiveChallenges />
+            </div>
+          )}
+
           {/* ── Tab: Bootcamps ── */}
           {activeTab === "bootcamps" && (
             <div className="comm-section">
@@ -413,28 +434,109 @@ function CommunityContent() {
             </div>
           )}
 
+          {/* ── Community Voices ── */}
+          <div className="opt-rule" style={{ marginTop: "64px" }}><span className="opt-rule-text">Community Voices</span></div>
+
+          <div className="testimonials-grid">
+            <div className="testimonial-card">
+              <p className="testimonial-quote">
+                &ldquo;OptimumAI completely transformed my research career. I went from self-teaching ML to co-authoring a NeurIPS paper in 8 months.&rdquo;
+              </p>
+              <div className="testimonial-author">
+                <div className="testimonial-avatar">A</div>
+                <div>
+                  <div className="testimonial-name">Amira Osei</div>
+                  <div className="testimonial-role">PhD Candidate, Oxford</div>
+                </div>
+              </div>
+            </div>
+            <div className="testimonial-card">
+              <p className="testimonial-quote">
+                &ldquo;The challenges pushed me to build real products. Our team&apos;s hackathon project turned into a funded startup within 3 months.&rdquo;
+              </p>
+              <div className="testimonial-author">
+                <div className="testimonial-avatar">K</div>
+                <div>
+                  <div className="testimonial-name">Kenji Nakamura</div>
+                  <div className="testimonial-role">Founder, AgentOS</div>
+                </div>
+              </div>
+            </div>
+            <div className="testimonial-card">
+              <p className="testimonial-quote">
+                &ldquo;Being part of this community means having access to mentors from top AI labs. The bootcamps are world-class quality — and free.&rdquo;
+              </p>
+              <div className="testimonial-author">
+                <div className="testimonial-avatar">S</div>
+                <div>
+                  <div className="testimonial-name">Sofia Vargas</div>
+                  <div className="testimonial-role">ML Engineer, DeepMind</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Community Leaderboard ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Top Contributors</span></div>
+
+          <div className="leaderboard">
+            {[
+              { rank: 1, name: "Mei-Lin Chen", contributions: 47, area: "Alignment Research", badge: "🥇" },
+              { rank: 2, name: "Rashid Ibrahim", contributions: 42, area: "LLM Engineering", badge: "🥈" },
+              { rank: 3, name: "Anika Patel", contributions: 38, area: "Computer Vision", badge: "🥉" },
+              { rank: 4, name: "Tomás Herrera", contributions: 35, area: "Reinforcement Learning", badge: "" },
+              { rank: 5, name: "Yuki Tanaka", contributions: 31, area: "NLP Systems", badge: "" },
+            ].map((c) => (
+              <div key={c.rank} className="leaderboard-row">
+                <span className="leaderboard-rank">{c.badge || `#${c.rank}`}</span>
+                <div className="leaderboard-info">
+                  <span className="leaderboard-name">{c.name}</span>
+                  <span className="leaderboard-area">{c.area}</span>
+                </div>
+                <span className="leaderboard-score">{c.contributions} contributions</span>
+              </div>
+            ))}
+          </div>
+
           {/* ── Account ── */}
-          <div className="opt-rule" style={{ marginTop: "64px" }}><span className="opt-rule-text">Get Started</span></div>
+          <div className="opt-rule" style={{ marginTop: "64px" }}><span className="opt-rule-text">{user ? 'Your Dashboard' : 'Get Started'}</span></div>
 
           <div className="comm-auth">
-            <div className="comm-auth-card">
-              <div className="opt-pillar-title" style={{ marginBottom: "8px" }}>Sign In</div>
-              <p className="opt-pillar-body" style={{ marginBottom: "24px" }}>
-                Access your research dashboard, track applications, and stay connected with the community.
-              </p>
-              <Link href="/login" className="opt-btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-                Sign In <ArrowRight size={13} />
-              </Link>
-            </div>
-            <div className="comm-auth-card">
-              <div className="opt-pillar-title" style={{ marginBottom: "8px" }}>New Here?</div>
-              <p className="opt-pillar-body" style={{ marginBottom: "24px" }}>
-                Join 10,000+ researchers. Create a free account to apply for programmes and publish research.
-              </p>
-              <Link href="/signup" className="opt-btn-ghost" style={{ width: "100%", justifyContent: "center" }}>
-                Create an Account <ArrowRight size={13} />
-              </Link>
-            </div>
+            {user ? (
+              <div className="comm-auth-card" style={{ maxWidth: "480px", margin: "0 auto" }}>
+                <div className="opt-pillar-title" style={{ marginBottom: "8px" }}>
+                  <LayoutDashboard size={18} style={{ marginRight: "8px", verticalAlign: "middle" }} />
+                  Dashboard
+                </div>
+                <p className="opt-pillar-body" style={{ marginBottom: "24px" }}>
+                  View your enrollments, challenge registrations, and community activity all in one place.
+                </p>
+                <Link href="/dashboard" className="opt-btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                  Open Dashboard <ArrowRight size={13} />
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="comm-auth-card">
+                  <div className="opt-pillar-title" style={{ marginBottom: "8px" }}>Sign In</div>
+                  <p className="opt-pillar-body" style={{ marginBottom: "24px" }}>
+                    Access your research dashboard, track applications, and stay connected with the community.
+                  </p>
+                  <Link href="/login" className="opt-btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                    Sign In <ArrowRight size={13} />
+                  </Link>
+                </div>
+                <div className="comm-auth-card">
+                  <div className="opt-pillar-title" style={{ marginBottom: "8px" }}>New Here?</div>
+                  <p className="opt-pillar-body" style={{ marginBottom: "24px" }}>
+                    Join 10,000+ researchers. Create a free account to apply for programmes and publish research.
+                  </p>
+                  <Link href="/signup" className="opt-btn-ghost" style={{ width: "100%", justifyContent: "center" }}>
+                    Create an Account <ArrowRight size={13} />
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
 
         </div>
