@@ -29,7 +29,7 @@ export function Footer() {
             <ul className="opt-footer-links">
               <li><Link href="#" className="opt-footer-link">Blog</Link></li>
               <li><Link href="#" className="opt-footer-link">Documentation</Link></li>
-              <li><Link href="/community" className="opt-footer-link">Community</Link></li>
+              <li><Link href="/beta-outreach" className="opt-footer-link">Beta Outreach</Link></li>
               <li><Link href="#" className="opt-footer-link">Success Stories</Link></li>
             </ul>
           </div>

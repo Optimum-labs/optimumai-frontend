@@ -1786,3 +1786,100 @@
   .ed-card-img { height: 140px; }
   .ed-card-body { padding: 20px; }
 }
+
+/* ============================================================
+   Agency Score Section
+   ============================================================ */
+
+.agency-score-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  margin-bottom: 80px;
+}
+
+.agency-score-intro {
+  padding-top: 16px;
+}
+
+.agency-score-demo {
+  display: flex;
+  justify-content: center;
+}
+
+.agency-score-card {
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(10,10,10,0.1);
+  padding: 32px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.agency-score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(10,10,10,0.06);
+}
+
+.agency-score-number {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 28px;
+}
+
+.agency-score-dimensions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.agency-dimension {
+  /* individual dimension row */
+}
+
+@media (max-width: 768px) {
+  .agency-score-section {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ============================================================
+   Agency Engine Section
+   ============================================================ */
+
+.agency-engine-section {
+  margin-bottom: 80px;
+}
+
+.agency-engine-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.agency-engine-card {
+  padding: 28px;
+  border: 1px solid rgba(10,10,10,0.1);
+  background: rgba(255,255,255,0.4);
+  transition: border-color 0.2s ease;
+}
+
+.agency-engine-card:hover {
+  border-color: var(--gold);
+}
+
+.agency-engine-card:first-child {
+  border-top: 3px solid var(--opt-red);
+  background: rgba(200,57,43,0.03);
+}
+
+@media (max-width: 768px) {
+  .agency-engine-grid {
+    grid-template-columns: 1fr;
+  }
+}

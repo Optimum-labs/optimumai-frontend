@@ -21,7 +21,7 @@ export default function AboutPage() {
 
   const values = [
     { icon: Target, title: "Excellence", description: "We hold ourselves and our programmes to the highest standard — rigorous, honest, always improving." },
-    { icon: Users, title: "Community", description: "We believe great AI is built together. Collaboration, peer learning, and shared success are central to everything we do." },
+    { icon: Users, title: "Collaboration", description: "We believe great AI is built together. Collaboration, peer learning, and shared success are central to everything we do." },
     { icon: Zap, title: "Innovation", description: "We stay at the frontier — updating curricula weekly, publishing original research, and building tools that didn't exist before." },
     { icon: Globe, title: "Accessibility", description: "Geography and background should never be barriers. We design programmes that reach every time zone and every level." },
     { icon: Award, title: "Impact", description: "We measure success by outcomes: papers published, jobs secured, products shipped, and lives changed." },
@@ -121,8 +121,8 @@ export default function AboutPage() {
           {/* ── CTA ── */}
           <div className="opt-rule"><span className="opt-rule-text">Get involved</span></div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", paddingBottom: "80px" }}>
-            <Link href="/community" className="opt-btn-primary" style={{ padding: "14px 32px", fontSize: "13px" }}>
-              Join the community
+            <Link href="/beta-outreach" className="opt-btn-primary" style={{ padding: "14px 32px", fontSize: "13px" }}>
+              Join the Beta Outreach
             </Link>
             <Link href="/contact" className="opt-btn-primary" style={{ padding: "14px 32px", fontSize: "13px", background: "transparent", color: "var(--ink)", border: "1.5px solid var(--ink)" }}>
               Contact us

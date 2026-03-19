@@ -1,12 +1,12 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight, ExternalLink, BookOpen, Users, Brain, FlaskConical } from "lucide-react"
+import { ArrowRight, ExternalLink, BookOpen, Users, Brain, FlaskConical, Activity, Target, Zap, Shield } from "lucide-react"
 import Link from "next/link"
 
 export const metadata = {
-  title: "OptimumAI — Reclaim Human Agency",
+  title: "OptimumAI — The First Infrastructure for Human Consciousness Development",
   description:
-    "AI that amplifies what makes us human. Research, tools, and systems built for the agentic era.",
+    "95% of human decisions are borrowed. We built the instrument that shows you exactly which ones — and what's underneath them.",
 }
 
 const stats = [
@@ -34,7 +34,7 @@ const pillars = [
   },
   {
     num: "04",
-    title: "Community",
+    title: "Open Infrastructure",
     body: "Open by default. Every breakthrough belongs to humanity first. We build in the open and share gains with the researchers who made them possible.",
   },
 ]
@@ -95,9 +95,9 @@ const tracks = [
   },
   {
     Icon: Users,
-    title: "Community",
+    title: "Beta Outreach",
     body: "10K+ researchers collaborating across 80 countries on open problems in AI.",
-    href: "/community",
+    href: "/beta-outreach",
   },
 ]
 
@@ -114,20 +114,19 @@ export default function Home() {
 
           {/* ── Hero ── */}
           <section className="opt-hero">
-            <p className="opt-kicker opt-anim-1">Mission &amp; Vision</p>
+            <p className="opt-kicker opt-anim-1">The Infrastructure for Human Consciousness Development</p>
             <h1 className="opt-headline opt-anim-2">
-              Reclaim<br />
-              <em>Human</em>
-              <span className="opt-indent">Agency.</span>
+              95% of your<br />
+              <em>decisions</em>
+              <span className="opt-indent">are borrowed.</span>
             </h1>
             <p className="opt-sub opt-anim-3">
-              The mission was always clear. AI that amplifies what makes us
-              human — not replaces it. Every decision, every tool, every system
-              built toward one end: <em>human agency restored</em>.
+              None of them are yours. We built the instrument that shows you
+              exactly which ones — and what's underneath them.
             </p>
             <p className="opt-sub opt-anim-4" style={{ marginTop: "20px", fontSize: "14px", opacity: 0.8 }}>
-              We're building the infrastructure for the agentic era — where AI serves human intent,
-              not the other way around.
+              Most humans are not thinking. They're executing borrowed programs.
+              We built the first system that proves it — and fixes it.
             </p>
           </section>
 
@@ -141,25 +140,166 @@ export default function Home() {
             ))}
           </div>
 
-          {/* ── The Evolution ── */}
+          {/* ── Agency Score ── */}
           <div className="opt-rule opt-anim-6">
-            <span className="opt-rule-text">The Evolution</span>
+            <span className="opt-rule-text">The Agency Score</span>
           </div>
 
-          <div className="opt-shift">
-            <div>
-              <span className="opt-shift-label">Then</span>
-              <p className="opt-shift-text">
-                A clear mission from day one. Built to optimize for humans, not around them.
+          <div className="agency-score-section">
+            <div className="agency-score-intro">
+              <h2 style={{
+                fontFamily: "var(--font-playfair), serif",
+                fontSize: "clamp(28px, 4vw, 42px)",
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: "16px",
+                lineHeight: 1.2
+              }}>
+                Not a personality type.<br />Not a category.<br /><em>A number with meaning.</em>
+              </h2>
+              <p style={{
+                fontSize: "13px",
+                lineHeight: 1.85,
+                color: "var(--muted-txt)",
+                maxWidth: "520px",
+                marginBottom: "32px"
+              }}>
+                Every competitor builds assessments that measure what people say about themselves. 
+                Ours measures what their actual language patterns, vocal tone, and response behavior 
+                reveal about them — without them knowing.
               </p>
             </div>
-            <div className="opt-shift-divider" />
-            <div>
-              <span className="opt-shift-label">Now</span>
-              <p className="opt-shift-text-now">
-                Just became more <em>agentic</em> —
-                because the mission demands it.
+
+            <div className="agency-score-demo">
+              <div className="agency-score-card">
+                <div className="agency-score-header">
+                  <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "var(--gold)" }}>Agency Assessment</span>
+                  <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "9px", color: "var(--muted-txt)" }}>Sample Output</span>
+                </div>
+                <div className="agency-score-number">
+                  <span style={{
+                    fontFamily: "var(--font-playfair), serif",
+                    fontSize: "72px",
+                    fontWeight: 900,
+                    color: "var(--opt-red)",
+                    lineHeight: 1
+                  }}>67</span>
+                  <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "11px", color: "var(--muted-txt)", marginLeft: "8px" }}>/100</span>
+                </div>
+                <div className="agency-score-dimensions">
+                  {[
+                    { label: "Original Thought", value: 72, color: "var(--opt-red)" },
+                    { label: "Decision Autonomy", value: 61, color: "var(--gold)" },
+                    { label: "Pattern Awareness", value: 74, color: "var(--ink)" },
+                    { label: "Cognitive Flexibility", value: 58, color: "var(--muted-txt)" },
+                  ].map((d) => (
+                    <div key={d.label} className="agency-dimension">
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
+                        <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "10px", color: "var(--ink)" }}>{d.label}</span>
+                        <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "10px", color: "var(--muted-txt)" }}>{d.value}</span>
+                      </div>
+                      <div style={{ height: "3px", background: "rgba(10,10,10,0.08)", borderRadius: "2px" }}>
+                        <div style={{ height: "100%", width: `${d.value}%`, background: d.color, borderRadius: "2px", transition: "width 1s ease" }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: "20px", padding: "16px", background: "rgba(184,150,90,0.06)", border: "1px solid rgba(184,150,90,0.12)" }}>
+                  <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "9px", letterSpacing: "0.15em", textTransform: "uppercase" as const, color: "var(--gold)", display: "block", marginBottom: "8px" }}>Pattern Map Insight</span>
+                  <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "11px", lineHeight: 1.7, color: "var(--ink)", margin: 0, fontStyle: "italic" }}>
+                    "Career decisions show strong conformity to peer-group consensus. 
+                    Creative reasoning operates independently but is suppressed in professional contexts."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── The Agency Engine ── */}
+          <div className="opt-rule">
+            <span className="opt-rule-text">The Agency Engine</span>
+          </div>
+
+          <div className="agency-engine-section">
+            <div style={{ textAlign: "center", marginBottom: "48px" }}>
+              <p style={{
+                fontFamily: "var(--font-dm-mono), monospace",
+                fontSize: "10px",
+                letterSpacing: "0.25em",
+                textTransform: "uppercase" as const,
+                color: "var(--opt-red)",
+                marginBottom: "16px"
+              }}>Now in Private Beta</p>
+              <h2 style={{
+                fontFamily: "var(--font-playfair), serif",
+                fontSize: "clamp(28px, 4vw, 48px)",
+                fontWeight: 700,
+                color: "var(--ink)",
+                marginBottom: "16px",
+                lineHeight: 1.2
+              }}>
+                The first infrastructure for<br />human consciousness development<br /><em>at scale.</em>
+              </h2>
+              <p style={{
+                fontSize: "13px",
+                lineHeight: 1.85,
+                color: "var(--muted-txt)",
+                maxWidth: "560px",
+                margin: "0 auto 32px"
+              }}>
+                One agent. One human. One score. One disruption. The Mirror Agent talks to a human, 
+                asks precise questions, listens for patterns, and reflects back exactly where they're 
+                operating on autopilot versus genuine original thought.
               </p>
+            </div>
+
+            <div className="agency-engine-grid">
+              {[
+                {
+                  icon: Activity,
+                  num: "01",
+                  title: "The Mirror Agent",
+                  status: "Private Beta",
+                  body: "30-minute conversational assessment across text and voice. Measures actual language patterns, vocal tone, and response behavior to produce your Agency Score.",
+                },
+                {
+                  icon: Target,
+                  num: "02",
+                  title: "The Challenger",
+                  status: "Coming Soon",
+                  body: "Takes Mirror Agent output. Designs personalized 30-day cognitive disruption program — precise behavioral interventions targeting your specific suppressed capacity.",
+                },
+                {
+                  icon: Zap,
+                  num: "03",
+                  title: "The Tracker",
+                  status: "Coming Soon",
+                  body: "Longitudinal check-ins every 30 days. Measures whether Agency Score is genuinely moving or you're performing change. Brutal honest tracking.",
+                },
+                {
+                  icon: Shield,
+                  num: "04",
+                  title: "The Meta Agent",
+                  status: "In Development",
+                  body: "Watches all agents. Identifies where the system has blind spots. Rewrites its own prompts. Improves calibration autonomously.",
+                },
+              ].map((agent) => (
+                <div key={agent.num} className="agency-engine-card">
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
+                    <agent.icon size={18} style={{ color: "var(--opt-red)" }} />
+                    <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "9px", letterSpacing: "0.15em", textTransform: "uppercase" as const, color: agent.status === "Private Beta" ? "var(--opt-red)" : "var(--gold)" }}>{agent.status}</span>
+                  </div>
+                  <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "10px", color: "var(--muted-txt)" }}>{agent.num}</span>
+                  <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "18px", fontWeight: 700, color: "var(--ink)", margin: "8px 0" }}>{agent.title}</div>
+                  <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "11px", lineHeight: 1.8, color: "var(--muted-txt)", margin: 0 }}>{agent.body}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ textAlign: "center", marginTop: "40px" }}>
+              <Link href="/beta-outreach" className="opt-btn-primary">
+                Request Early Access <ArrowRight size={13} />
+              </Link>
             </div>
           </div>
 
@@ -178,34 +318,108 @@ export default function Home() {
             ))}
           </div>
 
-          {/* ── About OptimumAI ── */}
+          {/* ── Two Businesses ── */}
           <div className="opt-rule">
-            <span className="opt-rule-text">About OptimumAI</span>
+            <span className="opt-rule-text">What We Build</span>
           </div>
 
-          <div style={{ maxWidth: "800px", margin: "0 auto 80px", textAlign: "center" }}>
-            <h2 style={{
-              fontFamily: "var(--font-playfair), serif",
-              fontSize: "clamp(28px, 4vw, 48px)",
-              fontWeight: 700,
-              color: "var(--ink)",
-              marginBottom: "20px",
-              lineHeight: 1.2
+          <div style={{ maxWidth: "800px", margin: "0 auto 80px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", marginBottom: "40px" }}>
+              <div style={{
+                padding: "32px",
+                border: "1px solid rgba(184,150,90,0.15)",
+                background: "rgba(255,255,255,0.4)"
+              }}>
+                <span style={{
+                  fontFamily: "var(--font-dm-mono), monospace",
+                  fontSize: "9px",
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  color: "var(--gold)",
+                  display: "block",
+                  marginBottom: "16px"
+                }}>Education &amp; Research</span>
+                <div style={{
+                  fontFamily: "var(--font-playfair), serif",
+                  fontSize: "22px",
+                  fontWeight: 700,
+                  color: "var(--ink)",
+                  marginBottom: "12px"
+                }}>
+                  The Foundation
+                </div>
+                <p style={{
+                  fontSize: "12px",
+                  lineHeight: 1.8,
+                  color: "var(--muted-txt)",
+                  marginBottom: "20px"
+                }}>
+                  Intensive bootcamps, research programs, and internships that transform ambitious 
+                  people into practising AI researchers. Real, valuable, and funding the mission.
+                </p>
+                <Link href="/bootcamps" className="opt-btn-ghost" style={{ fontSize: "9px", padding: "8px 20px" }}>
+                  Explore Programs <ArrowRight size={10} />
+                </Link>
+              </div>
+
+              <div style={{
+                padding: "32px",
+                border: "1px solid rgba(200,57,43,0.2)",
+                background: "rgba(200,57,43,0.03)",
+                borderTop: "3px solid var(--opt-red)"
+              }}>
+                <span style={{
+                  fontFamily: "var(--font-dm-mono), monospace",
+                  fontSize: "9px",
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  color: "var(--opt-red)",
+                  display: "block",
+                  marginBottom: "16px"
+                }}>Assessment Engine</span>
+                <div style={{
+                  fontFamily: "var(--font-playfair), serif",
+                  fontSize: "22px",
+                  fontWeight: 700,
+                  color: "var(--ink)",
+                  marginBottom: "12px"
+                }}>
+                  The Revolution
+                </div>
+                <p style={{
+                  fontSize: "12px",
+                  lineHeight: 1.8,
+                  color: "var(--muted-txt)",
+                  marginBottom: "20px"
+                }}>
+                  The Agency Engine — a multi-agent swarm that measures, challenges, and develops 
+                  human consciousness at scale. The thing nobody else can build.
+                </p>
+                <Link href="/beta-outreach" className="opt-btn-primary" style={{ fontSize: "9px", padding: "8px 20px" }}>
+                  Request Beta Access <ArrowRight size={10} />
+                </Link>
+              </div>
+            </div>
+
+            <div style={{
+              background: "rgba(184,150,90,0.05)",
+              border: "1px solid rgba(184,150,90,0.1)",
+              borderRadius: "4px",
+              padding: "24px",
+              marginBottom: "32px"
             }}>
-              We exist to make<br /><em>world-class AI</em><br />available to everyone.
-            </h2>
-            <p style={{
-              fontSize: "18px",
-              lineHeight: 1.6,
-              color: "var(--muted-txt)",
-              marginBottom: "32px",
-              maxWidth: "600px",
-              marginLeft: "auto",
-              marginRight: "auto"
-            }}>
-              OptimumAI is a research-first education company founded in 2022. We build the programmes, tools, and
-              community infrastructure that turn ambitious people into practising AI researchers and engineers.
-            </p>
+              <p style={{
+                fontSize: "16px",
+                lineHeight: 1.6,
+                color: "var(--ink)",
+                margin: 0,
+                fontStyle: "italic"
+              }}>
+                "Tesla wasn't a car — it was proof fossil fuel transport was obsolete. 
+                OptimumAI isn't an assessment tool — it's the first infrastructure for 
+                human consciousness development at scale."
+              </p>
+            </div>
 
             <div style={{
               display: "grid",
@@ -241,25 +455,6 @@ export default function Home() {
                   }}>{s.label}</div>
                 </div>
               ))}
-            </div>
-
-            <div style={{
-              background: "rgba(184,150,90,0.05)",
-              border: "1px solid rgba(184,150,90,0.1)",
-              borderRadius: "4px",
-              padding: "24px",
-              marginBottom: "32px"
-            }}>
-              <p style={{
-                fontSize: "16px",
-                lineHeight: 1.6,
-                color: "var(--ink)",
-                margin: 0,
-                fontStyle: "italic"
-              }}>
-                "The gap between academic AI research and accessible education was enormous. The best techniques
-                were locked inside elite labs and paywalled journals. Talented people everywhere had no path into the field."
-              </p>
             </div>
 
             <Link href="/about" className="opt-btn-ghost">
@@ -330,8 +525,8 @@ export default function Home() {
                 <Link href="/research" className="opt-btn-primary">
                   Explore Research <ArrowRight size={13} />
                 </Link>
-                <Link href="/community" className="opt-btn-ghost">
-                  Join Community
+                <Link href="/beta-outreach" className="opt-btn-ghost">
+                  Join Beta Outreach
                 </Link>
               </div>
             </div>
@@ -376,13 +571,13 @@ export default function Home() {
 
           {/* ── CTA ── */}
           <div className="opt-cta-block">
-            <p className="opt-kicker" style={{ marginBottom: "16px" }}>Ready to begin?</p>
+            <p className="opt-kicker" style={{ marginBottom: "16px" }}>Say the true thing. Build the true thing.</p>
             <p className="opt-cta-headline">
-              Start your journey toward<br />the agentic era.
+              The first system that proves<br />you're not thinking — <em>and fixes it.</em>
             </p>
             <div className="opt-cta-actions">
-              <Link href="/signup" className="opt-btn-primary">
-                Apply Now <ArrowRight size={13} />
+              <Link href="/beta-outreach" className="opt-btn-primary">
+                Request Early Access <ArrowRight size={13} />
               </Link>
               <Link href="/about" className="opt-btn-ghost">
                 Learn about us
