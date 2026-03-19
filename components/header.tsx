@@ -8,27 +8,29 @@ import { createClient } from "@/lib/supabase"
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [user, setUser] = useState<{ email?: string } | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [ready, setReady] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      setLoading(false)
-    }
-    checkSession()
+    // Instant check from local storage (no network request)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+      setReady(true)
+    })
 
+    // Listen for auth changes (login/logout/token refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
+      setReady(true)
     })
     return () => subscription.unsubscribe()
   }, [])
 
   const handleLogout = async () => {
+    setUser(null) // Instantly update UI
+    await supabase.auth.signOut()
     await fetch('/api/logout', { method: 'POST' })
-    setUser(null)
-    window.location.href = '/login'
+    window.location.href = '/'
   }
 
   return (
@@ -45,9 +47,8 @@ export function Header() {
           <Link href="/beta-outreach" className="opt-header-nav-link">Beta Outreach</Link>
         </nav>
 
-        <div className="opt-header-actions">
-          {!loading && (
-            user ? (
+        <div className="opt-header-actions" style={{ opacity: ready ? 1 : 0, transition: "opacity 0.15s ease" }}>
+          {user ? (
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <Link href="/dashboard" className="opt-btn-ghost opt-header-started" style={{ padding: "8px 16px", fontSize: "11px" }}>
                   <LayoutDashboard size={13} style={{ marginRight: "4px" }} /> Dashboard
@@ -63,8 +64,7 @@ export function Header() {
                 </Link>
                 <Link href="/contact" className="opt-btn-primary opt-header-started">Contact Us</Link>
               </div>
-            )
-          )}
+            )}
         </div>
 
         <button
