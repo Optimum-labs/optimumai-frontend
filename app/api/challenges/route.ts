@@ -12,7 +12,8 @@ export async function GET() {
 
     return NextResponse.json(challenges)
   } catch (err) {
-    console.error("Error fetching challenges:", err)
-    return NextResponse.json({ error: "Failed to fetch challenges" }, { status: 500 })
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error("Error fetching challenges:", msg)
+    return NextResponse.json({ error: "Failed to fetch challenges", detail: msg }, { status: 500 })
   }
 }

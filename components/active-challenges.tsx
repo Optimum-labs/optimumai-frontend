@@ -22,13 +22,20 @@ interface Challenge {
 export function ActiveChallenges() {
   const [challenges, setChallenges] = useState<Challenge[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null)
 
   useEffect(() => {
     fetch('/api/challenges')
       .then(res => res.json())
-      .then(data => setChallenges(data))
-      .catch(() => {})
+      .then(data => {
+        if (Array.isArray(data)) {
+          setChallenges(data)
+        } else {
+          setError(true)
+        }
+      })
+      .catch(() => setError(true))
       .finally(() => setLoading(false))
   }, [])
 
@@ -36,6 +43,14 @@ export function ActiveChallenges() {
     return (
       <div style={{ textAlign: 'center', padding: '40px 0' }}>
         <p style={{ fontFamily: 'var(--font-dm-mono), monospace', fontSize: '12px', color: 'var(--muted-txt)' }}>Loading challenges...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div style={{ textAlign: 'center', padding: '40px 0' }}>
+        <p style={{ fontFamily: 'var(--font-dm-mono), monospace', fontSize: '12px', color: 'var(--muted-txt)' }}>No active challenges right now. Check back soon!</p>
       </div>
     )
   }
