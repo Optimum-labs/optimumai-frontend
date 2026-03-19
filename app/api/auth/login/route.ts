@@ -37,8 +37,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 401 })
     }
 
-    // Get or create user in our database
-    const user = await getCurrentUser(data.user.id)
+    // Get or create user in our database — pass Supabase user directly
+    const user = await getCurrentUser(data.user)
+
+    if (!user) {
+      return NextResponse.json({ error: "Failed to retrieve user record." }, { status: 500 })
+    }
 
     // Log successful login
     await UserLogger.logAuthAction(

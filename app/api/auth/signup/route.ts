@@ -52,13 +52,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
-    // Get or create user in our database
-    const user = await getCurrentUser(data.user?.id)
+    if (!data.user) {
+      return NextResponse.json({ error: "Signup succeeded but no user returned." }, { status: 500 })
+    }
+
+    // Get or create user in our database — pass Supabase user directly
+    // since there's no session cookie yet (email not verified)
+    const user = await getCurrentUser(data.user)
+
+    if (!user) {
+      return NextResponse.json({ error: "Failed to create user record." }, { status: 500 })
+    }
 
     // Log successful signup
     await UserLogger.logAuthAction(
       'signup',
-      data.user?.id || null,
+      data.user.id,
       user.id,
       true,
       { email, name },
