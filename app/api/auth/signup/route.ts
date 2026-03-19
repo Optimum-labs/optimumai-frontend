@@ -28,67 +28,41 @@ export async function POST(req: NextRequest) {
     }
 
     const supabase = await createServerSupabaseClient()
+    const admin = createAdminSupabaseClient()
 
-    // Create user with Supabase
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { name },
+    // Check if user already exists in Supabase
+    const { data: existingList } = await admin.auth.admin.listUsers()
+    const existingUser = existingList?.users?.find(u => u.email === email)
+
+    let supabaseUser
+
+    if (existingUser) {
+      // User already exists — try signing in (they may have forgotten they registered)
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+      if (signInError) {
+        return NextResponse.json({ error: "An account with this email already exists. Please sign in instead." }, { status: 409 })
       }
-    })
+      supabaseUser = signInData.user
+    } else {
+      // Create user via admin client — auto-confirms email, bypasses rate limits
+      const { data: adminData, error: adminError } = await admin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: { name },
+      })
 
-    let supabaseUser = data?.user
-
-    // If rate limit exceeded, use admin client to create user directly
-    if (error && error.message.toLowerCase().includes('rate limit')) {
-      try {
-        const admin = createAdminSupabaseClient()
-
-        // Check if user already exists
-        const { data: existingUsers } = await admin.auth.admin.listUsers()
-        const existing = existingUsers?.users?.find(u => u.email === email)
-
-        if (existing) {
-          // User already exists — just sign them in
-          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-          if (signInError) {
-            return NextResponse.json({ error: signInError.message }, { status: 401 })
-          }
-          supabaseUser = signInData.user
-        } else {
-          // Create user via admin (bypasses rate limits, auto-confirms email)
-          const { data: adminData, error: adminError } = await admin.auth.admin.createUser({
-            email,
-            password,
-            email_confirm: true,
-            user_metadata: { name },
-          })
-
-          if (adminError) {
-            return NextResponse.json({ error: adminError.message }, { status: 400 })
-          }
-
-          supabaseUser = adminData.user
-
-          // Sign in to establish session cookies
-          await supabase.auth.signInWithPassword({ email, password })
-        }
-      } catch (adminErr) {
-        console.error('Admin signup fallback failed:', adminErr)
-        return NextResponse.json({ error: "Signup is temporarily unavailable. Please try again later." }, { status: 503 })
+      if (adminError) {
+        await UserLogger.logAuthAction('signup', null, null, false, { error: adminError.message, email }, req)
+        return NextResponse.json({ error: adminError.message }, { status: 400 })
       }
-    } else if (error) {
-      await UserLogger.logAuthAction('signup', null, null, false, { error: error.message, email }, req)
-      return NextResponse.json({ error: error.message }, { status: 400 })
-    } else if (supabaseUser) {
-      // Normal signup succeeded — auto-confirm via admin and sign in
-      try {
-        const admin = createAdminSupabaseClient()
-        await admin.auth.admin.updateUserById(supabaseUser.id, { email_confirm: true })
-        await supabase.auth.signInWithPassword({ email, password })
-      } catch {
-        // Non-critical: user created but email not auto-confirmed
+
+      supabaseUser = adminData.user
+
+      // Sign in to establish session cookies
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+      if (signInError) {
+        console.error('Post-signup sign-in failed:', signInError.message)
       }
     }
 
