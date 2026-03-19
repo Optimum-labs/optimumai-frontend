@@ -4,12 +4,11 @@ import { getCurrentUser } from "@/lib/auth"
 import { UserLogger } from "@/lib/user-logger"
 import { createClient } from "@supabase/supabase-js"
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 export async function POST(req: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
   try {
     const formData = await req.formData()
     const challengeId = formData.get('challengeId') as string
