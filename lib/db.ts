@@ -5,7 +5,6 @@ import pg from "pg"
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
 function createPrismaClient() {
-  // DATABASE_URL locally; Vercel Supabase integration provides POSTGRES_PRISMA_URL / POSTGRES_URL
   let connectionString =
     process.env.DATABASE_URL ||
     process.env.POSTGRES_PRISMA_URL ||
@@ -14,19 +13,18 @@ function createPrismaClient() {
   const isRemote = process.env.NODE_ENV === "production" ||
     (connectionString && connectionString.includes("supabase.co"))
 
-  // Strip sslmode from connection string — pg treats sslmode=require as verify-full
-  // which rejects Supabase's self-signed cert. We apply SSL config explicitly instead.
+  // pg v8 treats sslmode=require as verify-full, rejecting Supabase's self-signed cert.
+  // Adding uselibpqcompat=true makes sslmode=require use standard libpq semantics:
+  // "require SSL but don't verify the server certificate" — exactly what Supabase needs.
   if (isRemote && connectionString) {
-    const url = new URL(connectionString)
-    url.searchParams.delete("sslmode")
-    connectionString = url.toString()
+    const sep = connectionString.includes("?") ? "&" : "?"
+    connectionString += `${sep}uselibpqcompat=true`
+    if (!connectionString.includes("sslmode=")) {
+      connectionString += "&sslmode=require"
+    }
   }
 
-  const pool = new pg.Pool({
-    connectionString,
-    ...(isRemote ? { ssl: { rejectUnauthorized: false } } : {}),
-  })
-
+  const pool = new pg.Pool({ connectionString })
   const adapter = new PrismaPg(pool)
   return new PrismaClient({ adapter })
 }
