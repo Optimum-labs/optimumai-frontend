@@ -27,6 +27,23 @@ function LoginForm() {
     }
   }, [searchParams])
 
+  const handleSocialLogin = async (provider: 'github' | 'google') => {
+    setError(null)
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      })
+      if (error) {
+        setError(error.message)
+      }
+    } catch {
+      setError('Failed to sign in with ' + provider)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -74,10 +91,10 @@ function LoginForm() {
               <p className="auth-desc">Sign in to your OptimumAI account</p>
 
               <div className="auth-social">
-                <button type="button" className="auth-social-btn">
+                <button type="button" className="auth-social-btn" onClick={() => handleSocialLogin('github')}>
                   <Github size={14} /> GitHub
                 </button>
-                <button type="button" className="auth-social-btn">
+                <button type="button" className="auth-social-btn" onClick={() => handleSocialLogin('google')}>
                   <Mail size={14} /> Google
                 </button>
               </div>

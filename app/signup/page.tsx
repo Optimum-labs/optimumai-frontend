@@ -22,6 +22,23 @@ export default function SignUpPage() {
   const router = useRouter()
   const supabase = createClient()
 
+  const handleSocialLogin = async (provider: 'github' | 'google') => {
+    setError(null)
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      })
+      if (error) {
+        setError(error.message)
+      }
+    } catch {
+      setError('Failed to sign in with ' + provider)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -166,10 +183,10 @@ export default function SignUpPage() {
                   <p className="auth-desc">Start your AI learning journey with OptimumAI</p>
 
                   <div className="auth-social">
-                    <button type="button" className="auth-social-btn">
+                    <button type="button" className="auth-social-btn" onClick={() => handleSocialLogin('github')}>
                       <Github size={14} /> GitHub
                     </button>
-                    <button type="button" className="auth-social-btn">
+                    <button type="button" className="auth-social-btn" onClick={() => handleSocialLogin('google')}>
                       <Mail size={14} /> Google
                     </button>
                   </div>
