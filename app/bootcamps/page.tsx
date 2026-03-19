@@ -13,7 +13,8 @@ export default function BootcampsPage() {
   const [message, setMessage] = useState<{ slug: string; text: string; error: boolean } | null>(null)
   const [user, setUser] = useState<any>(null)
   const [resumes, setResumes] = useState<Record<string, File>>({})
-
+  const [guestForms, setGuestForms] = useState<Record<string, { fullName: string; email: string }>>({})
+  const [showGuestForm, setShowGuestForm] = useState<string | null>(null)
   useEffect(() => {
     const supabase = createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -28,8 +29,12 @@ export default function BootcampsPage() {
 
   const handleEnroll = async (slug: string) => {
     if (!user) {
-      setMessage({ slug, text: "Please sign in to enroll.", error: true })
-      return
+      const guestData = guestForms[slug]
+      if (!guestData?.fullName || !guestData?.email) {
+        setShowGuestForm(slug)
+        setMessage({ slug, text: "Please fill in your name and email.", error: true })
+        return
+      }
     }
     setEnrollingSlug(slug)
     setMessage(null)
@@ -39,10 +44,15 @@ export default function BootcampsPage() {
     if (resumes[slug]) {
       formData.append('resume', resumes[slug])
     }
+    if (!user) {
+      const guestData = guestForms[slug]
+      formData.append('fullName', guestData.fullName)
+      formData.append('email', guestData.email)
+    }
 
     // Save as JSON
     const jsonData = {
-      courseSlug,
+      courseSlug: slug,
       resumeUploaded: !!resumes[slug],
       enrolledAt: new Date().toISOString()
     }
@@ -273,18 +283,36 @@ export default function BootcampsPage() {
                       <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "var(--muted-txt)" }}>Next cohort</span>
                       <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 700, color: "var(--ink)" }}>{b.nextStart}</div>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px", width: "200px" }}>
-                      {user && !enrolledSlugs.has(b.slug) && (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px", width: "240px" }}>
+                      {!enrolledSlugs.has(b.slug) && (
                         <input
                           type="file"
                           accept=".pdf,.doc,.docx"
                           onChange={(e) => setResumes(prev => ({ ...prev, [b.slug]: e.target.files?.[0] || undefined }))}
-                          style={{ fontSize: "10px", padding: "4px", border: "1px solid var(--muted-txt)", borderRadius: "4px" }}
+                          style={{ fontSize: "10px", padding: "4px", border: "1px solid var(--muted-txt)", borderRadius: "4px", width: "100%" }}
                         />
+                      )}
+                      {!user && !enrolledSlugs.has(b.slug) && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: "6px", width: "100%" }}>
+                          <input
+                            type="text"
+                            placeholder="Full name"
+                            value={guestForms[b.slug]?.fullName || ""}
+                            onChange={(e) => setGuestForms(prev => ({ ...prev, [b.slug]: { ...prev[b.slug], fullName: e.target.value, email: prev[b.slug]?.email || "" } }))}
+                            style={{ fontSize: "11px", padding: "6px 8px", border: "1px solid rgba(10,10,10,0.15)", borderRadius: "4px", fontFamily: "var(--font-dm-mono), monospace", width: "100%" }}
+                          />
+                          <input
+                            type="email"
+                            placeholder="Email address"
+                            value={guestForms[b.slug]?.email || ""}
+                            onChange={(e) => setGuestForms(prev => ({ ...prev, [b.slug]: { ...prev[b.slug], email: e.target.value, fullName: prev[b.slug]?.fullName || "" } }))}
+                            style={{ fontSize: "11px", padding: "6px 8px", border: "1px solid rgba(10,10,10,0.15)", borderRadius: "4px", fontFamily: "var(--font-dm-mono), monospace", width: "100%" }}
+                          />
+                        </div>
                       )}
                       {enrolledSlugs.has(b.slug) ? (
                         <span className="opt-btn-ghost" style={{ fontSize: "11px", padding: "8px 18px", cursor: "default", color: "#2a7d4f" }}>✓ Enrolled</span>
-                      ) : user ? (
+                      ) : (
                         <button
                           onClick={() => handleEnroll(b.slug)}
                           disabled={enrollingSlug === b.slug}
@@ -293,10 +321,6 @@ export default function BootcampsPage() {
                         >
                           {enrollingSlug === b.slug ? "Enrolling..." : "Enroll Now"} <ArrowRight size={11} />
                         </button>
-                      ) : (
-                        <Link href="/login" className="opt-btn-primary" style={{ fontSize: "11px", padding: "8px 18px" }}>
-                          Sign In to Enroll <ArrowRight size={11} />
-                        </Link>
                       )}
                       {message && message.slug === b.slug && (
                         <span style={{ fontSize: "10px", color: message.error ? "var(--opt-red)" : "#2a7d4f", fontFamily: "var(--font-dm-mono), monospace" }}>
@@ -323,7 +347,9 @@ export default function BootcampsPage() {
               {user ? (
                 <Link href="/dashboard" className="opt-btn-primary">View My Enrollments <ArrowRight size={13} /></Link>
               ) : (
-                <Link href="/login" className="opt-btn-primary">Sign In to Enroll <ArrowRight size={13} /></Link>
+                <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className="opt-btn-primary">
+                  Enroll Now <ArrowRight size={13} />
+                </a>
               )}
               <Link href="/contact" className="opt-btn-ghost">Contact Us</Link>
             </div>

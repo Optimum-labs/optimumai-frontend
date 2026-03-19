@@ -13,6 +13,7 @@ export default function ResearchPage() {
   const [appliedSlugs, setAppliedSlugs] = useState<Set<string>>(new Set())
   const [message, setMessage] = useState<{ slug: string; text: string; error: boolean } | null>(null)
   const [user, setUser] = useState<any>(null)
+  const [guestForms, setGuestForms] = useState<Record<string, { fullName: string; email: string }>>({})
 
   useEffect(() => {
     const supabase = createBrowserClient(
@@ -28,16 +29,24 @@ export default function ResearchPage() {
 
   const handleApply = async (slug: string) => {
     if (!user) {
-      setMessage({ slug, text: "Please sign in to apply.", error: true })
-      return
+      const guestData = guestForms[slug]
+      if (!guestData?.fullName || !guestData?.email) {
+        setMessage({ slug, text: "Please fill in your name and email to apply.", error: true })
+        return
+      }
     }
     setApplyingSlug(slug)
     setMessage(null)
     try {
+      const body: any = { programSlug: slug }
+      if (!user) {
+        body.fullName = guestForms[slug].fullName
+        body.email = guestForms[slug].email
+      }
       const res = await fetch("/api/research/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ programSlug: slug }),
+        body: JSON.stringify(body),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -245,22 +254,34 @@ export default function ResearchPage() {
                   </div>
 
                   <div style={{ display: "flex", flexDirection: "column", gap: "8px", paddingTop: "8px" }}>
+                    {!user && project.status === "Accepting Applications" && !appliedSlugs.has(project.slug) && (
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        <input
+                          type="text"
+                          placeholder="Full name"
+                          value={guestForms[project.slug]?.fullName || ""}
+                          onChange={(e) => setGuestForms(prev => ({ ...prev, [project.slug]: { ...prev[project.slug], fullName: e.target.value, email: prev[project.slug]?.email || "" } }))}
+                          style={{ fontSize: "11px", padding: "6px 8px", border: "1px solid rgba(10,10,10,0.15)", borderRadius: "4px", fontFamily: "var(--font-dm-mono), monospace", flex: 1 }}
+                        />
+                        <input
+                          type="email"
+                          placeholder="Email address"
+                          value={guestForms[project.slug]?.email || ""}
+                          onChange={(e) => setGuestForms(prev => ({ ...prev, [project.slug]: { ...prev[project.slug], email: e.target.value, fullName: prev[project.slug]?.fullName || "" } }))}
+                          style={{ fontSize: "11px", padding: "6px 8px", border: "1px solid rgba(10,10,10,0.15)", borderRadius: "4px", fontFamily: "var(--font-dm-mono), monospace", flex: 1 }}
+                        />
+                      </div>
+                    )}
                     <div style={{ display: "flex", gap: "12px" }}>
                       {project.status === "Accepting Applications" && !appliedSlugs.has(project.slug) ? (
-                        user ? (
-                          <button
-                            onClick={() => handleApply(project.slug)}
-                            disabled={applyingSlug === project.slug}
-                            className="opt-btn-primary"
-                            style={{ fontSize: "12px", padding: "10px 20px", opacity: applyingSlug === project.slug ? 0.6 : 1 }}
-                          >
-                            {applyingSlug === project.slug ? "Submitting..." : "Apply to Join"} <ArrowRight size={11} />
-                          </button>
-                        ) : (
-                          <Link href="/login" className="opt-btn-primary" style={{ fontSize: "12px", padding: "10px 20px" }}>
-                            Sign In to Apply <ArrowRight size={11} />
-                          </Link>
-                        )
+                        <button
+                          onClick={() => handleApply(project.slug)}
+                          disabled={applyingSlug === project.slug}
+                          className="opt-btn-primary"
+                          style={{ fontSize: "12px", padding: "10px 20px", opacity: applyingSlug === project.slug ? 0.6 : 1 }}
+                        >
+                          {applyingSlug === project.slug ? "Submitting..." : "Apply to Join"} <ArrowRight size={11} />
+                        </button>
                       ) : project.status === "In Progress" ? (
                         <span className="opt-btn-ghost" style={{ fontSize: "12px", padding: "10px 20px", cursor: "default" }}>In Progress</span>
                       ) : (

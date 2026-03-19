@@ -38,8 +38,10 @@ model Course {
 
 model Enrollment {
   id         String   @id @default(cuid())
-  userId     String
+  userId     String?
   courseId    String
+  fullName    String?
+  email       String?
   status      String   @default("enrolled") // enrolled | in-progress | completed
   progress    Int      @default(0)          // 0-100 percent
   meetingLink String?
@@ -47,10 +49,10 @@ model Enrollment {
   jsonData    Json?
   enrolledAt  DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, courseId])
+  @@unique([courseId, email])
 }
 
 model Activity {
@@ -143,15 +145,18 @@ model ResearchProgram {
 model ResearchApplication {
   id          String          @id @default(cuid())
   programId   String
-  userId      String
+  userId      String?
+  fullName    String?
+  email       String?
   status      String          @default("pending") // pending | approved | active | completed
   meetingLink String?
+  jsonData    Json?
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   program     ResearchProgram @relation(fields: [programId], references: [id], onDelete: Cascade)
-  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  @@unique([programId, userId])
+  @@unique([programId, email])
 }
 
 model MeetingLink {

@@ -328,7 +328,7 @@ function BetaOutreachContent() {
                           <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><Clock size={12} /> {b.duration}</span>
                           <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><Calendar size={12} /> Next: {b.nextStart}</span>
                         </div>
-                        <Link href="/signup" className="opt-btn-primary" style={{ fontSize: "10px", padding: "10px 22px" }}>
+                        <Link href="/bootcamps" className="opt-btn-primary" style={{ fontSize: "10px", padding: "10px 22px" }}>
                           Apply Now <ArrowRight size={12} />
                         </Link>
                       </div>
@@ -389,7 +389,7 @@ function BetaOutreachContent() {
                           <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><BookOpen size={12} /> {l.lessons} lessons</span>
                           <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><Clock size={12} /> {l.duration}</span>
                         </div>
-                        <Link href="/signup" className="opt-btn-primary" style={{ fontSize: "10px", padding: "10px 22px" }}>
+                        <Link href="/bootcamps" className="opt-btn-primary" style={{ fontSize: "10px", padding: "10px 22px" }}>
                           Start Learning <Play size={12} />
                         </Link>
                       </div>
