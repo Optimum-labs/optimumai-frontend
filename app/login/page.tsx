@@ -16,9 +16,21 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [checkingAuth, setCheckingAuth] = useState(true)
   const searchParams = useSearchParams()
   const router = useRouter()
   const supabase = createClient()
+
+  useEffect(() => {
+    // Redirect to dashboard if already logged in
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        router.replace('/dashboard')
+      } else {
+        setCheckingAuth(false)
+      }
+    })
+  }, [])
 
   useEffect(() => {
     // Check for verification success
@@ -82,6 +94,16 @@ function LoginForm() {
       <main className="optimum-main">
         <div className="grain-overlay" aria-hidden="true" />
 
+        {checkingAuth ? (
+          <div className="auth-page">
+            <div>
+              <div className="auth-card">
+                <div className="auth-logo">O</div>
+                <h1 className="auth-title">Loading...</h1>
+              </div>
+            </div>
+          </div>
+        ) : (
         <div className="auth-page">
           <div>
             <div className="auth-card">
@@ -194,6 +216,7 @@ function LoginForm() {
             </p>
           </div>
         </div>
+        )}
       </main>
       <Footer />
     </>

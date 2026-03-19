@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Link from "next/link"
@@ -19,8 +19,20 @@ export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [checkingAuth, setCheckingAuth] = useState(true)
   const router = useRouter()
   const supabase = createClient()
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        router.replace('/dashboard')
+      } else {
+        setCheckingAuth(false)
+      }
+    })
+  }, [])
 
   const handleSocialLogin = async (provider: 'github' | 'google') => {
     setError(null)
@@ -77,10 +89,8 @@ export default function SignUpPage() {
         setError(data.error)
       } else {
         setIsSuccess(true)
-        // Redirect to dashboard or show success message
-        setTimeout(() => {
-          router.push('/dashboard')
-        }, 2000)
+        // Redirect to dashboard immediately — email verification is handled server-side
+        router.push('/dashboard')
       }
     } catch (err) {
       setError("An unexpected error occurred")
@@ -106,6 +116,16 @@ export default function SignUpPage() {
       <main className="optimum-main">
         <div className="grain-overlay" aria-hidden="true" />
 
+        {checkingAuth ? (
+          <div className="auth-page">
+            <div>
+              <div className="auth-card">
+                <div className="auth-logo">O</div>
+                <h1 className="auth-title">Loading...</h1>
+              </div>
+            </div>
+          </div>
+        ) : (
         <div className="auth-page">
           <div>
             <div className="auth-card">
@@ -144,38 +164,14 @@ export default function SignUpPage() {
                       color: "var(--muted-txt)",
                       margin: "0"
                     }}>
-                      {process.env.NODE_ENV === 'development' ? (
-                        <>
-                          Your account has been created successfully.<br />
-                          Redirecting you to your dashboard...
-                        </>
-                      ) : (
-                        <>
-                          Your account has been created successfully.<br />
-                          Check your email at <strong>{formData.email}</strong> for verification instructions.
-                        </>
-                      )}
+                      Your account has been created successfully.<br />
+                      Redirecting you to your dashboard...
                     </p>
                   </div>
 
-                  <div style={{ display: "flex", gap: "12px" }}>
-                    {process.env.NODE_ENV === 'development' ? (
-                      <Link href="/dashboard" className="opt-btn-primary" style={{ flex: 1, justifyContent: "center" }}>
-                        Go to Dashboard
-                      </Link>
-                    ) : (
-                      <Link href="/login" className="opt-btn-primary" style={{ flex: 1, justifyContent: "center" }}>
-                        Go to Sign In
-                      </Link>
-                    )}
-                    <button
-                      onClick={resetForm}
-                      className="opt-btn-ghost"
-                      style={{ flex: 1, justifyContent: "center" }}
-                    >
-                      Create Another
-                    </button>
-                  </div>
+                  <Link href="/dashboard" className="opt-btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                    Go to Dashboard
+                  </Link>
                 </>
               ) : (
                 <>
@@ -294,6 +290,7 @@ export default function SignUpPage() {
             </p>
           </div>
         </div>
+        )}
       </main>
       <Footer />
     </>

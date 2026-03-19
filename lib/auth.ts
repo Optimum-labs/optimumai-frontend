@@ -35,6 +35,8 @@ export async function getCurrentUser(supabaseUser?: { id: string; email?: string
     id: dbUser.id,
     name: dbUser.name,
     email: dbUser.email,
+    dateOfBirth: dbUser.dateOfBirth,
+    createdAt: dbUser.createdAt,
   }
 }
 

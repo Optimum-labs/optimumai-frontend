@@ -1,6 +1,6 @@
 "use client"
 
-import { Menu, X, LogOut, LogIn } from "lucide-react"
+import { Menu, X, LogOut, LogIn, LayoutDashboard } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase"
@@ -48,7 +48,10 @@ export function Header() {
         <div className="opt-header-actions">
           {!loading && (
             user ? (
-              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Link href="/dashboard" className="opt-btn-ghost opt-header-started" style={{ padding: "8px 16px", fontSize: "11px" }}>
+                  <LayoutDashboard size={13} style={{ marginRight: "4px" }} /> Dashboard
+                </Link>
                 <button onClick={handleLogout} className="opt-btn-ghost opt-header-started" style={{ padding: "8px 16px", fontSize: "11px", cursor: "pointer", background: "none", border: "1px solid rgba(10,10,10,0.15)" }}>
                   <LogOut size={13} style={{ marginRight: "4px" }} /> Sign Out
                 </button>
@@ -83,7 +86,10 @@ export function Header() {
           <div className="opt-header-mobile-actions">
             {user ? (
               <>
-                <button onClick={() => { setMobileMenuOpen(false); handleLogout() }} className="opt-btn-ghost" style={{ justifyContent: "center", width: "100%", cursor: "pointer", background: "none", border: "1px solid rgba(10,10,10,0.15)" }}>
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="opt-btn-primary" style={{ justifyContent: "center", width: "100%" }}>
+                  <LayoutDashboard size={13} style={{ marginRight: "6px" }} /> Dashboard
+                </Link>
+                <button onClick={() => { setMobileMenuOpen(false); handleLogout() }} className="opt-btn-ghost" style={{ justifyContent: "center", width: "100%", cursor: "pointer", background: "none", border: "1px solid rgba(10,10,10,0.15)", marginTop: "8px" }}>
                   <LogOut size={13} style={{ marginRight: "6px" }} /> Sign Out
                 </button>
               </>

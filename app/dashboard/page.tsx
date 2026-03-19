@@ -2,14 +2,14 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight, BookOpen, Users, Brain, FlaskConical, Calendar, Award, TrendingUp, LogOut, Rocket, Video, ExternalLink, Beaker } from "lucide-react"
+import { ArrowRight, BookOpen, Users, Brain, FlaskConical, Calendar, Award, TrendingUp, LogOut, Rocket, Video, ExternalLink, Beaker, User, Edit3, Check, X } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase"
 
 interface DashboardData {
-  user: { id: string; name: string; email: string; joinedDate: string }
+  user: { id: string; name: string; email: string; dateOfBirth: string | null; joinedDate: string }
   stats: { enrolled: number; completed: number; inProgress: number; totalActivities: number; challenges: number; researchPrograms: number }
   enrollments: { id: string; courseTitle: string; courseCategory: string; status: string; progress: number; meetingLink: string | null; enrolledAt: string }[]
   challengeRegistrations: { id: string; challengeTitle: string; challengeLevel: string; challengeDuration: string; startsAt: string; status: string; meetingLink: string | null; appliedAt: string }[]
@@ -33,6 +33,9 @@ export default function DashboardPage() {
   const router = useRouter()
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [editingProfile, setEditingProfile] = useState(false)
+  const [profileForm, setProfileForm] = useState({ name: '', dateOfBirth: '' })
+  const [profileSaving, setProfileSaving] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -69,6 +72,38 @@ export default function DashboardPage() {
       }
     } catch (err) {
       console.error("Logout failed:", err)
+    }
+  }
+
+  const startEditing = () => {
+    if (!data) return
+    setProfileForm({
+      name: data.user.name,
+      dateOfBirth: data.user.dateOfBirth ? data.user.dateOfBirth.split('T')[0] : '',
+    })
+    setEditingProfile(true)
+  }
+
+  const saveProfile = async () => {
+    setProfileSaving(true)
+    try {
+      const res = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: profileForm.name,
+          dateOfBirth: profileForm.dateOfBirth || null,
+        }),
+      })
+      if (res.ok) {
+        const { user: updated } = await res.json()
+        setData(prev => prev ? { ...prev, user: { ...prev.user, name: updated.name, dateOfBirth: updated.dateOfBirth } } : prev)
+        setEditingProfile(false)
+      }
+    } catch (err) {
+      console.error("Profile update failed:", err)
+    } finally {
+      setProfileSaving(false)
     }
   }
 
@@ -118,6 +153,100 @@ export default function DashboardPage() {
               </button>
             </div>
           </section>
+
+          {/* ── Account Information ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Account Information</span></div>
+
+          <div className="ed-card" style={{ marginBottom: "48px" }}>
+            <div className="ed-card-body">
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <User size={20} style={{ color: "var(--gold)" }} />
+                  <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "18px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
+                    Profile Details
+                  </h3>
+                </div>
+                {!editingProfile ? (
+                  <button onClick={startEditing} className="opt-btn-ghost" style={{ fontSize: "11px", padding: "6px 14px", cursor: "pointer", background: "none", border: "1px solid rgba(10,10,10,0.15)" }}>
+                    <Edit3 size={12} style={{ marginRight: "4px" }} /> Edit
+                  </button>
+                ) : (
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <button onClick={saveProfile} disabled={profileSaving} className="opt-btn-primary" style={{ fontSize: "11px", padding: "6px 14px" }}>
+                      <Check size={12} style={{ marginRight: "4px" }} /> {profileSaving ? 'Saving...' : 'Save'}
+                    </button>
+                    <button onClick={() => setEditingProfile(false)} className="opt-btn-ghost" style={{ fontSize: "11px", padding: "6px 14px", cursor: "pointer", background: "none", border: "1px solid rgba(10,10,10,0.15)" }}>
+                      <X size={12} style={{ marginRight: "4px" }} /> Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px" }}>
+                {/* Name */}
+                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                  <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Full Name
+                  </span>
+                  {editingProfile ? (
+                    <input
+                      type="text"
+                      value={profileForm.name}
+                      onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                      className="auth-input"
+                      style={{ marginTop: "6px", fontSize: "14px" }}
+                    />
+                  ) : (
+                    <p style={{ fontFamily: "var(--font-playfair), serif", fontSize: "15px", fontWeight: 600, color: "var(--ink)", margin: "6px 0 0" }}>
+                      {user.name}
+                    </p>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                  <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Email Address
+                  </span>
+                  <p style={{ fontFamily: "var(--font-playfair), serif", fontSize: "15px", fontWeight: 600, color: "var(--ink)", margin: "6px 0 0" }}>
+                    {user.email}
+                  </p>
+                </div>
+
+                {/* User ID */}
+                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                  <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    User ID
+                  </span>
+                  <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "13px", color: "var(--ink)", margin: "6px 0 0", wordBreak: "break-all" }}>
+                    {user.id}
+                  </p>
+                </div>
+
+                {/* Date of Birth */}
+                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                  <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Date of Birth
+                  </span>
+                  {editingProfile ? (
+                    <input
+                      type="date"
+                      value={profileForm.dateOfBirth}
+                      onChange={(e) => setProfileForm({ ...profileForm, dateOfBirth: e.target.value })}
+                      className="auth-input"
+                      style={{ marginTop: "6px", fontSize: "14px" }}
+                    />
+                  ) : (
+                    <p style={{ fontFamily: "var(--font-playfair), serif", fontSize: "15px", fontWeight: 600, color: "var(--ink)", margin: "6px 0 0" }}>
+                      {user.dateOfBirth
+                        ? new Date(user.dateOfBirth).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+                        : "Not set"}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* ── Quick Stats ── */}
           <div className="opt-stats-bar opt-anim-5">

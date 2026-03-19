@@ -41,6 +41,7 @@ export async function GET() {
       id: user.id,
       name: user.name,
       email: user.email,
+      dateOfBirth: user.dateOfBirth,
       joinedDate: user.createdAt,
     },
     stats: {

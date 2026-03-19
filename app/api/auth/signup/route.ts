@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createServerSupabaseClient } from "@/lib/supabase"
+import { createServerSupabaseClient, createAdminSupabaseClient } from "@/lib/supabase"
 import { UserLogger } from "@/lib/user-logger"
 import { getCurrentUser } from "@/lib/auth"
 
@@ -34,48 +34,80 @@ export async function POST(req: NextRequest) {
       email,
       password,
       options: {
-        data: {
-          name: name,
-        }
+        data: { name },
       }
     })
 
-    if (error) {
-      await UserLogger.logAuthAction(
-        'signup',
-        null,
-        null,
-        false,
-        { error: error.message, email },
-        req
-      )
+    let supabaseUser = data?.user
+
+    // If rate limit exceeded, use admin client to create user directly
+    if (error && error.message.toLowerCase().includes('rate limit')) {
+      try {
+        const admin = createAdminSupabaseClient()
+
+        // Check if user already exists
+        const { data: existingUsers } = await admin.auth.admin.listUsers()
+        const existing = existingUsers?.users?.find(u => u.email === email)
+
+        if (existing) {
+          // User already exists — just sign them in
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+          if (signInError) {
+            return NextResponse.json({ error: signInError.message }, { status: 401 })
+          }
+          supabaseUser = signInData.user
+        } else {
+          // Create user via admin (bypasses rate limits, auto-confirms email)
+          const { data: adminData, error: adminError } = await admin.auth.admin.createUser({
+            email,
+            password,
+            email_confirm: true,
+            user_metadata: { name },
+          })
+
+          if (adminError) {
+            return NextResponse.json({ error: adminError.message }, { status: 400 })
+          }
+
+          supabaseUser = adminData.user
+
+          // Sign in to establish session cookies
+          await supabase.auth.signInWithPassword({ email, password })
+        }
+      } catch (adminErr) {
+        console.error('Admin signup fallback failed:', adminErr)
+        return NextResponse.json({ error: "Signup is temporarily unavailable. Please try again later." }, { status: 503 })
+      }
+    } else if (error) {
+      await UserLogger.logAuthAction('signup', null, null, false, { error: error.message, email }, req)
       return NextResponse.json({ error: error.message }, { status: 400 })
+    } else if (supabaseUser) {
+      // Normal signup succeeded — auto-confirm via admin and sign in
+      try {
+        const admin = createAdminSupabaseClient()
+        await admin.auth.admin.updateUserById(supabaseUser.id, { email_confirm: true })
+        await supabase.auth.signInWithPassword({ email, password })
+      } catch {
+        // Non-critical: user created but email not auto-confirmed
+      }
     }
 
-    if (!data.user) {
+    if (!supabaseUser) {
       return NextResponse.json({ error: "Signup succeeded but no user returned." }, { status: 500 })
     }
 
-    // Get or create user in our database — pass Supabase user directly
-    // since there's no session cookie yet (email not verified)
-    const user = await getCurrentUser(data.user)
+    // Get or create user in our database
+    const user = await getCurrentUser(supabaseUser)
 
     if (!user) {
       return NextResponse.json({ error: "Failed to create user record." }, { status: 500 })
     }
 
     // Log successful signup
-    await UserLogger.logAuthAction(
-      'signup',
-      data.user.id,
-      user.id,
-      true,
-      { email, name },
-      req
-    )
+    await UserLogger.logAuthAction('signup', supabaseUser.id, user.id, true, { email, name }, req)
 
     return NextResponse.json({
-      message: "Account created successfully. Please check your email to verify your account.",
+      message: "Account created successfully!",
       user: { id: user.id, name: user.name, email: user.email },
     })
 
