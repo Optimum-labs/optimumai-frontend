@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight, ExternalLink, Calendar, Users, Clock, ChevronDown, BookOpen, Play, LayoutDashboard } from "lucide-react"
+import { ArrowRight, ExternalLink, Calendar, Users, Clock, ChevronDown, BookOpen, Play, LayoutDashboard, Sparkles, Trophy, Globe, Cpu, Shield, GraduationCap, Microscope, Handshake } from "lucide-react"
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
@@ -236,6 +236,56 @@ function BetaOutreachContent() {
                 <span className="opt-stat-label">{s.label}</span>
               </div>
             ))}
+          </div>
+
+          {/* ── Why Join the Beta ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Why Join the Beta</span></div>
+
+          <div style={{ marginBottom: "64px" }}>
+            <h2 style={{
+              fontFamily: "var(--font-playfair), serif",
+              fontSize: "clamp(24px, 3.5vw, 36px)",
+              fontWeight: 700,
+              color: "var(--ink)",
+              marginBottom: "12px",
+              lineHeight: 1.2
+            }}>
+              Early access to what nobody<br />else is building.
+            </h2>
+            <p style={{ fontSize: "13px", lineHeight: 1.85, color: "var(--muted-txt)", maxWidth: "520px", marginBottom: "40px" }}>
+              Beta members get exclusive access to the Agency Engine, direct influence on product development, and a front-row seat to the future of human consciousness infrastructure.
+            </p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "20px" }}>
+              {[
+                { icon: Sparkles, title: "Agency Score Access", body: "Be among the first to receive your personal Agency Score — a real measurement of independent thought, not a self-reported quiz." },
+                { icon: Trophy, title: "AI Challenges & Hackathons", body: "Compete in real-world challenges with prize pools, mentorship from industry leaders, and direct pathways to job offers." },
+                { icon: GraduationCap, title: "World-Class Bootcamps", body: "Intensive, project-based programmes from deep learning foundations to advanced LLM engineering — all free for beta members." },
+                { icon: Microscope, title: "Publish Real Research", body: "Co-author papers at NeurIPS, ICML, and ICLR. Access compute, datasets, and mentorship from researchers at top labs." },
+                { icon: Globe, title: "Global Community", body: "Join 10,000+ researchers across 80+ countries. Collaborate on open problems, share breakthroughs, and build your network." },
+                { icon: Handshake, title: "Career Pipeline", body: "Exclusive internship and full-time placements at leading AI companies. 78% of interns convert to permanent roles." },
+                { icon: Cpu, title: "Cutting-Edge Tools", body: "Access the Mirror Agent, Challenger, and Tracker — AI systems that measure and develop human cognitive capacity." },
+                { icon: Shield, title: "Shape the Product", body: "Direct feedback channel to the founding team. Your input shapes the roadmap — features, UX, and research direction." },
+              ].map((f, i) => (
+                <div key={i} style={{
+                  padding: "24px",
+                  border: "1px solid rgba(10,10,10,0.1)",
+                  background: i === 0 ? "rgba(16,185,129,0.04)" : "rgba(255,255,255,0.4)",
+                  borderTop: i === 0 ? "3px solid var(--gold)" : undefined,
+                  transition: "border-color 0.2s ease",
+                }}>
+                  <f.icon size={20} style={{ color: i === 0 ? "var(--gold)" : "var(--opt-red)", marginBottom: "12px" }} />
+                  <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "16px", fontWeight: 700, color: "var(--ink)", marginBottom: "8px" }}>{f.title}</div>
+                  <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "11px", lineHeight: 1.8, color: "var(--muted-txt)", margin: 0 }}>{f.body}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ textAlign: "center", marginTop: "32px" }}>
+              <Link href="/signup" className="opt-btn-primary" style={{ padding: "14px 32px" }}>
+                Join the Beta — It&apos;s Free <ArrowRight size={13} />
+              </Link>
+            </div>
           </div>
 
           {/* ── What We Do ── */}

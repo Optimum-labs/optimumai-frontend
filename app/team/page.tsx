@@ -68,7 +68,7 @@ export default function TeamPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "32px", marginBottom: "80px" }}>
             {team.map((member, i) => (
               <div key={i} className="ed-card" style={{ cursor: member.isOpen ? "pointer" : "default" }}>
-                <div className="ed-card-img" style={{ background: member.isOpen ? "linear-gradient(135deg, rgba(200,57,43,0.08), rgba(184,150,90,0.08))" : "linear-gradient(135deg, rgba(200,57,43,0.06), rgba(184,150,90,0.08))" }}>
+                <div className="ed-card-img" style={{ background: member.isOpen ? "linear-gradient(135deg, rgba(200,57,43,0.08), rgba(16,185,129,0.08))" : "linear-gradient(135deg, rgba(200,57,43,0.06), rgba(16,185,129,0.08))" }}>
                   <div style={{
                     width: "80px", height: "80px", borderRadius: "50%",
                     background: member.isOpen ? "var(--opt-red)" : "var(--ink)",

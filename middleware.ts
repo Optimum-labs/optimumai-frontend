@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   // Check if user is accessing protected routes
-  const protectedPaths = ['/dashboard']
+  const protectedPaths = ['/dashboard', '/admin']
   const isProtected = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
 
   if (isProtected && !user) {

@@ -204,7 +204,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <div style={{ marginTop: "20px", padding: "16px", background: "rgba(184,150,90,0.06)", border: "1px solid rgba(184,150,90,0.12)" }}>
+                <div style={{ marginTop: "20px", padding: "16px", background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}>
                   <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "9px", letterSpacing: "0.15em", textTransform: "uppercase" as const, color: "var(--gold)", display: "block", marginBottom: "8px" }}>Pattern Map Insight</span>
                   <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "11px", lineHeight: 1.7, color: "var(--ink)", margin: 0, fontStyle: "italic" }}>
                     "Career decisions show strong conformity to peer-group consensus. 
@@ -327,7 +327,7 @@ export default function Home() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "32px", marginBottom: "40px" }}>
               <div style={{
                 padding: "32px",
-                border: "1px solid rgba(184,150,90,0.15)",
+                border: "1px solid rgba(16,185,129,0.15)",
                 background: "rgba(255,255,255,0.4)"
               }}>
                 <span style={{
@@ -402,8 +402,8 @@ export default function Home() {
             </div>
 
             <div style={{
-              background: "rgba(184,150,90,0.05)",
-              border: "1px solid rgba(184,150,90,0.1)",
+              background: "rgba(16,185,129,0.05)",
+              border: "1px solid rgba(16,185,129,0.1)",
               borderRadius: "4px",
               padding: "24px",
               marginBottom: "32px"

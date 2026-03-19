@@ -88,7 +88,7 @@ export default function AboutPage() {
           <Link href="/team" style={{ textDecoration: "none" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "28px", marginBottom: "72px", cursor: "pointer" }}>
               {team.map((member, i) => (
-                <Card key={i} style={{ background: "rgba(255,255,255,0.55)", border: "1px solid rgba(184,150,90,0.18)", borderRadius: "2px", boxShadow: "none", transition: "border-color 0.2s ease" }} className="hover:border-gold">
+                <Card key={i} style={{ background: "rgba(255,255,255,0.55)", border: "1px solid rgba(16,185,129,0.18)", borderRadius: "2px", boxShadow: "none", transition: "border-color 0.2s ease" }} className="hover:border-gold">
                   <CardContent style={{ padding: "32px" }}>
                     <div style={{
                       width: "52px", height: "52px", borderRadius: "50%",
@@ -110,7 +110,7 @@ export default function AboutPage() {
           <div className="opt-rule"><span className="opt-rule-text">What we stand for</span></div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "24px", marginBottom: "72px" }}>
             {values.map((v, i) => (
-              <div key={i} style={{ padding: "28px", border: "1px solid rgba(184,150,90,0.15)", borderTop: "3px solid var(--gold)", background: "rgba(255,255,255,0.4)" }}>
+              <div key={i} style={{ padding: "28px", border: "1px solid rgba(16,185,129,0.15)", borderTop: "3px solid var(--gold)", background: "rgba(255,255,255,0.4)" }}>
                 <v.icon style={{ width: 24, height: 24, color: "var(--opt-red)", marginBottom: 12 }} />
                 <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "17px", fontWeight: 700, color: "var(--ink)", marginBottom: 8 }}>{v.title}</div>
                 <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "12px", lineHeight: 1.8, color: "var(--muted-txt)", margin: 0 }}>{v.description}</p>

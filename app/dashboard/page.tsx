@@ -19,12 +19,12 @@ interface DashboardData {
 
 const statusStyle = (status: string) => {
   const colors: Record<string, { color: string; bg: string }> = {
-    completed: { color: "var(--gold)", bg: "rgba(184,150,90,0.1)" },
+    completed: { color: "var(--gold)", bg: "rgba(16,185,129,0.1)" },
     approved: { color: "#2a7d4f", bg: "rgba(42,125,79,0.1)" },
     active: { color: "#2a7d4f", bg: "rgba(42,125,79,0.1)" },
     pending: { color: "var(--opt-red)", bg: "rgba(200,57,43,0.1)" },
     enrolled: { color: "var(--opt-red)", bg: "rgba(200,57,43,0.1)" },
-    "in-progress": { color: "var(--gold)", bg: "rgba(184,150,90,0.1)" },
+    "in-progress": { color: "var(--gold)", bg: "rgba(16,185,129,0.1)" },
   }
   return colors[status] || colors.pending
 }
@@ -465,7 +465,7 @@ export default function DashboardPage() {
                         <span style={{
                           fontSize: "10px",
                           color: "var(--gold)",
-                          background: "rgba(184,150,90,0.1)",
+                          background: "rgba(16,185,129,0.1)",
                           padding: "2px 8px",
                           borderRadius: "12px",
                           textTransform: "uppercase",

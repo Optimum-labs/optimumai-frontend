@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
           <hr style="border:none;border-top:1px solid #e0ddd6;margin:24px 0;" />
           <p style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:#0a0a0a;">${message}</p>
           <hr style="border:none;border-top:1px solid #e0ddd6;margin:24px 0;" />
-          <p style="font-size:11px;color:#b8965a;letter-spacing:0.15em;">OPTIMUMAI · info@optimumai.in</p>
+          <p style="font-size:11px;color:#10b981;letter-spacing:0.15em;">OPTIMUMAI · info@optimumai.in</p>
         </div>
       `,
     })
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
             <a href="https://optimumai.in" style="color:#c8392b;">optimumai.in</a>.
           </p>
           <hr style="border:none;border-top:1px solid #e0ddd6;margin:24px 0;" />
-          <p style="font-size:11px;color:#b8965a;letter-spacing:0.15em;">OPTIMUMAI · info@optimumai.in</p>
+          <p style="font-size:11px;color:#10b981;letter-spacing:0.15em;">OPTIMUMAI · info@optimumai.in</p>
         </div>
       `,
     })

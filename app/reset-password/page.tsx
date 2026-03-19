@@ -155,8 +155,8 @@ function ResetPasswordForm() {
 
                   <div style={{
                     padding: "24px",
-                    background: "rgba(184,150,90,0.1)",
-                    border: "1px solid rgba(184,150,90,0.2)",
+                    background: "rgba(16,185,129,0.1)",
+                    border: "1px solid rgba(16,185,129,0.2)",
                     borderRadius: "4px",
                     marginBottom: "24px",
                     textAlign: "center"
