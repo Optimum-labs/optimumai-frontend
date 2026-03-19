@@ -5,6 +5,7 @@ import { UserLogger } from "@/lib/user-logger"
 import { createClient } from "@supabase/supabase-js"
 
 export async function POST(req: NextRequest) {
+  try {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -122,4 +123,9 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json({ enrollment })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error("Enrollment error:", msg)
+    return NextResponse.json({ error: "Enrollment failed. Please try again.", detail: msg }, { status: 500 })
+  }
 }

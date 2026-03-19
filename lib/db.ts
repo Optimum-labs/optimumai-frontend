@@ -9,7 +9,12 @@ function createPrismaClient() {
     process.env.DATABASE_URL ||
     process.env.POSTGRES_PRISMA_URL ||
     process.env.POSTGRES_URL
-  const adapter = new PrismaPg({ connectionString })
+  const needsSsl = process.env.NODE_ENV === "production" ||
+    (connectionString && connectionString.includes("supabase.co"))
+  const adapter = new PrismaPg({
+    connectionString,
+    ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
+  })
   return new PrismaClient({ adapter })
 }
 
