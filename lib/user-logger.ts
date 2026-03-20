@@ -7,7 +7,7 @@ export interface LogData {
   description: string
   ipAddress?: string
   userAgent?: string
-  metadata?: any
+  metadata?: Record<string, unknown>
   success?: boolean
 }
 
@@ -49,7 +49,7 @@ export class UserLogger {
     supabaseId: string | null,
     userId: string | null,
     success: boolean,
-    metadata?: any,
+    metadata?: Record<string, unknown>,
     request?: Request
   ) {
     const ipAddress = this.getClientIP(request)
@@ -71,7 +71,7 @@ export class UserLogger {
     action: string,
     userId: string,
     description: string,
-    metadata?: any,
+    metadata?: Record<string, unknown>,
     request?: Request
   ) {
     const ipAddress = this.getClientIP(request)
@@ -90,7 +90,7 @@ export class UserLogger {
   static async logSystemAction(
     action: string,
     description: string,
-    metadata?: any,
+    metadata?: Record<string, unknown>,
     request?: Request
   ) {
     const ipAddress = this.getClientIP(request)

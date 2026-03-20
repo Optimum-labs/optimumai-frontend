@@ -1,13 +1,27 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createServerSupabaseClient } from "@/lib/supabase"
+import { resetPasswordSchema, parseBody } from "@/lib/validations"
+import { rateLimit } from "@/lib/rate-limit"
 
 export async function POST(req: NextRequest) {
-  try {
-    const { email } = await req.json()
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+  const { allowed, retryAfterMs } = rateLimit(`reset:${ip}`, 5, 60_000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many reset attempts. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    )
+  }
 
-    if (!email) {
-      return NextResponse.json({ error: "Email is required." }, { status: 400 })
+  try {
+    const body = await req.json()
+    const { data: parsed, error: validationError } = parseBody(resetPasswordSchema, body)
+
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { email } = parsed
 
     const supabase = await createServerSupabaseClient()
 

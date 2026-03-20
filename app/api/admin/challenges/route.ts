@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { adminChallengeCreateSchema, adminChallengeUpdateSchema, parseBody } from "@/lib/validations"
 
 export async function GET() {
   try {
@@ -30,11 +31,13 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { title, description, level, duration, prizePool, partnership, maxTeams, teamSize, tags, startsAt, registrationCloses, status } = body
+    const { data: parsed, error: validationError } = parseBody(adminChallengeCreateSchema, body)
 
-    if (!title || !description || !level || !duration || !startsAt) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { title, description, level, duration, prizePool, partnership, maxTeams, teamSize, tags, startsAt, registrationCloses, status } = parsed
 
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
 
@@ -72,16 +75,19 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { id, ...data } = body
+    const { data: parsed, error: validationError } = parseBody(adminChallengeUpdateSchema, body)
 
-    if (!id) {
-      return NextResponse.json({ error: "Challenge ID required" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
 
-    if (data.startsAt) data.startsAt = new Date(data.startsAt)
-    if (data.registrationCloses) data.registrationCloses = new Date(data.registrationCloses)
-    if (data.title) {
-      data.slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+    const { id, ...rest } = parsed
+    const data: Record<string, unknown> = { ...rest }
+
+    if (data.startsAt) data.startsAt = new Date(data.startsAt as string)
+    if (data.registrationCloses) data.registrationCloses = new Date(data.registrationCloses as string)
+    if (rest.title) {
+      data.slug = rest.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
     }
 
     const challenge = await prisma.challenge.update({ where: { id }, data })

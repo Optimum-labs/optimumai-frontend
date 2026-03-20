@@ -1,32 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 import { UserLogger } from "@/lib/user-logger"
+import { contactSchema, parseBody } from "@/lib/validations"
 
 export async function POST(req: NextRequest) {
-  const { name, email, phone, message } = await req.json()
+  const body = await req.json()
+  const { data: parsed, error: validationError } = parseBody(contactSchema, body)
 
-  if (!name || !email || !phone || !message) {
+  if (validationError) {
     await UserLogger.logAuthAction('contact_form', null, 'failure', {
-      reason: 'missing_fields',
-      name: name ? 'provided' : 'missing',
-      email: email ? 'provided' : 'missing',
-      phone: phone ? 'provided' : 'missing',
-      message: message ? 'provided' : 'missing'
+      reason: 'validation_error',
+      error: validationError,
     }, req)
 
-    return NextResponse.json({ error: "All fields are required." }, { status: 400 })
+    return NextResponse.json({ error: validationError }, { status: 400 })
   }
 
-  // Basic email safety check
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRe.test(email)) {
-    await UserLogger.logAuthAction('contact_form', null, 'failure', {
-      reason: 'invalid_email',
-      email
-    }, req)
-
-    return NextResponse.json({ error: "Invalid email address." }, { status: 400 })
-  }
+  const { name, email, phone, message } = parsed
 
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,

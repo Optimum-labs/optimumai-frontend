@@ -2,30 +2,34 @@ import { NextRequest, NextResponse } from "next/server"
 import { createServerSupabaseClient, createAdminSupabaseClient } from "@/lib/supabase"
 import { UserLogger } from "@/lib/user-logger"
 import { getCurrentUser } from "@/lib/auth"
+import { signupSchema, parseBody } from "@/lib/validations"
+import { rateLimit } from "@/lib/rate-limit"
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+  const { allowed, retryAfterMs } = rateLimit(`signup:${ip}`, 5, 60_000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many signup attempts. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    )
+  }
+
   try {
-    const { name, email, password } = await req.json()
+    const body = await req.json()
+    const { data: parsed, error: validationError } = parseBody(signupSchema, body)
 
-    if (!name || !email || !password) {
+    if (validationError) {
       await UserLogger.logSystemAction(
         'signup_attempt',
-        'Signup attempt with missing fields',
-        { name: name || 'missing', email: email || 'missing' },
+        'Signup attempt with invalid fields',
+        { error: validationError },
         req
       )
-      return NextResponse.json({ error: "All fields are required." }, { status: 400 })
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
 
-    if (password.length < 8) {
-      await UserLogger.logSystemAction(
-        'signup_attempt',
-        'Signup attempt with short password',
-        { email },
-        req
-      )
-      return NextResponse.json({ error: "Password must be at least 8 characters long." }, { status: 400 })
-    }
+    const { name, email, password } = parsed
 
     const supabase = await createServerSupabaseClient()
     const admin = createAdminSupabaseClient()

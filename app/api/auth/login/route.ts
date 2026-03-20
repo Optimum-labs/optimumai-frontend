@@ -2,20 +2,34 @@ import { NextRequest, NextResponse } from "next/server"
 import { createServerSupabaseClient } from "@/lib/supabase"
 import { UserLogger } from "@/lib/user-logger"
 import { getCurrentUser } from "@/lib/auth"
+import { loginSchema, parseBody } from "@/lib/validations"
+import { rateLimit } from "@/lib/rate-limit"
 
 export async function POST(req: NextRequest) {
-  try {
-    const { email, password } = await req.json()
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+  const { allowed, retryAfterMs } = rateLimit(`login:${ip}`, 5, 60_000)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many login attempts. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    )
+  }
 
-    if (!email || !password) {
+  try {
+    const body = await req.json()
+    const { data: parsed, error: validationError } = parseBody(loginSchema, body)
+
+    if (validationError) {
       await UserLogger.logSystemAction(
         'login_attempt',
-        'Login attempt with missing credentials',
-        { email: email || 'missing' },
+        'Login attempt with invalid credentials',
+        { error: validationError },
         req
       )
-      return NextResponse.json({ error: "Email and password are required." }, { status: 400 })
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { email, password } = parsed
 
     const supabase = await createServerSupabaseClient()
 

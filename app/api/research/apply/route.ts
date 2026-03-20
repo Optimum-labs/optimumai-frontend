@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth"
+import { researchApplySchema, parseBody } from "@/lib/validations"
 
 export async function POST(req: NextRequest) {
   // Get authenticated user if available (not required)
@@ -11,22 +12,18 @@ export async function POST(req: NextRequest) {
     // Guest user, that's fine
   }
 
-  const { programSlug, fullName, email } = await req.json()
-  if (!programSlug) {
-    return NextResponse.json({ error: "Program is required." }, { status: 400 })
+  const body = await req.json()
+  const { data: parsed, error: validationError } = parseBody(researchApplySchema, body)
+
+  if (validationError) {
+    return NextResponse.json({ error: validationError }, { status: 400 })
   }
+
+  const { programSlug, fullName, email } = parsed
 
   // Guest users must provide name and email
   if (!user && (!fullName || !email)) {
     return NextResponse.json({ error: "Full name and email are required." }, { status: 400 })
-  }
-
-  // Validate email format for guest
-  if (!user && email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json({ error: "Invalid email address." }, { status: 400 })
-    }
   }
 
   const program = await prisma.researchProgram.findUnique({ where: { slug: programSlug } })

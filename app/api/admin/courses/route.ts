@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { adminCourseCreateSchema, adminCourseUpdateSchema, parseBody } from "@/lib/validations"
 
 export async function GET() {
   try {
@@ -30,11 +31,13 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { title, description, category, duration, level, tags } = body
+    const { data: parsed, error: validationError } = parseBody(adminCourseCreateSchema, body)
 
-    if (!title || !description || !category || !duration || !level) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { title, description, category, duration, level, tags } = parsed
 
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
 
@@ -58,17 +61,20 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { id, ...data } = body
+    const { data: parsed, error: validationError } = parseBody(adminCourseUpdateSchema, body)
 
-    if (!id) {
-      return NextResponse.json({ error: "Course ID required" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
 
+    const { id, ...data } = parsed
+
+    const updateData: Record<string, unknown> = { ...data }
     if (data.title) {
-      data.slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+      updateData.slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
     }
 
-    const course = await prisma.course.update({ where: { id }, data })
+    const course = await prisma.course.update({ where: { id }, data: updateData })
     return NextResponse.json(course)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)

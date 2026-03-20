@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { adminAmbassadorCreateSchema, adminAmbassadorPatchSchema, parseBody } from "@/lib/validations"
 
 export async function GET(request: NextRequest) {
   try {
@@ -45,11 +46,13 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { fullName, email, university, linkedIn, motivation, status, region } = body
+    const { data: parsed, error: validationError } = parseBody(adminAmbassadorCreateSchema, body)
 
-    if (!fullName || !email || !motivation) {
-      return NextResponse.json({ error: "Missing required fields (fullName, email, motivation)" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { fullName, email, university, linkedIn, motivation, status, region } = parsed
 
     const ambassador = await prisma.ambassador.create({
       data: {
@@ -77,11 +80,13 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { id, ...data } = body
+    const { data: parsed, error: validationError } = parseBody(adminAmbassadorPatchSchema, body)
 
-    if (!id) {
-      return NextResponse.json({ error: "Ambassador ID required" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { id, ...data } = parsed
 
     const ambassador = await prisma.ambassador.update({ where: { id }, data })
     return NextResponse.json(ambassador)

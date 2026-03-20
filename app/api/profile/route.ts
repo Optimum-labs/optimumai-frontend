@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getCurrentUser } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { profileUpdateSchema, parseBody } from "@/lib/validations"
 
 export async function PUT(req: NextRequest) {
   const user = await getCurrentUser()
@@ -8,18 +9,19 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const { name, dateOfBirth } = await req.json()
+  const body = await req.json()
+  const { data: parsed, error: validationError } = parseBody(profileUpdateSchema, body)
+
+  if (validationError) {
+    return NextResponse.json({ error: validationError }, { status: 400 })
+  }
 
   const updateData: { name?: string; dateOfBirth?: Date | null } = {}
-  if (name && typeof name === 'string' && name.trim()) {
-    updateData.name = name.trim()
+  if (parsed.name) {
+    updateData.name = parsed.name
   }
-  if (dateOfBirth !== undefined) {
-    updateData.dateOfBirth = dateOfBirth ? new Date(dateOfBirth) : null
-  }
-
-  if (Object.keys(updateData).length === 0) {
-    return NextResponse.json({ error: "No fields to update." }, { status: 400 })
+  if (parsed.dateOfBirth !== undefined) {
+    updateData.dateOfBirth = parsed.dateOfBirth ? new Date(parsed.dateOfBirth) : null
   }
 
   const updated = await prisma.user.update({

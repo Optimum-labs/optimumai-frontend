@@ -24,6 +24,7 @@ model User {
   researchApps      ResearchApplication[]
   eventRegs         EventRegistration[]
   ambassadors       Ambassador[]
+  lessonProgress    LessonProgress[]
 }
 
 model Course {
@@ -37,6 +38,7 @@ model Course {
   tags        String[]
   createdAt   DateTime     @default(now())
   enrollments Enrollment[]
+  lessons     Lesson[]
 }
 
 model Enrollment {
@@ -217,4 +219,32 @@ model Ambassador {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   user         User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model Lesson {
+  id          String           @id @default(cuid())
+  courseId    String
+  title       String
+  order       Int              // 1-based sort order
+  description String?
+  createdAt   DateTime         @default(now())
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress    LessonProgress[]
+
+  @@unique([courseId, order])
+  @@index([courseId])
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  lessonId    String
+  userId      String
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, userId])
+  @@index([userId])
 }

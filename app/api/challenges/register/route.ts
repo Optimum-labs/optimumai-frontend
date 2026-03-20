@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse jsonData
-    let jsonData: any = null
+    let jsonData: Record<string, unknown> | null = null
     try {
       jsonData = JSON.parse(jsonDataStr)
     } catch {

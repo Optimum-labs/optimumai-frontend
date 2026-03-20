@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { adminResearchCreateSchema, adminResearchUpdateSchema, parseBody } from "@/lib/validations"
 
 export async function GET() {
   try {
@@ -30,11 +31,13 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { title, description, organization, difficulty, duration, tags, objectives, prerequisites, status, meetingLink } = body
+    const { data: parsed, error: validationError } = parseBody(adminResearchCreateSchema, body)
 
-    if (!title || !description || !organization || !difficulty || !duration) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { title, description, organization, difficulty, duration, tags, objectives, prerequisites, status, meetingLink } = parsed
 
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
 
@@ -62,14 +65,17 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { id, ...data } = body
+    const { data: parsed, error: validationError } = parseBody(adminResearchUpdateSchema, body)
 
-    if (!id) {
-      return NextResponse.json({ error: "Program ID required" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
 
-    if (data.title) {
-      data.slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+    const { id, ...rest } = parsed
+    const data: Record<string, unknown> = { ...rest }
+
+    if (rest.title) {
+      data.slug = rest.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
     }
 
     const program = await prisma.researchProgram.update({ where: { id }, data })

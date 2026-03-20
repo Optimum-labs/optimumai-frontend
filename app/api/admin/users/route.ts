@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { adminUserPatchSchema, parseBody } from "@/lib/validations"
 
 export async function GET(request: NextRequest) {
   try {
@@ -68,11 +69,13 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { userId, role } = body
+    const { data: parsed, error: validationError } = parseBody(adminUserPatchSchema, body)
 
-    if (!userId || !role || !["user", "admin"].includes(role)) {
-      return NextResponse.json({ error: "Invalid userId or role" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { userId, role } = parsed
 
     const user = await prisma.user.update({
       where: { id: userId },

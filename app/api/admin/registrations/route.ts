@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { adminRegistrationPatchSchema, parseBody } from "@/lib/validations"
 
 export async function GET(request: NextRequest) {
   try {
@@ -48,15 +49,17 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { id, type, status, meetingLink } = body
+    const { data: parsed, error: validationError } = parseBody(adminRegistrationPatchSchema, body)
 
-    if (!id || !type) {
-      return NextResponse.json({ error: "id and type required" }, { status: 400 })
+    if (validationError) {
+      return NextResponse.json({ error: validationError }, { status: 400 })
     }
+
+    const { id, type, status, meetingLink } = parsed
 
     const data: Record<string, string> = {}
     if (status) data.status = status
-    if (meetingLink !== undefined) data.meetingLink = meetingLink
+    if (meetingLink !== undefined && meetingLink !== null) data.meetingLink = meetingLink
 
     if (type === "challenge") {
       const reg = await prisma.challengeRegistration.update({ where: { id }, data })

@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     const skip = (page - 1) * limit
 
-    const where: any = {}
+    const where: Record<string, string> = {}
     if (action) where.action = action
     if (userId) where.userId = userId
     if (supabaseId) where.supabaseId = supabaseId
