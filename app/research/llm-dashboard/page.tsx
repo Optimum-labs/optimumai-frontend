@@ -606,6 +606,317 @@ export default function LLMDashboardPage() {
             </p>
           </div>
 
+          {/* ── Rankings ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Model Rankings</span></div>
+          <p style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "11px", color: "var(--muted-txt)", marginBottom: "28px", lineHeight: 1.7 }}>
+            Top models ranked per benchmark. Green = world-class · Gold = strong · Grey = good. Higher is always better.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "20px", marginBottom: "64px" }}>
+            {[
+              {
+                title: "🧠 General Intelligence (MMLU)",
+                subtitle: "57-subject academic breadth",
+                rows: [
+                  { rank: 1, name: "GPT-4o",           score: 88.7, color: "#10a37f" },
+                  { rank: 2, name: "DeepSeek-V3",       score: 88.5, color: "#1a1a2e" },
+                  { rank: 3, name: "Claude 3.5 Sonnet", score: 88.3, color: "#d4a96a" },
+                  { rank: 4, name: "Grok-2",            score: 87.5, color: "#000000" },
+                  { rank: 5, name: "Mistral Large 2",   score: 84.0, color: "#ff6b35" },
+                ],
+              },
+              {
+                title: "💻 Coding (HumanEval)",
+                subtitle: "Python function generation",
+                rows: [
+                  { rank: 1, name: "Claude 3.5 Sonnet", score: 92.0, color: "#d4a96a" },
+                  { rank: 2, name: "Mistral Large 2",   score: 92.0, color: "#ff6b35" },
+                  { rank: 3, name: "GPT-4o",            score: 90.2, color: "#10a37f" },
+                  { rank: 4, name: "DeepSeek-V3",       score: 89.1, color: "#1a1a2e" },
+                  { rank: 5, name: "Grok-2",            score: 88.4, color: "#000000" },
+                ],
+              },
+              {
+                title: "➗ Math Reasoning (GSM8K)",
+                subtitle: "Grade-school word problems",
+                rows: [
+                  { rank: 1, name: "GPT-4o",            score: 97.0, color: "#10a37f" },
+                  { rank: 2, name: "DeepSeek-V3",        score: 97.1, color: "#1a1a2e" },
+                  { rank: 3, name: "Phi-4",              score: 95.8, color: "#00bcf2" },
+                  { rank: 4, name: "Claude 3.5 Sonnet",  score: 96.4, color: "#d4a96a" },
+                  { rank: 5, name: "Qwen 2.5 72B",       score: 95.5, color: "#ff6a00" },
+                ],
+              },
+              {
+                title: "💰 Best Value (Quality ÷ Price)",
+                subtitle: "Top MMLU score per dollar",
+                rows: [
+                  { rank: 1, name: "DeepSeek-V3",       score: null, note: "$0.27/1M · 88.5% MMLU", color: "#1a1a2e" },
+                  { rank: 2, name: "Phi-4",             score: null, note: "$0.07/1M · 84.8% MMLU", color: "#00bcf2" },
+                  { rank: 3, name: "Qwen 2.5 72B",      score: null, note: "$0.50/1M · 86.0% MMLU", color: "#ff6a00" },
+                  { rank: 4, name: "Llama 3.1 70B",     score: null, note: "$0.88/1M · 83.6% MMLU", color: "#0866ff" },
+                  { rank: 5, name: "Claude 3.5 Sonnet", score: null, note: "$3.00/1M · 88.3% MMLU", color: "#d4a96a" },
+                ],
+              },
+            ].map((cat, ci) => (
+              <div key={ci} style={{ padding: "22px", border: "1px solid rgba(10,10,10,0.1)", background: "rgba(255,255,255,0.35)" }}>
+                <div style={{ fontFamily: "var(--font-playfair),serif", fontSize: "15px", fontWeight: 700, color: "var(--ink)", marginBottom: "4px" }}>{cat.title}</div>
+                <div style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "9px", color: "var(--muted-txt)", marginBottom: "16px", textTransform: "uppercase", letterSpacing: "0.06em" }}>{cat.subtitle}</div>
+                {cat.rows.map((row, ri) => (
+                  <div key={ri} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+                    <span style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "11px", fontWeight: 700, color: row.rank === 1 ? "#2a7d4f" : row.rank === 2 ? "var(--gold)" : "var(--muted-txt)", minWidth: "18px" }}>
+                      #{row.rank}
+                    </span>
+                    <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: row.color, flexShrink: 0 }} />
+                    <span style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "11px", color: "var(--ink)", flex: 1 }}>{row.name}</span>
+                    {row.score != null ? (
+                      <span style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "11px", fontWeight: 700, color: row.score >= 95 ? "#2a7d4f" : row.score >= 88 ? "var(--gold)" : "var(--muted-txt)" }}>
+                        {row.score}%
+                      </span>
+                    ) : (
+                      <span style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "9px", color: "var(--muted-txt)" }}>{row.note}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          {/* ── Trending Research Topics ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Trending in AI Research — 2026</span></div>
+          <p style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "11px", color: "var(--muted-txt)", marginBottom: "28px", lineHeight: 1.7 }}>
+            The hottest areas researchers and engineers are actively publishing, debating, and building in right now.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px", marginBottom: "64px" }}>
+            {[
+              { emoji: "🤖", tag: "HOT", title: "Agentic AI & Multi-Agent Systems", desc: "Building AI that plans, uses tools, and completes long tasks autonomously. Think mini-teams of AI workers that can browse the web, write code, and call APIs.", heat: 5 },
+              { emoji: "🧩", tag: "RISING", title: "Reasoning Models (Chain-of-Thought)", desc: "Models like o1/o3 that think step-by-step before answering. Massively improves accuracy on math, logic, and multi-step coding tasks.", heat: 5 },
+              { emoji: "📚", tag: "HOT", title: "Long Context & Memory", desc: "Models with 500K–1M token windows that can read entire codebases or books at once. Solving the \"the model forgot\" problem for ever.", heat: 4 },
+              { emoji: "🔍", tag: "RISING", title: "RAG 2.0 — Smarter Retrieval", desc: "Going beyond basic vector search: hybrid retrieval, re-ranking, agentic document parsing, and real-time knowledge grounding.", heat: 4 },
+              { emoji: "🏃", tag: "HOT", title: "Open Source vs Proprietary", desc: "Llama 3.1, DeepSeek-V3, Qwen 2.5 are now nearly matching GPT-4o at 1/10th the cost. Open-weights models are closing the gap fast.", heat: 5 },
+              { emoji: "🗜️", tag: "GROWING", title: "Model Compression & Edge AI", desc: "Quantization, pruning, and distillation to run powerful models on laptops and phones. Phi-4 (14B) outperforms many 70B models.", heat: 4 },
+              { emoji: "🌐", tag: "GROWING", title: "Multimodal Foundation Models", desc: "Models that see, hear, speak, and read images natively. GPT-4o, Gemini 1.5, Llama 3.2 Vision unify all modalities in one model.", heat: 4 },
+              { emoji: "🛡️", tag: "CRITICAL", title: "AI Safety & Alignment", desc: "Red-teaming, constitutional AI, and RLHF to make models honest and safe. Increasingly required by enterprise buyers and regulators.", heat: 3 },
+            ].map((t, i) => (
+              <div key={i} style={{ padding: "20px", border: "1px solid rgba(10,10,10,0.1)", background: "rgba(255,255,255,0.3)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
+                  <span style={{ fontSize: "22px" }}>{t.emoji}</span>
+                  <span style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "9px", padding: "2px 8px", background: t.tag === "HOT" || t.tag === "CRITICAL" ? "rgba(208,66,66,0.1)" : "rgba(212,169,106,0.1)", color: t.tag === "HOT" || t.tag === "CRITICAL" ? "var(--opt-red)" : "var(--gold)", borderRadius: "2px", letterSpacing: "0.06em" }}>
+                    {t.tag}
+                  </span>
+                </div>
+                <div style={{ fontFamily: "var(--font-playfair),serif", fontSize: "14px", fontWeight: 700, color: "var(--ink)", marginBottom: "8px", lineHeight: 1.3 }}>{t.title}</div>
+                <p style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "10px", lineHeight: 1.7, color: "var(--muted-txt)", margin: "0 0 12px" }}>{t.desc}</p>
+                <div style={{ display: "flex", gap: "3px" }}>
+                  {Array.from({ length: 5 }).map((_, hi) => (
+                    <div key={hi} style={{ width: "18px", height: "4px", borderRadius: "2px", background: hi < t.heat ? "var(--opt-red)" : "rgba(10,10,10,0.08)" }} />
+                  ))}
+                  <span style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "9px", color: "var(--muted-txt)", marginLeft: "6px" }}>heat</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Open-Source Platform Guide ── */}
+          <div className="opt-rule"><span className="opt-rule-text">Build with Open Source AI</span></div>
+          <p style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "11px", color: "var(--muted-txt)", marginBottom: "32px", lineHeight: 1.7 }}>
+            The essential tools every AI builder needs. Pick the right platform for your project — explained plainly, with starter code.
+          </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "64px" }}>
+            {[
+              {
+                name: "Ollama",
+                badge: "Run Locally",
+                badgeColor: "#2a7d4f",
+                emoji: "🦙",
+                tagline: "Run any open-source LLM on your own Mac or PC — no cloud needed, no API bill.",
+                bestFor: "Privacy-first apps, offline use, rapid prototyping without cost",
+                install: "brew install ollama && ollama run llama3.1",
+                code:
+`# Pull a model and chat instantly
+ollama run llama3.1
+
+# Use from Python
+import ollama
+response = ollama.chat(model='llama3.1', messages=[
+    {'role': 'user', 'content': 'Explain RAG in simple terms'}
+])
+print(response['message']['content'])`,
+              },
+              {
+                name: "HuggingFace",
+                badge: "Model Hub",
+                badgeColor: "#ff6b35",
+                emoji: "🤗",
+                tagline: "The GitHub of AI — 500K+ open models, datasets, and Spaces. Download, fine-tune, and deploy anything.",
+                bestFor: "Finding models, fine-tuning, hosting demos, sharing research",
+                install: "pip install transformers torch",
+                code:
+`from transformers import pipeline
+
+# Load any model from the hub in 2 lines
+classifier = pipeline("text-classification",
+    model="distilbert-base-uncased-finetuned-sst-2-english")
+
+result = classifier("This research paper is excellent!")
+print(result)  # [{'label': 'POSITIVE', 'score': 0.9998}]`,
+              },
+              {
+                name: "LangChain",
+                badge: "LLM Framework",
+                badgeColor: "#1c7c5d",
+                emoji: "⛓️",
+                tagline: "Build LLM-powered apps that chain prompts, tools, memory, and retrieval together. Works with any model.",
+                bestFor: "Chatbots with memory, document Q&A, multi-step pipelines, RAG",
+                install: "pip install langchain langchain-openai",
+                code:
+`from langchain_openai import ChatOpenAI
+from langchain.chains import RetrievalQA
+from langchain_community.vectorstores import FAISS
+
+# Build a document Q&A chatbot in minutes
+llm = ChatOpenAI(model="gpt-4o-mini")
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm, retriever=vectorstore.as_retriever()
+)
+answer = qa_chain.invoke("What does the paper conclude?")`,
+              },
+              {
+                name: "CrewAI",
+                badge: "Multi-Agent",
+                badgeColor: "#7c3aed",
+                emoji: "👥",
+                tagline: "Build teams of AI agents that talk to each other and collaborate on complex tasks — like having a mini startup inside your code.",
+                bestFor: "Research workflows, automated content, data pipelines, autonomous teams",
+                install: "pip install crewai",
+                code:
+`from crewai import Agent, Task, Crew
+
+researcher = Agent(role="AI Researcher",
+    goal="Find the latest LLM benchmark results",
+    backstory="Expert at reading papers and extracting key findings")
+
+writer = Agent(role="Technical Writer",
+    goal="Write a clear summary for engineers",
+    backstory="Explains complex AI research in plain English")
+
+task = Task(description="Summarise GPT-4o vs Claude benchmarks",
+    agent=researcher)
+
+crew = Crew(agents=[researcher, writer], tasks=[task])
+result = crew.kickoff()`,
+              },
+              {
+                name: "OpenAI SDK",
+                badge: "GPT / Automation",
+                badgeColor: "#10a37f",
+                emoji: "🟢",
+                tagline: "The official Python/Node SDK for GPT-4o, DALL·E, and Whisper. Perfect for production automation workflows.",
+                bestFor: "GPT-4o apps, code automation, structured outputs, batch jobs",
+                install: "pip install openai",
+                code:
+`from openai import OpenAI
+
+client = OpenAI()  # reads OPENAI_API_KEY from env
+
+# Structured JSON output — great for automation
+response = client.chat.completions.create(
+    model="gpt-4o",
+    response_format={"type": "json_object"},
+    messages=[{"role": "user",
+               "content": "List top 3 AI trends as JSON array"}]
+)
+print(response.choices[0].message.content)`,
+              },
+              {
+                name: "Anthropic SDK",
+                badge: "Claude / Automation",
+                badgeColor: "#d4a96a",
+                emoji: "🟠",
+                tagline: "Build with Claude 3.5 Sonnet — best for long documents, complex coding, and safe enterprise automation.",
+                bestFor: "Document analysis, safe automation, coding assistants, long context tasks",
+                install: "pip install anthropic",
+                code:
+`import anthropic
+
+client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY
+
+# 200K context — send a whole codebase
+message = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    max_tokens=1024,
+    messages=[{"role": "user",
+               "content": "Review this code for security issues:\\n" + code}]
+)
+print(message.content[0].text)`,
+              },
+            ].map((p, pi) => (
+              <div key={pi} style={{ border: "1px solid rgba(10,10,10,0.1)", background: "rgba(255,255,255,0.35)" }}>
+                {/* Header */}
+                <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(10,10,10,0.07)", display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
+                  <span style={{ fontSize: "24px" }}>{p.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "3px" }}>
+                      <span style={{ fontFamily: "var(--font-playfair),serif", fontSize: "18px", fontWeight: 700, color: "var(--ink)" }}>{p.name}</span>
+                      <span style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "9px", padding: "2px 8px", background: `${p.badgeColor}18`, color: p.badgeColor, borderRadius: "2px", letterSpacing: "0.06em" }}>{p.badge}</span>
+                    </div>
+                    <p style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "11px", color: "var(--muted-txt)", margin: 0, lineHeight: 1.6 }}>{p.tagline}</p>
+                  </div>
+                  <div style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "10px", color: "var(--muted-txt)", minWidth: "180px" }}>
+                    <span style={{ color: "var(--ink)", fontWeight: 700 }}>Best for: </span>{p.bestFor}
+                  </div>
+                </div>
+                {/* Code */}
+                <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "0" }}>
+                  <div style={{ padding: "14px 16px", borderRight: "1px solid rgba(10,10,10,0.07)", background: "rgba(10,10,10,0.02)" }}>
+                    <div style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "9px", color: "var(--muted-txt)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "8px" }}>Install</div>
+                    <code style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "10px", color: p.badgeColor, whiteSpace: "nowrap" }}>
+                      {p.install}
+                    </code>
+                  </div>
+                  <div style={{ padding: "14px 18px", background: "rgba(10,10,10,0.025)", overflowX: "auto" }}>
+                    <div style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "9px", color: "var(--muted-txt)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "8px" }}>Starter Code</div>
+                    <pre style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "10px", color: "var(--ink)", margin: 0, lineHeight: 1.8, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                      {p.code}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Agentic AI Concept Strip ── */}
+          <div style={{ padding: "32px 36px", border: "1px solid rgba(10,10,10,0.1)", background: "rgba(255,255,255,0.3)", marginBottom: "64px" }}>
+            <p style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "10px", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--gold)", marginBottom: "10px" }}>How agentic AI works — simply</p>
+            <h3 style={{ fontFamily: "var(--font-playfair),serif", fontSize: "22px", fontWeight: 700, color: "var(--ink)", marginBottom: "20px" }}>
+              The Agentic AI Stack Explained in Plain English
+            </h3>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "0" }}>
+              {[
+                { step: "1", label: "LLM Brain",      tool: "GPT-4o / Claude / Llama", desc: "The model that reasons, plans, and decides what to do next." },
+                { step: "→" },
+                { step: "2", label: "Orchestration",  tool: "LangChain / CrewAI",       desc: "Manages memory, chains steps together, and routes tasks between agents." },
+                { step: "→" },
+                { step: "3", label: "Local Inference", tool: "Ollama / HuggingFace",     desc: "Run open models privately on your own hardware — no cloud bill." },
+                { step: "→" },
+                { step: "4", label: "Tools & APIs",   tool: "Search, Code, Databases",  desc: "Agents browse the web, write & run code, and read your documents." },
+                { step: "→" },
+                { step: "5", label: "Output",         tool: "Answer / Action / Report",  desc: "The final result: a written report, a working app, an automated task." },
+              ].map((s, si) =>
+                s.label ? (
+                  <div key={si} style={{ padding: "14px 16px", borderRight: si < 8 ? "1px solid rgba(10,10,10,0.07)" : "none" }}>
+                    <div style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "18px", fontWeight: 700, color: "rgba(10,10,10,0.06)", marginBottom: "4px" }}>{s.step}</div>
+                    <div style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "11px", fontWeight: 700, color: "var(--ink)", marginBottom: "4px" }}>{s.label}</div>
+                    <div style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "10px", color: "var(--gold)", marginBottom: "6px" }}>{s.tool}</div>
+                    <p style={{ fontFamily: "var(--font-dm-mono),monospace", fontSize: "9px", color: "var(--muted-txt)", lineHeight: 1.6, margin: 0 }}>{s.desc}</p>
+                  </div>
+                ) : (
+                  <div key={si} style={{ display: "flex", alignItems: "center", justifyContent: "center", color: "var(--muted-txt)", fontSize: "18px" }}>→</div>
+                )
+              )}
+            </div>
+          </div>
+
         </div>
       </main>
       <Footer />
