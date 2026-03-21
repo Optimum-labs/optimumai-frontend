@@ -113,96 +113,94 @@ export default function SignUpPage() {
   return (
     <>
       <Header />
-      <main className="optimum-main">
+      <main className="optimum-main" style={{ paddingTop: 0 }}>
         <div className="grain-overlay" aria-hidden="true" />
 
         {checkingAuth ? (
           <div className="auth-page">
-            <div>
-              <div className="auth-card">
-                <div className="auth-logo">O</div>
-                <h1 className="auth-title">Loading...</h1>
-              </div>
+            <div className="auth-card" style={{ textAlign: "center" }}>
+              <div className="auth-logo">O</div>
+              <h1 className="auth-title">Loading…</h1>
             </div>
           </div>
         ) : (
-        <div className="auth-page">
-          <div>
-            <div className="auth-card">
-              <div className="auth-logo">O</div>
+        <div className="auth-split" style={{ minHeight: "100vh" }}>
+          {/* ── Brand panel ── */}
+          <div className="auth-split-brand">
+            <div className="auth-split-brand-logo">
+              <div className="auth-split-brand-mark">O</div>
+              <span className="auth-split-brand-name">OptimumAI</span>
+            </div>
 
+            <div className="auth-split-brand-content">
+              <h2 className="auth-split-brand-headline">
+                Build the future of <em>AI research</em> with us.
+              </h2>
+              <p className="auth-split-brand-desc">
+                Join 10,000+ researchers, builders, and learners pushing the frontier of human-centered AI.
+                Get access to bootcamps, internships, and real research projects.
+              </p>
+            </div>
+
+            <div className="auth-split-brand-trust">
+              <div className="auth-split-trust-item">
+                <div className="auth-split-trust-dot" />
+                Free to join — no credit card required
+              </div>
+              <div className="auth-split-trust-item">
+                <div className="auth-split-trust-dot" style={{ background: "var(--opt-red)" }} />
+                Access live AI challenges &amp; competitions
+              </div>
+              <div className="auth-split-trust-item">
+                <div className="auth-split-trust-dot" style={{ background: "rgba(245,240,232,0.4)" }} />
+                Co-author papers from day one
+              </div>
+            </div>
+          </div>
+
+          {/* ── Form panel ── */}
+          <div className="auth-split-form">
+            <div className="auth-split-form-inner">
               {isSuccess ? (
-                <>
-                  <h1 className="auth-title">Account Created!</h1>
-                  <p className="auth-desc">Welcome to OptimumAI, {formData.name.split(' ')[0]}!</p>
-
+                <div style={{ textAlign: "center" }}>
                   <div style={{
-                    padding: "24px",
-                    background: "rgba(16,185,129,0.1)",
-                    border: "1px solid rgba(16,185,129,0.2)",
-                    borderRadius: "4px",
-                    marginBottom: "24px",
-                    textAlign: "center"
-                  }}>
-                    <div style={{
-                      width: "48px",
-                      height: "48px",
-                      borderRadius: "50%",
-                      background: "var(--gold)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      margin: "0 auto 16px",
-                      fontSize: "20px",
-                      color: "var(--ink)"
-                    }}>
-                      ✓
-                    </div>
-                    <p style={{
-                      fontFamily: "var(--font-dm-mono), monospace",
-                      fontSize: "14px",
-                      color: "var(--muted-txt)",
-                      margin: "0"
-                    }}>
-                      Your account has been created successfully.<br />
-                      Redirecting you to your dashboard...
-                    </p>
-                  </div>
-
-                  <Link href="/dashboard" className="opt-btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                    width: 56, height: 56, borderRadius: "50%",
+                    background: "rgba(16,185,129,0.12)",
+                    border: "2px solid rgba(16,185,129,0.3)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    margin: "0 auto 20px", fontSize: 24
+                  }}>✓</div>
+                  <h1 className="auth-title">You&apos;re in!</h1>
+                  <p className="auth-desc">Welcome to OptimumAI, {formData.name.split(" ")[0]}. Redirecting to your dashboard…</p>
+                  <Link href="/dashboard" className="opt-btn-primary" style={{ width: "100%", justifyContent: "center", marginTop: "8px" }}>
                     Go to Dashboard
                   </Link>
-                </>
+                </div>
               ) : (
                 <>
-                  <h1 className="auth-title">Create an account</h1>
-                  <p className="auth-desc">Start your AI learning journey with OptimumAI</p>
+                  <h1 className="auth-title" style={{ textAlign: "left", marginBottom: "6px" }}>Create an account</h1>
+                  <p className="auth-desc" style={{ textAlign: "left", marginBottom: "28px" }}>Start your AI journey with OptimumAI</p>
 
                   <div className="auth-social">
                     <button type="button" className="auth-social-btn" onClick={() => handleSocialLogin('github')}>
-                      <Github size={14} /> GitHub
+                      <Github size={15} /> GitHub
                     </button>
                     <button type="button" className="auth-social-btn" onClick={() => handleSocialLogin('google')}>
-                      <Mail size={14} /> Google
+                      <Mail size={15} /> Google
                     </button>
                   </div>
 
-                  <div className="auth-divider"><span>Or continue with</span></div>
+                  <div className="auth-divider"><span>or continue with email</span></div>
 
                   {error && (
                     <div style={{
                       padding: "12px 16px",
-                      background: "rgba(200,57,43,0.1)",
+                      background: "rgba(200,57,43,0.07)",
                       border: "1px solid rgba(200,57,43,0.2)",
-                      borderRadius: "4px",
-                      marginBottom: "20px"
+                      borderRadius: "8px",
+                      marginBottom: "16px"
                     }}>
-                      <p style={{
-                        fontFamily: "var(--font-dm-mono), monospace",
-                        fontSize: "12px",
-                        color: "var(--opt-red)",
-                        margin: "0"
-                      }}>
+                      <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: "13px", color: "var(--opt-red)", margin: 0 }}>
                         {error}
                       </p>
                     </div>
@@ -211,66 +209,47 @@ export default function SignUpPage() {
                   <form onSubmit={handleSubmit} className="auth-form">
                     <div className="auth-field">
                       <label htmlFor="name" className="auth-label">Full Name</label>
-                      <input
-                        id="name"
-                        type="text"
-                        className="auth-input"
-                        placeholder="Your full name"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        required
-                        autoComplete="name"
-                      />
+                      <input id="name" type="text" className="auth-input" placeholder="Your full name"
+                        value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required autoComplete="name" />
                     </div>
 
                     <div className="auth-field">
                       <label htmlFor="email" className="auth-label">Email</label>
-                      <input
-                        id="email"
-                        type="email"
-                        className="auth-input"
-                        placeholder="name@example.com"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        required
-                        autoComplete="email"
-                      />
+                      <input id="email" type="email" className="auth-input" placeholder="name@example.com"
+                        value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required autoComplete="email" />
                     </div>
 
                     <div className="auth-field">
                       <label htmlFor="password" className="auth-label">Password</label>
-                      <input
-                        id="password"
-                        type="password"
-                        className="auth-input"
-                        placeholder="Create a strong password"
-                        value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        required
-                        autoComplete="new-password"
-                      />
+                      <input id="password" type="password" className="auth-input" placeholder="Min 8 characters"
+                        value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        required autoComplete="new-password" />
+                      {formData.password.length > 0 && (
+                        <div style={{ display: "flex", gap: 4, marginTop: 4 }}>
+                          {[1,2,3,4].map(i => (
+                            <div key={i} style={{
+                              flex: 1, height: 3, borderRadius: 2,
+                              background: formData.password.length >= i * 3
+                                ? i <= 1 ? "var(--opt-red)" : i <= 2 ? "#f59e0b" : i <= 3 ? "#3b82f6" : "var(--gold)"
+                                : "rgba(10,10,10,0.1)",
+                              transition: "background 0.3s"
+                            }} />
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     <div className="auth-field">
                       <label htmlFor="confirmPassword" className="auth-label">Confirm Password</label>
-                      <input
-                        id="confirmPassword"
-                        type="password"
-                        className="auth-input"
-                        placeholder="Re-enter your password"
-                        value={formData.confirmPassword}
-                        onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                        required
-                        autoComplete="new-password"
-                      />
+                      <input id="confirmPassword" type="password" className="auth-input" placeholder="Re-enter your password"
+                        value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                        required autoComplete="new-password" />
                     </div>
 
-                    <button
-                      type="submit"
-                      className="opt-btn-primary"
-                      disabled={isLoading}
-                      style={{ width: "100%", justifyContent: "center", opacity: isLoading ? 0.6 : 1 }}
-                    >
+                    <button type="submit" className="opt-btn-primary" disabled={isLoading}
+                      style={{ width: "100%", justifyContent: "center", opacity: isLoading ? 0.6 : 1, marginTop: "4px" }}>
                       {isLoading ? "Creating account…" : "Create Account"}
                     </button>
                   </form>
@@ -279,20 +258,19 @@ export default function SignUpPage() {
                     <span>Already have an account? </span>
                     <Link href="/login">Sign in</Link>
                   </div>
+
+                  <p className="auth-legal">
+                    By signing up, you agree to our{" "}
+                    <Link href="/terms">Terms of Service</Link> and{" "}
+                    <Link href="/privacy">Privacy Policy</Link>
+                  </p>
                 </>
               )}
             </div>
-
-            <p className="auth-legal">
-              By signing up, you agree to our{" "}
-              <Link href="/terms">Terms of Service</Link> and{" "}
-              <Link href="/privacy">Privacy Policy</Link>
-            </p>
           </div>
         </div>
         )}
       </main>
-      <Footer />
     </>
   )
 }

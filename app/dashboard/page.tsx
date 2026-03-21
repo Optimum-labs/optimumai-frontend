@@ -36,6 +36,7 @@ export default function DashboardPage() {
   const [editingProfile, setEditingProfile] = useState(false)
   const [profileForm, setProfileForm] = useState({ name: '', dateOfBirth: '' })
   const [profileSaving, setProfileSaving] = useState(false)
+  const [dashSection, setDashSection] = useState<string>('challenges')
   const supabase = createClient()
 
   useEffect(() => {
@@ -182,9 +183,9 @@ export default function DashboardPage() {
                 )}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
                 {/* Name */}
-                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.07)", borderRadius: "10px", background: "rgba(10,10,10,0.01)" }}>
                   <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     Full Name
                   </span>
@@ -204,7 +205,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Email */}
-                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.07)", borderRadius: "10px", background: "rgba(10,10,10,0.01)" }}>
                   <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     Email Address
                   </span>
@@ -214,7 +215,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* User ID */}
-                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.07)", borderRadius: "10px", background: "rgba(10,10,10,0.01)" }}>
                   <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     User ID
                   </span>
@@ -224,7 +225,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Date of Birth */}
-                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
+                <div style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.07)", borderRadius: "10px", background: "rgba(10,10,10,0.01)" }}>
                   <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                     Date of Birth
                   </span>
@@ -249,240 +250,354 @@ export default function DashboardPage() {
           </div>
 
           {/* ── Quick Stats ── */}
-          <div className="opt-stats-bar opt-anim-5">
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: "14px",
+            marginBottom: "40px",
+          }}>
             {[
-              { value: stats.challenges, label: "Challenges" },
-              { value: stats.researchPrograms, label: "Research Programs" },
-              { value: stats.enrolled, label: "Courses Enrolled" },
-              { value: stats.completed, label: "Completed" },
-              { value: stats.inProgress, label: "In Progress" },
-              { value: stats.totalActivities, label: "Total Activities" },
+              { icon: Rocket,    value: stats.challenges,      label: "Challenges",        color: "#c8392b", bg: "rgba(200,57,43,0.08)" },
+              { icon: Beaker,    value: stats.researchPrograms, label: "Research Programs",  color: "#10b981", bg: "rgba(16,185,129,0.08)" },
+              { icon: BookOpen,  value: stats.enrolled,         label: "Courses Enrolled",  color: "#6366f1", bg: "rgba(99,102,241,0.08)" },
+              { icon: Award,     value: stats.completed,        label: "Completed",         color: "#10b981", bg: "rgba(16,185,129,0.08)" },
+              { icon: TrendingUp,value: stats.inProgress,       label: "In Progress",       color: "#f59e0b", bg: "rgba(245,158,11,0.08)" },
+              { icon: Brain,     value: stats.totalActivities,  label: "Total Activities",  color: "#8b5cf6", bg: "rgba(139,92,246,0.08)" },
             ].map((s) => (
-              <div key={s.label} className="opt-stat">
-                <span className="opt-stat-value">{s.value}</span>
-                <span className="opt-stat-label">{s.label}</span>
+              <div key={s.label} style={{
+                padding: "18px 20px",
+                background: "#fff",
+                border: "1px solid rgba(10,10,10,0.07)",
+                borderRadius: "10px",
+                borderLeft: `3px solid ${s.color}`,
+                boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+                  <div style={{ padding: "8px", borderRadius: "8px", background: s.bg, flexShrink: 0 }}>
+                    <s.icon size={16} style={{ color: s.color, display: "block" }} />
+                  </div>
+                  <span style={{
+                    fontSize: "28px", fontWeight: 700,
+                    color: "var(--ink)",
+                    fontFamily: "var(--font-playfair), serif",
+                    lineHeight: 1,
+                  }}>{s.value}</span>
+                </div>
+                <span style={{
+                  fontSize: "11px", color: "var(--muted-txt)",
+                  textTransform: "uppercase", letterSpacing: "0.05em",
+                  fontFamily: "var(--font-dm-mono), monospace",
+                }}>{s.label}</span>
               </div>
             ))}
           </div>
 
-          {/* ── My Challenges ── */}
-          <div className="opt-rule"><span className="opt-rule-text">My Challenges</span></div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "20px", marginBottom: "48px" }}>
-            {challengeRegistrations.length === 0 ? (
-              <div className="ed-card">
-                <div className="ed-card-body" style={{ textAlign: "center", padding: "32px 20px" }}>
-                  <Rocket size={24} style={{ color: "var(--muted-txt)", marginBottom: "12px" }} />
-                  <p style={{ fontSize: "13px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", margin: 0 }}>
-                    No challenge registrations yet. <Link href="/community" style={{ color: "var(--opt-red)" }}>Browse challenges</Link>
-                  </p>
-                </div>
-              </div>
-            ) : challengeRegistrations.map((reg) => (
-              <div key={reg.id} className="ed-card">
-                <div className="ed-card-body">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
-                    <div>
-                      <h4 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "16px", fontWeight: 700, color: "var(--ink)", margin: "0 0 4px" }}>
-                        {reg.challengeTitle}
-                      </h4>
-                      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                        <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace" }}>
-                          {reg.challengeLevel} · {reg.challengeDuration}
-                        </span>
-                      </div>
-                    </div>
-                    <span style={{
-                      fontSize: "10px",
-                      color: statusStyle(reg.status).color,
-                      background: statusStyle(reg.status).bg,
-                      padding: "3px 10px",
-                      borderRadius: "12px",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      fontWeight: 600,
-                      whiteSpace: "nowrap",
-                    }}>
-                      {reg.status}
-                    </span>
-                  </div>
-                  <div style={{ display: "flex", gap: "24px", flexWrap: "wrap", fontSize: "12px", color: "var(--muted-txt)" }}>
-                    <span><Calendar size={12} style={{ marginRight: "4px", verticalAlign: "middle" }} /> Starts: {new Date(reg.startsAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                    <span><Calendar size={12} style={{ marginRight: "4px", verticalAlign: "middle" }} /> Applied: {new Date(reg.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                  </div>
-                  <div style={{ marginTop: "12px" }}>
-                    {reg.meetingLink ? (
-                      <a href={reg.meetingLink} target="_blank" rel="noopener noreferrer" className="opt-btn-ghost" style={{ fontSize: "11px", padding: "6px 14px", display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                        <Video size={12} /> Join Progress Meeting <ExternalLink size={10} />
-                      </a>
-                    ) : (
-                      <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", fontStyle: "italic" }}>
-                        📅 Meeting link will be shared soon
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
+          {/* ── Section Navigation ── */}
+          <div style={{
+            display: "flex",
+            gap: 0,
+            flexWrap: "wrap",
+            borderBottom: "2px solid rgba(10,10,10,0.08)",
+            marginBottom: "32px",
+          }}>
+            {[
+              { key: "challenges", label: "Challenges",       count: stats.challenges },
+              { key: "research",   label: "Research",         count: stats.researchPrograms },
+              { key: "courses",    label: "Courses",          count: stats.enrolled },
+              { key: "activity",   label: "Activity",         count: recentActivity.length },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setDashSection(tab.key)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "7px",
+                  padding: "11px 20px",
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  fontSize: "13px",
+                  fontFamily: "var(--font-inter, Inter, sans-serif)",
+                  fontWeight: dashSection === tab.key ? 600 : 400,
+                  color: dashSection === tab.key ? "var(--opt-red)" : "var(--muted-txt)",
+                  borderBottom: dashSection === tab.key ? "2px solid var(--opt-red)" : "2px solid transparent",
+                  marginBottom: "-2px",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                {tab.label}
+                <span style={{
+                  fontSize: "10px",
+                  fontWeight: 600,
+                  padding: "1px 6px",
+                  borderRadius: "10px",
+                  background: dashSection === tab.key ? "rgba(200,57,43,0.1)" : "rgba(10,10,10,0.06)",
+                  color: dashSection === tab.key ? "var(--opt-red)" : "var(--muted-txt)",
+                  fontFamily: "var(--font-dm-mono), monospace",
+                }}>{tab.count}</span>
+              </button>
             ))}
           </div>
 
-          {/* ── My Research Programs ── */}
-          <div className="opt-rule"><span className="opt-rule-text">My Research Programs</span></div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "20px", marginBottom: "48px" }}>
-            {researchApplications.length === 0 ? (
-              <div className="ed-card">
-                <div className="ed-card-body" style={{ textAlign: "center", padding: "32px 20px" }}>
-                  <Beaker size={24} style={{ color: "var(--muted-txt)", marginBottom: "12px" }} />
-                  <p style={{ fontSize: "13px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", margin: 0 }}>
-                    No research applications yet. <Link href="/research" style={{ color: "var(--opt-red)" }}>Apply to a program</Link>
-                  </p>
-                </div>
-              </div>
-            ) : researchApplications.map((app) => (
-              <div key={app.id} className="ed-card">
-                <div className="ed-card-body">
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
-                    <div>
-                      <h4 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "16px", fontWeight: 700, color: "var(--ink)", margin: "0 0 4px" }}>
-                        {app.programTitle}
-                      </h4>
-                      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                        <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace" }}>
-                          {app.programOrganization} · {app.programDuration} · {app.programDifficulty}
-                        </span>
-                      </div>
-                    </div>
-                    <span style={{
-                      fontSize: "10px",
-                      color: statusStyle(app.status).color,
-                      background: statusStyle(app.status).bg,
-                      padding: "3px 10px",
-                      borderRadius: "12px",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      fontWeight: 600,
-                      whiteSpace: "nowrap",
-                    }}>
-                      {app.status}
-                    </span>
-                  </div>
-                  <div style={{ display: "flex", gap: "24px", flexWrap: "wrap", fontSize: "12px", color: "var(--muted-txt)" }}>
-                    <span><Calendar size={12} style={{ marginRight: "4px", verticalAlign: "middle" }} /> Applied: {new Date(app.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                  </div>
-                  <div style={{ marginTop: "12px" }}>
-                    {app.meetingLink ? (
-                      <a href={app.meetingLink} target="_blank" rel="noopener noreferrer" className="opt-btn-ghost" style={{ fontSize: "11px", padding: "6px 14px", display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                        <Video size={12} /> Join Progress Meeting <ExternalLink size={10} />
-                      </a>
-                    ) : (
-                      <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace", fontStyle: "italic" }}>
-                        📅 Meeting link will be shared soon
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* ── My Courses & Bootcamps ── */}
-          <div className="opt-rule"><span className="opt-rule-text">My Courses & Bootcamps</span></div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "32px", marginBottom: "48px" }}>
-
-            {/* Enrolled Courses */}
-            <div className="ed-card">
-              <div className="ed-card-body">
-                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-                  <BookOpen size={20} style={{ color: "var(--gold)" }} />
-                  <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "18px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
-                    Enrolled Courses
-                  </h3>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  {enrollments.length === 0 ? (
-                    <p style={{ fontSize: "13px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace" }}>
-                      No courses yet. <Link href="/bootcamps" style={{ color: "var(--opt-red)" }}>Browse bootcamps</Link>
+          {/* ── Tab: Challenges ── */}
+          {dashSection === "challenges" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "48px" }}>
+              {challengeRegistrations.length === 0 ? (
+                <div className="ed-card">
+                  <div className="ed-card-body" style={{ textAlign: "center", padding: "48px 20px" }}>
+                    <Rocket size={28} style={{ color: "var(--muted-txt)", display: "block", margin: "0 auto 12px" }} />
+                    <p style={{ fontSize: "14px", color: "var(--muted-txt)", margin: "0 0 20px", fontFamily: "var(--font-inter), sans-serif" }}>
+                      No challenge registrations yet.
                     </p>
-                  ) : enrollments.map((enrollment) => (
-                    <div key={enrollment.id} style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
-                        <span style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 600, color: "var(--ink)" }}>
-                          {enrollment.courseTitle}
-                        </span>
-                        <span style={{
-                          fontSize: "10px",
-                          color: statusStyle(enrollment.status).color,
-                          background: statusStyle(enrollment.status).bg,
-                          padding: "2px 8px",
-                          borderRadius: "12px",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em"
-                        }}>
-                          {enrollment.status}
-                        </span>
+                    <Link href="/community" className="opt-btn-primary" style={{ fontSize: "12px" }}>
+                      Browse Challenges <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </div>
+              ) : challengeRegistrations.map((reg) => (
+                <div key={reg.id} className="ed-card">
+                  <div className="ed-card-body">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px", gap: "12px" }}>
+                      <div>
+                        <h4 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "17px", fontWeight: 700, color: "var(--ink)", margin: "0 0 8px" }}>
+                          {reg.challengeTitle}
+                        </h4>
+                        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                          <span style={{ fontSize: "10px", fontFamily: "var(--font-dm-mono), monospace", color: "var(--opt-red)", background: "rgba(200,57,43,0.08)", padding: "2px 8px", borderRadius: "8px" }}>
+                            {reg.challengeLevel}
+                          </span>
+                          <span style={{ fontSize: "10px", fontFamily: "var(--font-dm-mono), monospace", color: "var(--muted-txt)", background: "rgba(10,10,10,0.05)", padding: "2px 8px", borderRadius: "8px" }}>
+                            {reg.challengeDuration}
+                          </span>
+                        </div>
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                        <span style={{ fontSize: "12px", color: "var(--muted-txt)" }}>{enrollment.courseCategory}</span>
-                        <span style={{ fontSize: "12px", color: "var(--muted-txt)" }}>{enrollment.progress}% complete</span>
-                      </div>
-                      {enrollment.meetingLink ? (
-                        <a href={enrollment.meetingLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: "var(--opt-red)", display: "inline-flex", alignItems: "center", gap: "4px", textDecoration: "none" }}>
-                          <Video size={11} /> Join Meeting <ExternalLink size={9} />
+                      <span style={{
+                        fontSize: "10px",
+                        color: statusStyle(reg.status).color,
+                        background: statusStyle(reg.status).bg,
+                        padding: "4px 10px", borderRadius: "12px",
+                        textTransform: "uppercase", letterSpacing: "0.05em",
+                        fontWeight: 600, whiteSpace: "nowrap", flexShrink: 0,
+                      }}>{reg.status}</span>
+                    </div>
+                    <div style={{
+                      display: "flex", gap: "20px", flexWrap: "wrap",
+                      fontSize: "12px", color: "var(--muted-txt)",
+                      paddingTop: "12px", borderTop: "1px solid rgba(10,10,10,0.06)",
+                      fontFamily: "var(--font-inter), sans-serif",
+                    }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                        <Calendar size={12} /> Starts: {new Date(reg.startsAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </span>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                        <Calendar size={12} /> Applied: {new Date(reg.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </span>
+                      {reg.meetingLink ? (
+                        <a href={reg.meetingLink} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "5px", color: "var(--opt-red)", textDecoration: "none", fontWeight: 500 }}>
+                          <Video size={12} /> Join Meeting <ExternalLink size={10} />
                         </a>
                       ) : (
-                        <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontStyle: "italic" }}>📅 Meeting link coming soon</span>
+                        <span style={{ fontStyle: "italic" }}>📅 Meeting link coming soon</span>
                       )}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
+          )}
 
-            {/* Recent Activity */}
-            <div className="ed-card">
-              <div className="ed-card-body">
-                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-                  <TrendingUp size={20} style={{ color: "var(--gold)" }} />
-                  <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "18px", fontWeight: 700, color: "var(--ink)", margin: 0 }}>
-                    Recent Activity
-                  </h3>
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                  {recentActivity.length === 0 ? (
-                    <p style={{ fontSize: "13px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace" }}>
-                      No activity yet. Start by joining a challenge or research program!
+          {/* ── Tab: Research ── */}
+          {dashSection === "research" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "48px" }}>
+              {researchApplications.length === 0 ? (
+                <div className="ed-card">
+                  <div className="ed-card-body" style={{ textAlign: "center", padding: "48px 20px" }}>
+                    <Beaker size={28} style={{ color: "var(--muted-txt)", display: "block", margin: "0 auto 12px" }} />
+                    <p style={{ fontSize: "14px", color: "var(--muted-txt)", margin: "0 0 20px", fontFamily: "var(--font-inter), sans-serif" }}>
+                      No research applications yet.
                     </p>
-                  ) : recentActivity.map((activity) => (
-                    <div key={activity.id} style={{ padding: "16px", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "4px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
-                        <span style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 600, color: "var(--ink)" }}>
-                          {activity.description}
-                        </span>
-                        <span style={{
-                          fontSize: "10px",
-                          color: "var(--gold)",
-                          background: "rgba(16,185,129,0.1)",
-                          padding: "2px 8px",
-                          borderRadius: "12px",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em"
-                        }}>
-                          {activity.type}
+                    <Link href="/research" className="opt-btn-primary" style={{ fontSize: "12px" }}>
+                      Explore Research <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </div>
+              ) : researchApplications.map((app) => (
+                <div key={app.id} className="ed-card">
+                  <div className="ed-card-body">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px", gap: "12px" }}>
+                      <div>
+                        <h4 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "17px", fontWeight: 700, color: "var(--ink)", margin: "0 0 8px" }}>
+                          {app.programTitle}
+                        </h4>
+                        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                          <span style={{ fontSize: "10px", fontFamily: "var(--font-dm-mono), monospace", color: "#10b981", background: "rgba(16,185,129,0.08)", padding: "2px 8px", borderRadius: "8px" }}>
+                            {app.programDifficulty}
+                          </span>
+                          <span style={{ fontSize: "10px", fontFamily: "var(--font-dm-mono), monospace", color: "var(--muted-txt)", background: "rgba(10,10,10,0.05)", padding: "2px 8px", borderRadius: "8px" }}>
+                            {app.programOrganization}
+                          </span>
+                          <span style={{ fontSize: "10px", fontFamily: "var(--font-dm-mono), monospace", color: "var(--muted-txt)", background: "rgba(10,10,10,0.05)", padding: "2px 8px", borderRadius: "8px" }}>
+                            {app.programDuration}
+                          </span>
+                        </div>
+                      </div>
+                      <span style={{
+                        fontSize: "10px",
+                        color: statusStyle(app.status).color,
+                        background: statusStyle(app.status).bg,
+                        padding: "4px 10px", borderRadius: "12px",
+                        textTransform: "uppercase", letterSpacing: "0.05em",
+                        fontWeight: 600, whiteSpace: "nowrap", flexShrink: 0,
+                      }}>{app.status}</span>
+                    </div>
+                    <div style={{
+                      display: "flex", gap: "20px", flexWrap: "wrap",
+                      fontSize: "12px", color: "var(--muted-txt)",
+                      paddingTop: "12px", borderTop: "1px solid rgba(10,10,10,0.06)",
+                      fontFamily: "var(--font-inter), sans-serif",
+                    }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                        <Calendar size={12} /> Applied: {new Date(app.appliedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </span>
+                      {app.meetingLink ? (
+                        <a href={app.meetingLink} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "5px", color: "var(--opt-red)", textDecoration: "none", fontWeight: 500 }}>
+                          <Video size={12} /> Join Meeting <ExternalLink size={10} />
+                        </a>
+                      ) : (
+                        <span style={{ fontStyle: "italic" }}>📅 Meeting link coming soon</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ── Tab: Courses ── */}
+          {dashSection === "courses" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "48px" }}>
+              {enrollments.length === 0 ? (
+                <div className="ed-card">
+                  <div className="ed-card-body" style={{ textAlign: "center", padding: "48px 20px" }}>
+                    <BookOpen size={28} style={{ color: "var(--muted-txt)", display: "block", margin: "0 auto 12px" }} />
+                    <p style={{ fontSize: "14px", color: "var(--muted-txt)", margin: "0 0 20px", fontFamily: "var(--font-inter), sans-serif" }}>
+                      No courses enrolled yet.
+                    </p>
+                    <Link href="/bootcamps" className="opt-btn-primary" style={{ fontSize: "12px" }}>
+                      Browse Bootcamps <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </div>
+              ) : enrollments.map((enrollment) => (
+                <div key={enrollment.id} className="ed-card">
+                  <div className="ed-card-body">
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px", gap: "12px" }}>
+                      <div style={{ flex: 1 }}>
+                        <h4 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "17px", fontWeight: 700, color: "var(--ink)", margin: "0 0 8px" }}>
+                          {enrollment.courseTitle}
+                        </h4>
+                        <span style={{ fontSize: "10px", fontFamily: "var(--font-dm-mono), monospace", color: "var(--muted-txt)", background: "rgba(10,10,10,0.05)", padding: "2px 8px", borderRadius: "8px" }}>
+                          {enrollment.courseCategory}
                         </span>
                       </div>
-                      <span style={{ fontSize: "12px", color: "var(--muted-txt)" }}>
-                        {new Date(activity.createdAt).toLocaleDateString()}
-                      </span>
+                      <span style={{
+                        fontSize: "10px",
+                        color: statusStyle(enrollment.status).color,
+                        background: statusStyle(enrollment.status).bg,
+                        padding: "4px 10px", borderRadius: "12px",
+                        textTransform: "uppercase", letterSpacing: "0.05em",
+                        fontWeight: 600, whiteSpace: "nowrap", flexShrink: 0,
+                      }}>{enrollment.status}</span>
                     </div>
-                  ))}
+                    <div style={{ marginBottom: "14px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+                        <span style={{ fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-inter), sans-serif" }}>Progress</span>
+                        <span style={{ fontSize: "11px", color: "var(--ink)", fontWeight: 600, fontFamily: "var(--font-dm-mono), monospace" }}>{enrollment.progress}%</span>
+                      </div>
+                      <div style={{ height: "6px", background: "rgba(10,10,10,0.08)", borderRadius: "3px", overflow: "hidden" }}>
+                        <div style={{
+                          height: "100%",
+                          width: `${enrollment.progress}%`,
+                          background: enrollment.progress === 100 ? "#10b981" : "var(--opt-red)",
+                          borderRadius: "3px",
+                          transition: "width 0.5s ease",
+                        }} />
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", fontSize: "12px", color: "var(--muted-txt)", paddingTop: "12px", borderTop: "1px solid rgba(10,10,10,0.06)", fontFamily: "var(--font-inter), sans-serif" }}>
+                      {enrollment.meetingLink ? (
+                        <a href={enrollment.meetingLink} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "5px", color: "var(--opt-red)", textDecoration: "none", fontWeight: 500 }}>
+                          <Video size={12} /> Join Meeting <ExternalLink size={10} />
+                        </a>
+                      ) : (
+                        <span style={{ fontStyle: "italic" }}>📅 Meeting link coming soon</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-          </div>
+          )}
+
+          {/* ── Tab: Activity ── */}
+          {dashSection === "activity" && (
+            <div style={{ marginBottom: "48px" }}>
+              {recentActivity.length === 0 ? (
+                <div className="ed-card">
+                  <div className="ed-card-body" style={{ textAlign: "center", padding: "48px 20px" }}>
+                    <TrendingUp size={28} style={{ color: "var(--muted-txt)", display: "block", margin: "0 auto 12px" }} />
+                    <p style={{ fontSize: "14px", color: "var(--muted-txt)", margin: 0, fontFamily: "var(--font-inter), sans-serif" }}>
+                      No activity yet. Start by joining a challenge or research program!
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ position: "relative", paddingLeft: "32px" }}>
+                  <div style={{
+                    position: "absolute", left: "9px", top: "12px", bottom: "12px",
+                    width: "2px",
+                    background: "linear-gradient(to bottom, var(--opt-red), rgba(200,57,43,0.08))",
+                  }} />
+                  <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                    {recentActivity.map((activity) => (
+                      <div key={activity.id} style={{ position: "relative" }}>
+                        <div style={{
+                          position: "absolute", left: "-27px", top: "50%",
+                          transform: "translateY(-50%)",
+                          width: "10px", height: "10px",
+                          borderRadius: "50%",
+                          background: "var(--opt-red)",
+                          border: "2px solid var(--paper)",
+                          boxShadow: "0 0 0 3px rgba(200,57,43,0.15)",
+                        }} />
+                        <div className="ed-card">
+                          <div className="ed-card-body" style={{ padding: "16px 20px" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px", marginBottom: "8px" }}>
+                              <p style={{ margin: 0, fontSize: "14px", color: "var(--ink)", fontFamily: "var(--font-inter), sans-serif" }}>
+                                {activity.description}
+                              </p>
+                              <span style={{
+                                fontSize: "10px",
+                                color: "#10b981", background: "rgba(16,185,129,0.08)",
+                                padding: "3px 8px", borderRadius: "8px",
+                                textTransform: "uppercase", letterSpacing: "0.04em",
+                                fontFamily: "var(--font-dm-mono), monospace",
+                                fontWeight: 600, whiteSpace: "nowrap", flexShrink: 0,
+                              }}>{activity.type}</span>
+                            </div>
+                            <p style={{ margin: 0, fontSize: "11px", color: "var(--muted-txt)", fontFamily: "var(--font-dm-mono), monospace" }}>
+                              {new Date(activity.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* ── Quick Actions ── */}
           <div className="opt-rule"><span className="opt-rule-text">Quick Actions</span></div>
