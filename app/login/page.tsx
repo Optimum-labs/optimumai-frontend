@@ -91,52 +91,77 @@ function LoginForm() {
   return (
     <>
       <Header />
-      <main className="optimum-main">
+      <main className="optimum-main" style={{ paddingTop: 0 }}>
         <div className="grain-overlay" aria-hidden="true" />
 
         {checkingAuth ? (
           <div className="auth-page">
-            <div>
-              <div className="auth-card">
-                <div className="auth-logo">O</div>
-                <h1 className="auth-title">Loading...</h1>
-              </div>
+            <div className="auth-card" style={{ textAlign: "center" }}>
+              <div className="auth-logo">O</div>
+              <h1 className="auth-title">Loading…</h1>
             </div>
           </div>
         ) : (
-        <div className="auth-page">
-          <div>
-            <div className="auth-card">
-              <div className="auth-logo">O</div>
+        <div className="auth-split" style={{ minHeight: "100vh" }}>
+          {/* ── Brand panel ── */}
+          <div className="auth-split-brand">
+            <div className="auth-split-brand-logo">
+              <div className="auth-split-brand-mark">O</div>
+              <span className="auth-split-brand-name">OptimumAI</span>
+            </div>
 
-              <h1 className="auth-title">Welcome back</h1>
-              <p className="auth-desc">Sign in to your OptimumAI account</p>
+            <div className="auth-split-brand-content">
+              <h2 className="auth-split-brand-headline">
+                95% of your <em>decisions</em> are borrowed.
+              </h2>
+              <p className="auth-split-brand-desc">
+                We built the first instrument that shows you exactly which ones —
+                and what&apos;s underneath them. Welcome back.
+              </p>
+            </div>
+
+            <div className="auth-split-brand-trust">
+              <div className="auth-split-trust-item">
+                <div className="auth-split-trust-dot" />
+                10,000+ researchers across 80 countries
+              </div>
+              <div className="auth-split-trust-item">
+                <div className="auth-split-trust-dot" style={{ background: "var(--opt-red)" }} />
+                250+ published research papers
+              </div>
+              <div className="auth-split-trust-item">
+                <div className="auth-split-trust-dot" style={{ background: "rgba(245,240,232,0.4)" }} />
+                Production-grade AI bootcamps & internships
+              </div>
+            </div>
+          </div>
+
+          {/* ── Form panel ── */}
+          <div className="auth-split-form">
+            <div className="auth-split-form-inner">
+              <h1 className="auth-title" style={{ textAlign: "left", marginBottom: "6px" }}>Welcome back</h1>
+              <p className="auth-desc" style={{ textAlign: "left", marginBottom: "28px" }}>Sign in to your OptimumAI account</p>
 
               <div className="auth-social">
                 <button type="button" className="auth-social-btn" onClick={() => handleSocialLogin('github')}>
-                  <Github size={14} /> GitHub
+                  <Github size={15} /> GitHub
                 </button>
                 <button type="button" className="auth-social-btn" onClick={() => handleSocialLogin('google')}>
-                  <Mail size={14} /> Google
+                  <Mail size={15} /> Google
                 </button>
               </div>
 
-              <div className="auth-divider"><span>Or continue with</span></div>
+              <div className="auth-divider"><span>or continue with email</span></div>
 
               {successMessage && (
                 <div style={{
                   padding: "12px 16px",
-                  background: "rgba(16,185,129,0.1)",
+                  background: "rgba(16,185,129,0.08)",
                   border: "1px solid rgba(16,185,129,0.2)",
-                  borderRadius: "4px",
+                  borderRadius: "8px",
                   marginBottom: "20px"
                 }}>
-                  <p style={{
-                    fontFamily: "var(--font-dm-mono), monospace",
-                    fontSize: "12px",
-                    color: "var(--gold)",
-                    margin: "0"
-                  }}>
+                  <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: "13px", color: "var(--gold)", margin: 0 }}>
                     {successMessage}
                   </p>
                 </div>
@@ -145,17 +170,12 @@ function LoginForm() {
               {error && (
                 <div style={{
                   padding: "12px 16px",
-                  background: "rgba(200,57,43,0.1)",
+                  background: "rgba(200,57,43,0.07)",
                   border: "1px solid rgba(200,57,43,0.2)",
-                  borderRadius: "4px",
+                  borderRadius: "8px",
                   marginBottom: "20px"
                 }}>
-                  <p style={{
-                    fontFamily: "var(--font-dm-mono), monospace",
-                    fontSize: "12px",
-                    color: "var(--opt-red)",
-                    margin: "0"
-                  }}>
+                  <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: "13px", color: "var(--opt-red)", margin: 0 }}>
                     {error}
                   </p>
                 </div>
@@ -197,7 +217,7 @@ function LoginForm() {
                   type="submit"
                   className="opt-btn-primary"
                   disabled={isLoading}
-                  style={{ width: "100%", justifyContent: "center", opacity: isLoading ? 0.6 : 1 }}
+                  style={{ width: "100%", justifyContent: "center", opacity: isLoading ? 0.6 : 1, marginTop: "4px" }}
                 >
                   {isLoading ? "Signing in…" : "Sign In"}
                 </button>
@@ -205,20 +225,19 @@ function LoginForm() {
 
               <div className="auth-footer">
                 <span>Don&apos;t have an account? </span>
-                <Link href="/signup">Sign up</Link>
+                <Link href="/signup">Create one</Link>
               </div>
-            </div>
 
-            <p className="auth-legal">
-              By signing in, you agree to our{" "}
-              <Link href="/terms">Terms of Service</Link> and{" "}
-              <Link href="/privacy">Privacy Policy</Link>
-            </p>
+              <p className="auth-legal">
+                By signing in, you agree to our{" "}
+                <Link href="/terms">Terms of Service</Link> and{" "}
+                <Link href="/privacy">Privacy Policy</Link>
+              </p>
+            </div>
           </div>
         </div>
         )}
       </main>
-      <Footer />
     </>
   )
 }
@@ -231,15 +250,12 @@ export default function LoginPage() {
         <main className="optimum-main">
           <div className="grain-overlay" aria-hidden="true" />
           <div className="auth-page">
-            <div>
-              <div className="auth-card">
-                <div className="auth-logo">O</div>
-                <h1 className="auth-title">Loading...</h1>
-              </div>
+            <div className="auth-card" style={{ textAlign: "center" }}>
+              <div className="auth-logo">O</div>
+              <h1 className="auth-title">Loading…</h1>
             </div>
           </div>
         </main>
-        <Footer />
       </>
     }>
       <LoginForm />

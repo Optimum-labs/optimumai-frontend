@@ -1,20 +1,36 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Playfair_Display, DM_Mono } from "next/font/google"
+import { Inter, Playfair_Display, DM_Mono, Space_Grotesk } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+})
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
   weight: ["400", "700", "900"],
   style: ["normal", "italic"],
+  display: "swap",
 })
 
 const dmMono = DM_Mono({
   subsets: ["latin"],
   variable: "--font-dm-mono",
   weight: ["300", "400", "500"],
+  display: "swap",
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -47,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${dmMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable} ${dmMono.variable} ${spaceGrotesk.variable}`}>
       <body className="antialiased">
         {children}
         <Analytics />

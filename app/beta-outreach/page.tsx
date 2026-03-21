@@ -403,14 +403,21 @@ function BetaOutreachContent() {
               ].map((f, i) => (
                 <div key={i} style={{
                   padding: "24px",
-                  border: "1px solid rgba(10,10,10,0.1)",
-                  background: i === 0 ? "rgba(16,185,129,0.04)" : "rgba(255,255,255,0.4)",
-                  borderTop: i === 0 ? "3px solid var(--gold)" : undefined,
-                  transition: "border-color 0.2s ease",
-                }}>
-                  <f.icon size={20} style={{ color: i === 0 ? "var(--gold)" : "var(--opt-red)", marginBottom: "12px" }} />
-                  <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "16px", fontWeight: 700, color: "var(--ink)", marginBottom: "8px" }}>{f.title}</div>
-                  <p style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "11px", lineHeight: 1.8, color: "var(--muted-txt)", margin: 0 }}>{f.body}</p>
+                  background: i === 0 ? "rgba(16,185,129,0.03)" : "#fff",
+                  border: "1px solid rgba(10,10,10,0.08)",
+                  borderRadius: "12px",
+                  borderTop: i === 0 ? "3px solid var(--gold)" : "1px solid rgba(10,10,10,0.08)",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 6px 20px rgba(0,0,0,0.08)"; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; }}
+                >
+                  <div style={{ padding: "10px", borderRadius: "10px", background: i === 0 ? "rgba(16,185,129,0.1)" : "rgba(200,57,43,0.07)", width: "fit-content", marginBottom: "14px" }}>
+                    <f.icon size={18} style={{ color: i === 0 ? "var(--gold)" : "var(--opt-red)", display: "block" }} />
+                  </div>
+                  <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "16px", fontWeight: 700, color: "var(--ink)", marginBottom: "10px" }}>{f.title}</div>
+                  <p style={{ fontFamily: "var(--font-inter), Inter, sans-serif", fontSize: "13px", lineHeight: 1.75, color: "var(--muted-txt)", margin: 0 }}>{f.body}</p>
                 </div>
               ))}
             </div>

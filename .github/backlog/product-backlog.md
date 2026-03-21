@@ -1,7 +1,24 @@
 # Product Backlog — OptimumAI Platform
 
 > Prioritized by: Product Owner Agent
-> Last updated: March 26, 2026
+> Last updated: March 21, 2026
+
+---
+
+## Recently Completed — Sprint 1.1 (Premium Redesign)
+
+| ID | Story | Agent | Status |
+|----|-------|-------|--------|
+| BRAND-001 | Global color & typography design system overhaul | UI/UX | Sprint 1.1 ✅ |
+| BRAND-002 | Homepage hero rewrite — consciousness/agency copy | UI/UX | Sprint 1.1 ✅ |
+| BRAND-003 | Homepage Company section (mission + philosophy + timeline) | Full Stack | Sprint 1.1 ✅ |
+| NAV-001 | Company dropdown in header navigation | Full Stack | Sprint 1.1 ✅ |
+| NAV-002 | Footer cleanup — remove Bootcamps/Community | Full Stack | Sprint 1.1 ✅ |
+| NAV-003 | Mission & Vision link in footer Company column | Full Stack | Sprint 1.1 ✅ |
+| ABOUT-001 | About page hero, pillars & mission anchor rewrite | UI/UX | Sprint 1.1 ✅ |
+| ABOUT-002 | About page Our Story full narrative replacement | Copywriter | Sprint 1.1 ✅ |
+| ABOUT-003 | About page values/team card border colours → gold | UI/UX | Sprint 1.1 ✅ |
+| BRAND-004 | Footer copyright tagline "Making Humans Better Humans." | Copywriter | Sprint 1.1 ✅ |
 
 ---
 
@@ -26,10 +43,27 @@
 | FEAT-005 | Full-text search across courses, challenges, events | Full Stack | Backlog |
 | FEAT-006 | Payment integration (Stripe) for premium courses | Full Stack | Backlog |
 | API-002 | Rate limiting on auth and registration endpoints | API Developer | Sprint 1 |
-| API-003 | Error tracking integration (Sentry) | API Developer | Backlog |
+| API-003 | Error tracking integration (Sentry) | API Developer | Sprint 2 |
 | UI-001 | Loading skeletons for data-fetching pages | UI/UX | Sprint 1 |
 | UI-002 | Mobile responsiveness audit | UI/UX | Sprint 1 |
 | BACKEND-002 | Startup environment validation | Backend | Sprint 1 |
+| EMAIL-001 | Transactional email (enrollments, welcome, challenges) | Backend | Sprint 2 |
+| SEO-001 | Metadata & Open Graph for all public pages | Full Stack | Sprint 2 |
+| PERF-001 | Lighthouse performance audit + critical path fixes | Full Stack | Sprint 2 |
+
+---
+
+## P1 — High (Sprint 2 Planned)
+
+| ID | Story | Agent | Status |
+|----|-------|-------|--------|
+| BLOG-001 | Blog / content system — listing page (`/blog`) | Full Stack | Sprint 2 |
+| BLOG-002 | Blog post detail page (`/blog/[slug]`) | Full Stack | Sprint 2 |
+| PROFILE-001 | Public researcher profile pages (`/team/[slug]`) | Full Stack | Sprint 2 |
+| SEARCH-001 | Global search command palette (Cmd+K) | Full Stack | Sprint 2 |
+| DARK-001 | Dark mode — complete and polish all pages | UI/UX | Sprint 2 |
+| FEAT-003 | Certificate generation on course completion | Full Stack | Sprint 2 |
+| FEAT-006 | Payment integration (Stripe) for premium courses | Full Stack | Backlog |
 
 ---
 
@@ -37,22 +71,19 @@
 
 | ID | Story | Agent | Status |
 |----|-------|-------|--------|
-| FEAT-010 | Blog/CMS system for articles and tutorials | Full Stack | Backlog |
+| COMPANY-001 | Dedicated `/company` route with full brand story | Full Stack | Sprint 2 |
 | FEAT-011 | Discussion forums per course and challenge | Full Stack | Backlog |
-| FEAT-012 | Researcher public profile pages | Full Stack | Backlog |
 | FEAT-013 | Gamification (points, badges, streaks) | Full Stack | Backlog |
 | FEAT-014 | Push/in-app notification system | Full Stack | Backlog |
-| FEAT-015 | Command palette (Cmd+K) for navigation | UI/UX | Backlog |
 | FEAT-016 | Paper submission and peer review workflow | Full Stack | Backlog |
 | FEAT-017 | Company registration and enterprise portal | Full Stack | Backlog |
 | FEAT-018 | Sponsored challenge creation (for companies) | Full Stack | Backlog |
 | FEAT-019 | Talent search and matching | Full Stack | Backlog |
+| A11Y-001 | WCAG 2.1 AA accessibility audit | UI/UX | Sprint 2 |
 | API-010 | OpenAPI/Swagger documentation | API Developer | Backlog |
 | API-011 | Webhook system (Supabase, Stripe) | API Developer | Backlog |
 | BACKEND-010 | Redis/caching layer | Backend | Backlog |
 | BACKEND-011 | Database connection monitoring | Backend | Backlog |
-| UI-010 | Dark mode completion and polish | UI/UX | Backlog |
-| UI-011 | WCAG 2.1 AA accessibility audit | UI/UX | Backlog |
 | TEST-010 | E2E test suite (Playwright) | Tester | Backlog |
 | TEST-011 | API integration test suite | Tester | Backlog |
 

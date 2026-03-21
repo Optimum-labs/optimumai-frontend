@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { ArrowRight, BookOpen, Brain, FlaskConical, BarChart3, ChevronRight, ExternalLink, Cpu, Zap, FileText } from "lucide-react"
+import { ArrowRight, BookOpen, Brain, FlaskConical, BarChart3, ChevronRight, ExternalLink, Cpu, Zap, FileText, MessageSquare, Mic, Eye, Layers, Wand2, Shield, Target } from "lucide-react"
 import Link from "next/link"
 
 export default function ResearchPage() {
@@ -79,6 +79,102 @@ export default function ResearchPage() {
               <div key={s.label} className="opt-stat">
                 <span className="opt-stat-value">{s.value}</span>
                 <span className="opt-stat-label">{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* ── OptimumAI LLM Platform ── */}
+          <div className="opt-rule"><span className="opt-rule-text">OptimumAI LLM Platform</span></div>
+          <div style={{ marginBottom: "12px" }}>
+            <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 700, color: "var(--ink)", lineHeight: 1.2, marginBottom: "10px" }}>
+              Domain-Specific LLMs.<br /><em>Built on four signal streams.</em>
+            </h2>
+            <p style={{ fontFamily: "var(--font-inter), Inter, sans-serif", fontSize: "13px", lineHeight: 1.8, color: "var(--muted-txt)", maxWidth: "580px", marginBottom: "36px" }}>
+              OptimumLLM is a family of multimodal foundation models fine-tuned specifically to measure, develop,
+              and augment human cognition. Unlike general-purpose LLMs, each model is purpose-built for a specific
+              human-AI interaction domain.
+            </p>
+          </div>
+
+          {/* Modalities */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1px", background: "rgba(10,10,10,0.08)", border: "1px solid rgba(10,10,10,0.08)", borderRadius: "10px", overflow: "hidden", marginBottom: "36px" }}>
+            {[
+              { icon: MessageSquare, label: "Text", desc: "Language patterns, rhetorical structure, semantic coherence, cognitive load signals" },
+              { icon: Mic, label: "Audio", desc: "Vocal tone, speech hesitation rate, prosody, paralinguistic certainty markers" },
+              { icon: Eye, label: "Video", desc: "Micro-expression detection, gaze tracking, body language, emotional congruence" },
+              { icon: Layers, label: "Group", desc: "Social conformity pressure, consensus deviation, peer-influence susceptibility" },
+            ].map((m, i) => (
+              <div key={i} style={{ padding: "24px 20px", background: "var(--paper)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                  <m.icon size={14} style={{ color: "var(--opt-red)", flexShrink: 0 }} />
+                  <span style={{ fontFamily: "var(--font-playfair), serif", fontSize: "14px", fontWeight: 700, color: "var(--ink)" }}>{m.label}</span>
+                </div>
+                <p style={{ fontFamily: "var(--font-inter), Inter, sans-serif", fontSize: "11px", lineHeight: 1.7, color: "var(--muted-txt)", margin: 0 }}>{m.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Model Family */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginBottom: "64px" }}>
+            {[
+              { name: "OptimumLLM-1", size: "7B", desc: "Flagship multimodal foundation model. Text + audio + video understanding with Agency Score output.", status: "In Development", statusColor: "#f59e0b" },
+              { name: "OptimumLLM-1-Mini", size: "3B", desc: "Efficient variant for edge deployment. Same 4-stream architecture, optimised for latency.", status: "Planned", statusColor: "#6366f1" },
+              { name: "OptimumLLM-Code", size: "7B", desc: "Code-specialist fine-tune. Instruction-following + code generation + debugging + explanation.", status: "Planned", statusColor: "#6366f1" },
+              { name: "OptimumLLM-Vision", size: "7B", desc: "Vision-language model for multimodal reasoning, image understanding, and visual grounding.", status: "Research Phase", statusColor: "#0ea5e9" },
+            ].map((model, i) => (
+              <div key={i} style={{ padding: "24px", border: "1px solid rgba(10,10,10,0.1)", borderRadius: "10px", background: "rgba(255,255,255,0.45)", boxShadow: "var(--shadow-sm)" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+                  <span style={{ fontFamily: "var(--font-playfair), serif", fontSize: "15px", fontWeight: 700, color: "var(--ink)" }}>{model.name}</span>
+                  <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "9px", color: "var(--muted-txt)", background: "rgba(10,10,10,0.06)", padding: "2px 6px", borderRadius: "3px" }}>{model.size} params</span>
+                </div>
+                <p style={{ fontFamily: "var(--font-inter), Inter, sans-serif", fontSize: "12px", lineHeight: 1.7, color: "var(--muted-txt)", margin: "0 0 14px" }}>{model.desc}</p>
+                <span style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "9px", letterSpacing: "0.1em", textTransform: "uppercase" as const, color: model.statusColor, background: `${model.statusColor}15`, padding: "2px 7px", borderRadius: "4px" }}>{model.status}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Fine-Tuning Platform */}
+          <div className="opt-rule"><span className="opt-rule-text">Fine-Tuning Research</span></div>
+          <div style={{ marginBottom: "12px" }}>
+            <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(20px, 2.5vw, 28px)", fontWeight: 700, color: "var(--ink)", lineHeight: 1.2, marginBottom: "10px" }}>
+              PEFT at scale. LoRA, QLoRA, RLHF.<br /><em>Open research infrastructure.</em>
+            </h2>
+            <p style={{ fontFamily: "var(--font-inter), Inter, sans-serif", fontSize: "13px", lineHeight: 1.8, color: "var(--muted-txt)", maxWidth: "560px", marginBottom: "32px" }}>
+              Our fine-tuning programme trains researchers on production-grade techniques — and contributes
+              methods back to open research. Every fine-tuning cohort produces a shared model artefact and a co-authored preprint.
+            </p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px", marginBottom: "64px" }}>
+            {[
+              { technique: "LoRA & QLoRA", desc: "Low-rank adaptation and quantised LoRA for memory-efficient domain fine-tuning." },
+              { technique: "Instruction Tuning", desc: "Supervised fine-tuning on curated instruction datasets across cognition and reasoning tasks." },
+              { technique: "RLHF", desc: "Reinforcement learning from human feedback with reward modelling and PPO alignment." },
+              { technique: "Prefix Tuning", desc: "Soft-prompt prefix fine-tuning for efficient task transfer without full model updates." },
+              { technique: "DPO", desc: "Direct preference optimisation — simpler alignment than RLHF, strong empirical performance." },
+              { technique: "Merging & Fusion", desc: "Model merging (DARE/TIES/SLERP) to combine specialist fine-tunes without catastrophic forgetting." },
+            ].map((t, i) => (
+              <div key={i} style={{ padding: "20px", border: "1px solid rgba(10,10,10,0.09)", borderLeft: "3px solid var(--opt-red)", background: "rgba(255,255,255,0.35)", borderRadius: "0 8px 8px 0" }}>
+                <div style={{ fontFamily: "var(--font-dm-mono), monospace", fontSize: "11px", fontWeight: 700, color: "var(--ink)", marginBottom: "6px" }}>{t.technique}</div>
+                <p style={{ fontFamily: "var(--font-inter), Inter, sans-serif", fontSize: "11px", lineHeight: 1.7, color: "var(--muted-txt)", margin: 0 }}>{t.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* For AI Scientists */}
+          <div className="opt-rule"><span className="opt-rule-text">For AI Scientists &amp; Researchers</span></div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "16px", marginBottom: "64px" }}>
+            {[
+              { icon: FlaskConical, title: "Research Collaboration", desc: "Apply to join active research projects on multimodal LLMs, Agency Score theory, and agentic systems. Co-author papers and contribute to OptimumLLM training." },
+              { icon: Cpu, title: "Compute Access", desc: "Accepted researchers get access to fine-tuning compute for approved projects. Apply via the Research Dashboard with a proposal." },
+              { icon: BookOpen, title: "Open Dataset Contributions", desc: "Contribute to shared datasets for cognitive-signal multimodal training. All contributing researchers are credited in model cards and papers." },
+            ].map((item, i) => (
+              <div key={i} style={{ padding: "28px", border: "1px solid rgba(10,10,10,0.09)", borderTop: "3px solid var(--gold)", background: "rgba(255,255,255,0.4)", borderRadius: "0 0 10px 10px" }}>
+                <item.icon size={22} style={{ color: "var(--gold)", marginBottom: 14 }} />
+                <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "16px", fontWeight: 700, color: "var(--ink)", marginBottom: 8 }}>{item.title}</div>
+                <p style={{ fontFamily: "var(--font-inter), Inter, sans-serif", fontSize: "12px", lineHeight: 1.8, color: "var(--muted-txt)", margin: "0 0 16px" }}>{item.desc}</p>
+                <Link href="/research/dashboard" style={{ fontFamily: "var(--font-inter), Inter, sans-serif", fontSize: "11px", color: "var(--opt-red)", fontWeight: 500, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                  Apply <ChevronRight size={12} />
+                </Link>
               </div>
             ))}
           </div>

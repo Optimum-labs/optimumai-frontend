@@ -7,10 +7,11 @@ export function Footer() {
       <div className="opt-footer-inner">
         <div className="opt-footer-grid">
           <div>
-            <span className="opt-footer-col-heading">Programs</span>
+            <span className="opt-footer-col-heading">Products</span>
             <ul className="opt-footer-links">
-              <li><Link href="/bootcamps" className="opt-footer-link">Bootcamps</Link></li>
+              <li><Link href="/research/llm-dashboard" className="opt-footer-link">LLM Dashboard</Link></li>
               <li><Link href="/research" className="opt-footer-link">Research</Link></li>
+              <li><Link href="/beta-outreach" className="opt-footer-link">Beta Outreach</Link></li>
             </ul>
           </div>
 
@@ -18,6 +19,7 @@ export function Footer() {
             <span className="opt-footer-col-heading">Company</span>
             <ul className="opt-footer-links">
               <li><Link href="/about" className="opt-footer-link">About Us</Link></li>
+              <li><Link href="/about#mission" className="opt-footer-link">Mission &amp; Vision</Link></li>
               <li><Link href="/team" className="opt-footer-link">Team</Link></li>
               <li><Link href="/internships" className="opt-footer-link">Careers</Link></li>
               <li><Link href="/contact" className="opt-footer-link">Contact</Link></li>
@@ -29,7 +31,6 @@ export function Footer() {
             <ul className="opt-footer-links">
               <li><Link href="#" className="opt-footer-link">Blog</Link></li>
               <li><Link href="#" className="opt-footer-link">Documentation</Link></li>
-              <li><Link href="/beta-outreach" className="opt-footer-link">Beta Outreach</Link></li>
               <li><Link href="#" className="opt-footer-link">Success Stories</Link></li>
             </ul>
           </div>
@@ -52,7 +53,7 @@ export function Footer() {
             <span className="opt-footer-brand-text">OptimumAI</span>
           </Link>
 
-          <p className="opt-footer-copy">© 2026 OptimumAI. All rights reserved.</p>
+          <p className="opt-footer-copy">© 2026 OptimumAI. All rights reserved. · <em>Making Humans Better Humans.</em></p>
 
           <div className="opt-footer-socials">
             <a href="#" aria-label="Twitter" className="opt-footer-social"><Twitter size={16} /></a>
